@@ -1,0 +1,301 @@
+\documentclass[12pt]{report}
+
+\usepackage{suproposal}
+\usepackage{enumitem}
+\setlist[itemize]{itemsep=0.5pt, topsep=1pt}
+
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta}
+
+\hypersetup{
+	pdfencoding=auto,
+	pdfauthor={Trương Quốc Trường, TS. Nguyễn Vinh Tiệp},
+	pdfsubject={Thị giác máy tính},
+	pdftitle={Nghiên cứu một số phương pháp tạo sinh ảnh khai thác đa thể thức tương tác}
+}
+
+\begin{document}
+
+\firstbeforepreface
+\setcounter{page}{1}
+\newpage
+\afterpreface
+
+
+
+\section{Giới thiệu bài toán}
+\label{sec:intro}
+
+\noindent\textbf{Bối cảnh thực tiễn.} 
+Hiện nay, các mô hình tạo sinh (Generative Models) đã tạo ra nhiều đột phá trong lĩnh vực thị giác máy tính, truyền thông đa phương tiện và sáng tạo nội dung số \cite{google2025nanobanana,openai2025gptimage15,flux-2-2025}. Các phương pháp tạo sinh hình ảnh từ văn bản (text-to-image) đã đạt được những thành tựu đáng kể, cho phép tạo ra hình ảnh chất lượng cao và nội dung đa dạng chỉ từ câu mô tả bằng ngôn ngữ tự nhiên. 
+Tuy nhiên, khi yêu cầu của người dùng ngày càng phức tạp và đòi hỏi độ chính xác cao, việc chỉ dựa vào chỉ dẫn văn bản gặp nhiều hạn chế. Vì ngôn ngữ tự nhiên có tính đã nghĩa và khó diễn đạt đầy đủ các chi tiết về hình dạng, bố cục, hiệu ứng và phong cách nghệ thuật. 
+Đối với các phương pháp nhận đầu vào là chỉ dẫn văn bản, người dùng phải sử dụng câu mô tả rất dài và chi tiết để tạo ra sản phẩm mong muốn. Nhưng các mô hình tạo sinh hiện nay thường gặp khó khăn khi xử lý các chỉ dẫn phức tạp, thiếu khả năng suy luận ngữ cảnh hoặc tạo ra hình ảnh không đúng mục tiêu (minh hoạ Hình \ref{fig:problems}).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/Fig_intro1.pdf} 
+    \caption{Hạn chế về việc sử dụng câu mô tả dài dòng và tạo ra ảnh không đúng mục tiêu trong tạo sinh ảnh có tham chiếu dựa vào chỉ dẫn từ văn bản.}
+    \label{fig:intro1}
+\end{figure}
+
+
+
+Để giải quyết các vấn đề này, đề tài tập trung vào hướng nghiên cứu các phương pháp tạo sinh ảnh với chỉ dẫn đa thể thức tương tác (interactive multimodal image generation). Hướng tiếp cận này cho phép các hệ thống kết hợp linh hoạt nhiều loại chỉ dẫn khác nhau như văn bản, tính hiệu thị giác, tương tác chạm, và giọng nói. Việc kết hợp các chỉ dẫn đa thể thức giúp việc diễn giải của mô hình sát với yêu cầu của người dùng, từ đó tăng cường khả năng kiểm soát và độ chính xác của quá trình tạo sinh. 
+Ứng dụng thực tế của công nghệ này rất rộng lớn, đặc biệt là trong ngành quảng cáo và truyền thông đa phương tiện. Phương pháp tạo sinh này giúp giảm thiểu chi phí, cho phép thử nghiệm nhiều ý tưởng trong thời gian ngắn. Ngoài ra, hướng nghiên cứu này có tiềm năng trong việc tạo dữ liệu giả lập cho các hệ thống thị giác máy tính khác, cũng như nâng cao chất lượng tương tác giữa người và máy.
+
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{figures/Fig_intro2.pdf} 
+    \caption{Ví dụ minh hoạ về input và output của bài toán tạo sinh ảnh đa thể thức (kết hợp giữa hình ảnh, văn bản, tín hiệu tương tác thị giác (scribble).}
+    \label{fig:intro2}
+\end{figure}
+
+\noindent \textbf{Định nghĩa bài toán.}
+Các bài toán tạo sinh hình ảnh theo chỉ dẫn đều hướng tới mục
+tiêu tạo ra hình ảnh thoả mãn yêu cầu của người dùng. Sự khác biệt chính nằm ở mức độ chi tiết và khả năng kiểm soát linh hoạt các đặc trưng của đối tượng. Bài toán mà luận án này tập trung giải quyết là \textbf{nghiên cứu các phương pháp tạo sinh ảnh khai thác đa thể thức tương tác} (minh hoạ Hình \ref{fig:intro2}). Bài toán được định nghĩa với các thành phần đầu vào và đầu ra như sau:
+\begin{itemize}
+    \item \textbf{Đầu vào:} Tập hợp chỉ dẫn đa thể thức, bao gồm hình ảnh (nếu có), chỉ dẫn văn bản, tín hiệu thị giác, các tính hiệu tương tác chạm, và giọng nói.
+    \item \textbf{Đầu ra:} Hình ảnh được tạo ra đáp ứng chính xác các yêu cầu về nội dung ngữ nghĩa, đảm bảo độ phân giải cao và tuân thủ các quy luật vật lý của ngữ cảnh.
+\end{itemize}
+Để giải quyết bài toán này, mô hình phải xử lý kết hợp các chỉ dẫn đa thể thức để tạo ra hình ảnh đáp ứng chính xác yêu cầu của người dùng. Bên cạnh đó cần có khả năng suy luận sâu để chuyển đổi tín hiệu chỉ dẫn thành các biến đổi điểm ảnh tương ứng. 
+Quá trình này phải đảm bảo không phá vỡ cấu trúc tổng thể của ảnh hoặc gây ra hiện tượng sai lệch nội dung. 
+
+
+
+\hspace{5mm}
+
+\noindent \textbf{Các thách thức chính.}
+Các mô hình tạo sinh hiện nay cho phép tạo ra các hình ảnh có chất lượng cao và nội dung đa dạng. Tuy nhiên, các hướng tiếp cận kết hợp linh hoạt nhiều loại chỉ dẫn trong tạo sinh ảnh có tham chiếu chưa được phát triển rộng rãi. Hầu hết, các mô hình hiện tại mới chỉ dừng lại ở khả năng xử lý độc lập từng loại chỉ dẫn (OR), hoặc là chỉ dẫn văn bản, hoặc là điều kiện thị giác (visual condition) như bản đồ độ sâu (depth map), bản phác thảo (sketch), bản đồ tư thế (pose map),... để điều khiển quá trình sinh ảnh.
+Do dó, đề tài hướng đến bài toán kết hợp linh hoạt, có tính thứ tự giữa các loại chỉ dẫn (AND) để điều khiển quá trình sinh ảnh chính xác và đúng mục tiêu. Qua quá trình khảo sát, đề tài nhận thấy một số thách thức của bài toán như sau:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/Fig_problems.pdf} 
+    \caption{Một số hạn chế của các mô hình tạo sinh hiện nay: Attribute leakage: Đối tượng bị ảnh hưởng bởi thuộc tính của các đối tượng khác. Invalid Physical Logic: Quá trình sinh ảnh không đảm bảo yếu tố logic vật lý và không gian.}
+    \label{fig:problems}
+\end{figure}
+
+\begin{itemize}
+    \item \textbf{Sự xung đột trong xử lý chỉ dẫn đa thể thức:} Việc xử lý kết hợp các loại chỉ dẫn khác nhau giúp điều khiển chính xác quá trình tạo sinh ảnh. Giải quyết được vấn đề của các phương pháp chỉ xử lý một loại chỉ dẫn như văn bản (Hình \ref{fig:intro1}). Khi chỉ sử dụng duy nhất một loại chỉ dẫn văn bản, người dùng phải dùng câu mô tả rất dài và chi tiết (long instructions). Điều này gây khó khăn cho người dùng và  khiến mô hình dễ bỏ sót chi tiết. 
+    Nhưng việc kết hợp đồng thời nhiều loại chỉ dẫn cũng có thể khiến mô hình hiểu sai mối liên hệ giữa các chỉ dẫn, gây khó khăn và nhập nhằng cho việc điều khiển chính xác kết quả. Để giải quyết được vấn đề này, mô hình cần phải có khả năng hiểu tính thứ tự và sự tương tác giữa các chỉ dẫn đầu vào.
+    
+    \item \textbf{Hiện tượng rò rỉ thuộc tính (Attribute Leakage):} Đây là vấn đề thường gặp trong các bài toán tạo sinh ảnh. Xảy ra khi đặc trưng của đối tượng này bị lan truyền sang các đối tượng khác. Ví dụ trong Hình \ref{fig:problems}, khi thay đổi bối cảnh sang "ngày mưa" (rainy day), các thuộc tính của môi trường, khung cảnh xung quanh trời tối đã ảnh hưởng đến chiếc xe, làm biến đổi màu sắc chiếc xe từ màu xanh qua màu đen. Vấn đề này thường xuất phát từ việc thiếu các cơ chế chú ý (attention maps) và xác định đặc trưng ngữ nghĩa theo không gian.
+    
+    \item \textbf{Chưa có khả năng suy luận tương quan không gian:} Các mô hình tạo sinh hiện nay chủ yếu học các tương quan thống kê giữa các điểm ảnh thay vì hiểu được cấu trúc vật lý của thế giới thực. Do đó, hình ảnh được tạo ra có thể hiện đầy đủ nội dung, đối tượng cụ thể, nhưng thiếu sự tương quan ngữ cảnh giữa các đối tượng, sai lệch về hình dạng. Các chỉ dẫn phức tạp liên quan về hình học như xoay, dịch chuyển, tăng/giảm kích thước đòi hỏi mô hình phải hiểu về không gian ba chiều và ngữ cảnh. Trong Hình \ref{fig:problems}, thay vì tạo ra hình ảnh với cô gái xoay toàn bộ người, thì mô hình chỉ xoay phần thân trên còn phần thân dưới thì giữ nguyên, làm cho đối tượng bị biến dạng, không đúng với thực tế. Bên cạnh đó, các phương pháp hiện tại còn gặp vấn đề về sai lệch hiệu ứng, hướng ánh sáng. Nguyên nhân do các mô hình này chưa có khả năng suy luận về tương quan không gian.
+
+\end{itemize}
+
+
+
+
+\section{Mục tiêu nghiên cứu}
+\label{sec:objectives}
+
+Mục tiêu tổng quát của đề tài là nghiên cứu và đề xuất một framework tạo sinh ảnh, cho phép điều khiển chi tiết quá trình tạo sinh thông qua các chỉ dẫn đa thể thức. Đề tài này hướng tới việc xây dựng phương pháp xử lý nhiều loại chỉ dẫn đầu vào để mô hình tạo ra các kết quả đạt độ chính xác cao về mặt nội dung ngữ nghĩa. Bên cạnh đó, thiết kế các cơ chế tích hợp khả năng suy luận ngữ cảnh để đảm bảo tính nhất quán về không gian.
+
+\noindent \textbf{Các mục tiêu cụ thể:}
+
+
+\begin{itemize}
+    \item \textbf{Nghiên cứu cơ chế xử lý chỉ dẫn đa thể thức:} Đề tài tập trung phát triển các phương pháp kết hợp linh hoạt giữa các loại chỉ dẫn văn bản (textual prompt), các tín hiệu thị giác (visual prompt), tín hiệu tương tác chạm, giọng nói. Mục tiêu là xây dựng một không gian biểu diễn chung giúp mô hình hiểu được mối liên hệ, tính thứ tự giữa các thể thức khác nhau, từ đó giảm thiểu sự nhập nhằng trong quá trình hiểu ý định của người dùng. Thay vì đưa vào câu mô tả dài dòng và chi tiết, thì người dùng có thể kết hợp các chỉ dẫn đơn giản như tương tác chạm, tín hiệu thị giác để tạo ra sản phẩm mong muốn.
+
+    
+    \item \textbf{Tích hợp suy luận tương quan không gian:} Đề tài hướng đến việc tăng khả năng suy luận của mô hình trong quá trình tạo sinh ảnh. Mục tiêu là giúp hình ảnh được tạo ra đạt được sự nhất quán về phối cảnh và mối quan hệ không gian giữa các đối tượng, từ đó nâng cao độ chân thực và tính hợp lý của nội dung trong ảnh. Bên cạnh đó, đề tài hướng đến đảm bảo các thay đổi về thuộc tính đối tượng (như màu sắc, chất liệu, kết cấu) chỉ tác động chính xác vào vùng cần được xử lý mà không ảnh hưởng đến các đối tượng khác.
+    
+    \item \textbf{Xây dựng hệ thống đánh giá toàn diện:} Bên cạnh phát triển các phương pháp và mô hình tạo sinh ảnh đa thể thức tương tác, đề tài còn hướng đến xây dựng các độ đo (metrics), tập dữ liệu đánh giá (benchmark) và quy trình để đánh giá hiệu quả của các phương pháp đề xuất. Quá trình đánh giá dựa trên chất lượng hình ảnh (độ phân giải, tính thẩm mỹ), khả năng bám sát chỉ dẫn, sự tương quan với cảm nhận của người dùng.
+\end{itemize}
+
+
+
+
+\section{Tổng quan tình hình nghiên cứu}
+\label{sec:literature_review}
+
+Hiện nay, lĩnh vực tạo sinh ảnh đã có sự chuyển dịch từ các mô hình xác suất truyền thống sang các kiến trúc học sâu phức tạp. Phần nội dung này sẽ tổng hợp các thành tựu nghiên cứu nổi bật và chỉ ra các vấn đề mà đề tài này tập trung giải quyết.
+
+\subsection{Các phương pháp tạo sinh hình ảnh từ văn bản}
+Khởi đầu trong lĩnh vực tạo sinh hiện đại là các mô hình Mạng đối nghịch tạo sinh (GANs)\cite{goodfellow2014generative}. Các nghiên cứu này đã đặt nền móng cho việc tạo ra dữ liệu giả từ phân bố nhiễu (noise). Sau đó, các biến thể như StackGAN\cite{zhang2017stackgan} đã cải thiện độ phân giải bằng cách sử dụng các kiến trúc phân tầng nhiều lớp và khối. Tuy nhiên, GANs thường gặp khó khăn trong việc hội tụ và hiện tượng mode collapse khi xử lý các tập dữ liệu có chủ đề đa dạng.
+Sự xuất hiện của các mô hình khuếch tán (Diffusion Models) đã làm thay đổi hoàn toàn hướng nghiên cứu trong lĩnh vực tạo sinh hiện nay. DDPM \cite{ho2020denoising} đã chứng minh khả năng tạo sinh vượt trội so với GANs. Bước ngoặt lớn nhất đến từ mô hình Stable Diffusion \cite{rombach2022high}, giúp thực hiện quá trình khuếch tán trên không gian tiềm ẩn (latent space) để giảm chi phí tính toán. Đây cũng là tiền đề cho sự phát triển của hàng loạt mô hình trong họ mô hình khuếch tán sau này. Mặc dù đạt chất lượng hình ảnh rất cao, nhưng các phương pháp này chủ yếu dựa vào chỉ dẫn văn bản. Điều này gây khó khăn khi người dùng muốn điều khiển chính xác cấu trúc hoặc vị trí cụ thể của các đối tượng trong ảnh.
+
+\subsection{Các phương pháp tạo sinh ảnh đa thể thức}
+Để tăng cường khả năng điều khiển, một số nhóm tác giả đã phát triển các phương pháp tích hợp thêm các điều kiện (conditioning) đầu vào. ControlNet \cite{zhang2023adding} đã giới thiệu cách sao chép các khối kiến trúc để huấn luyện thêm các thông tin như bản đồ độ sâu (depth map), sơ đồ phác thảo (sketch), bounding box. Bên cạnh đó, T2I-Adapter \cite{mou2024t2i} đề xuất một kiến trúc gọn nhẹ hơn để đạt mục tiêu tương tự nhưng tiết kiệm tài nguyên hơn.
+Trong lĩnh vực chỉnh sửa ảnh, các phương pháp dựa trên mặt nạ (mask-based) đã đạt được nhiều thành công. Blended Diffusion \cite{avrahami2022blended} cho phép người dùng khoanh vùng để mô hình chỉ tác động vào khu vực mong muốn. Gần đây, IP-Adapter \cite{ye2023ip} đã mở rộng khả năng bằng cách cho phép sử dụng hình ảnh làm chỉ dẫn chính thay vì văn bản. Tuy nhiên, sự kết hợp giữa nhiều loại chỉ dẫn (như văn bản và hình ảnh tham chiếu) vẫn còn gặp các hiện tượng xung đột dữ liệu và rò rỉ thuộc tính giữa các đối tượng.
+
+
+\subsection{Tầm quan trọng của chỉ dẫn đa thể thức}
+Việc khai thác chỉ dẫn đa thể thức không chỉ đơn thuần là thêm loại chỉ dẫn đầu vào. ImageBind \cite{girdhar2023imagebind} đã chứng minh rằng việc học một không gian biểu diễn chung cho nhiều thể thức giúp mô hình hiểu ngữ cảnh và nội dung sâu sắc hơn. Đối với bài toán tạo sinh, chỉ dẫn đa thể thức giúp mô hình suy luận tốt hơn về mối quan hệ, sự tương quan giữa các đối tượng. Giúp người dùng có thể can thiệp chính xác vào quá trình tạo sinh ảnh. Tuy nhiên, việc tích hợp quá nhiều thể thức thường yêu cầu mô hình phải có nhiều mô-đun, nhiều tham số để xử lý, dẫn đến khó triển khai thực tế.
+Do đó, việc thiết kế các mô hình gọn nhẹ là cần thiết để giúp giảm chi phí tính toán và giảm thời gian suy luận.
+
+\subsection{Bộ dữ liệu và các tiêu chuẩn đánh giá}
+Hiện nay đã có rất nhiều công trình liên quan việc đề xuất các bộ dữ liệu (benchmark) và các tiêu chuẩn đánh giá (evaluation dimensions). TedBench~\cite{kawar2023imagic} cung cấp một thiết lập đánh giá quy mô nhỏ với chỉ khoảng 100 hình ảnh và chủ yếu tập trung vào các tác vụ chỉnh sửa cơ bản.
+SmartEdit~\cite{huang2024smartedit} hướng đến các kịch bản chỉnh sửa phức tạp, tuy nhiên vẫn chưa đáp ứng được các yêu cầu chỉnh sửa đa dạng và toàn diện hơn. Bên cạnh đó, một số benchmark thường bỏ qua yếu tố mức độ khó của tác vụ, điều này có thể dẫn đến các đánh giá thiếu khách quan và gây sai lệch kết quả. Ngoài những hạn chế về bộ dữ liệu, việc xây dựng các tiêu chí đánh giá đáng tin cậy vẫn là một thách thức lớn trong lĩnh vực này. 
+
+Về các độ đo đánh giá, các nghiên cứu trước chủ yếu sử dụng các độ đo tương đồng tổng quát như $L_1$, khoảng cách $L_2$, CLIP-I và CLIP-T. Tuy nhiên, các độ đo truyền thống này thường quá đơn giản để phản ánh đầy đủ các thao tác chỉnh sửa phức tạp, gặp khó khăn trong việc đánh giá chất lượng thẩm mỹ, đồng thời có mức tương quan thấp với cảm nhận của con người.
+Để thu hẹp khoảng trống này, một số phương pháp đã sử dụng các mô hình Vision-Language Model (VLM) lớn cho đánh giá tự động, tiêu biểu như KRIS-Bench \cite{wu2026kris} và ImgEdit \cite{ye2026imgedit}. Tuy nhiên, các mô hình mang tính tổng quát này chưa được huấn luyện chuyên biệt cho bài toán đánh giá ảnh chỉnh sửa. 
+Bên cạnh đó, ICE-Bench~\cite{pan2025ice} và HATIE~\cite{ryu2025towards} khai thác nhiều mô hình nền khác nhau để thực hiện đánh giá. 
+Tuy nhiên, việc phụ thuộc vào các kiến trúc đa dạng như vậy dẫn đến chi phí tính toán cao và làm cho các tiêu chí đánh giá trở nên rời rạc, thiếu tính thống nhất. Do đó, đề tài hướng đến việc thiết kế các tập dữ liệu và tiêu chí đánh giá đa dạng và bao phủ các trường hợp trong tạo sinh ảnh.
+
+
+
+
+\section{Nội dung nghiên cứu}
+\label{sec:research_content}
+
+
+\subsection{Nội dung 1: Xây dựng tiêu chí và dữ liệu đánh giá cho sinh ảnh có tham chiếu với chỉ dẫn hỗn hợp}
+
+\noindent \textbf{Động lực nghiên cứu:}  
+Hiện nay, các giải pháp tạo sinh chưa thực sự hỗ trợ khả năng tương tác đa thể thức đi kèm với khả năng suy luận và hiểu bối cảnh. Bên cạnh đó, một vấn đề quan trọng khác là sự thiếu hụt các bộ dữ liệu đánh giá (benchmarks) có quy mô đủ lớn và đa dạng về tình huống trong tạo sinh ảnh. Các tập dữ liệu hiện có thường chỉ giới hạn ở một vài nhóm chỉnh sửa cơ bản, chưa bao phủ hết các kịch bản phức tạp trong thực tế như góc nhìn từ trên cao, hiện tượng vật thể bị che khuất hay các hiệu ứng ánh sáng đặc thù. Do đó, việc xây dựng một framework hoàn chỉnh đi kèm với tập dữ liệu đánh giá đa dạng là yêu cầu cấp thiết.
+
+\noindent \textbf{Mục tiêu:}
+Đề xuất một tập dữ liệu đánh giá đa dạng, với nhiều kịch bản tạo sinh trong thực tế. Bên cạnh đó là phát triển một bộ đánh giá trên nhiều khía cạnh của hình ảnh được tạo sinh. Giải pháp này giúp giảm thiểu chi phí tính toán và đảm bảo tính khách quan, nhất quán trong việc đo lường hiệu quả tạo sinh.
+
+\noindent \textbf{Sản phẩm khoa học dự kiến:}
+Kết quả nghiên cứu dự kiến của nội dung này là 01 bài báo khoa học trên tạp chí ISI. Sản phẩm kỹ thuật bao gồm tập dữ liệu và các chỉ tiêu đánh giá hiệu quả tạo sinh trên nhiều phương diện.
+
+\noindent \textbf{Phương pháp:}
+% Quá trình thực hiện tập trung vào việc tổng hợp và thiết kế các thành phần để hoàn thiện hệ thống tạo sinh đa thể thức. Triển khai sử dụng các kỹ thuật tích hợp mô-đun để đảm bảo xử lý kết hợp đa thể thức và cơ chế suy luận ngữ cảnh trong quá trình tạo sinh. 
+Đối với xây dựng tập đánh giá, dữ liệu được thu thập đa dạng, tập trung vào các tình huống thách thức như góc nhìn từ trên cao (top-view), vật thể bị che khuất (occlusion), các hiệu ứng ánh sáng đa dạng và góc nhìn mắt cá (fisheye). 
+Bên cạnh đó, đề tài đề xuất các tiêu chí đánh giá để chấm điểm trên các khía cạnh khác nhau của kết quả tạo sinh. Thực hiện các thực nghiệm giữa hệ thống đề xuất và các phương pháp SOTA để chứng minh tính vượt trội về cả khả năng tạo sinh lẫn độ tin cậy của các tiêu chí đánh giá mới.
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\textwidth]{figures/Fig_Evaluation.pdf} 
+    \caption{Minh họa hệ thống tạo hệ thống đánh giá hình ảnh tạo sinh trên nhiều khía cạnh.}
+    \label{fig:evaluator_example}
+\end{figure}
+
+
+\subsection{Nội dung 2: Đề xuất mô hình sinh ảnh có tham chiếu với thể thức chỉ dẫn hỗn hợp}
+
+\noindent \textbf{Động lực nghiên cứu:}  
+Ngôn ngữ tự nhiên vốn có tính đa nghĩa và trừu tượng, gây nhiều khó khăn cho các mô hình tạo sinh trong việc biểu diễn chính xác yêu cầu của người dùng. Trong thực tế, người dùng có xu hướng sử dụng kết hợp nhiều loại điều kiện đầu vào khác nhau như hình ảnh tham chiếu, bản phác thảo hoặc các vùng mặt nạ để hỗ trợ cho văn bản. Tuy nhiên, các phương pháp hiện nay thường xử lý các chỉ dẫn này một cách độc lập, không có sự liên kết, tương tác giữa các chỉ dẫn. Điều này dẫn đến kết quả tạo ra có thể bỏ sót thông tin hoặc tạo ra nội dung không đồng nhất. Vì vậy, việc nghiên cứu một cơ chế kết hợp linh hoạt và đồng bộ nội dung ngữ nghĩa giữa các loại chỉ dẫn là yêu cầu cấp thiết để nâng cao khả năng điều khiển của mô hình, cũng như trải nghiệm người dùng.
+
+\noindent \textbf{Mục tiêu:}
+Luận án hướng tới việc hoàn thiện framework tạo sinh ảnh đa thể thức tương tác thông qua việc kết nối các mô-đun đã nghiên cứu từ hai nội dung trước. Mục tiêu là xây dựng một hệ thống có khả năng xử lý linh hoạt các chỉ dẫn phức tạp và bảo toàn được sự nhất quán ngữ cảnh của hình ảnh. 
+Thiết kế một không gian biểu diễn chung (joint embedding space) nhằm liên kết chặt chẽ các đặc trưng ngữ nghĩa từ văn bản, tín hiệu thị giác, tương tác. Mục tiêu là giúp mô hình có thể tự động cân bằng mức độ ảnh hưởng của từng loại chỉ dẫn dựa trên độ phức tạp của yêu cầu, từ đó tạo ra hình ảnh đầu ra bám sát nhất với ý tưởng của người dùng.
+
+\noindent \textbf{Sản phẩm khoa học dự kiến:}
+Sản phẩm dự kiến của nội dung này là 01 bài báo khoa học trên tạp chí ISI và 01 bài báo hội nghị quốc tế. Đồng thời, hoàn thiện hệ thống tạo sinh ảnh kết hợp đa thể thức, làm nền tảng cốt lõi cho các nghiên cứu tiếp theo của luận án.
+
+\noindent \textbf{Phương pháp:}
+Đề tài hướng đến sử dụng các bộ mã hóa (encoders) đã được huấn luyện sẵn trên các tập dữ liệu khổng lồ để trích xuất đặc trưng chuyên biệt cho từng loại chỉ dẫn đầu vào. Khai thác sức mạnh của các mô hình ngôn ngữ lớn cho chỉ dẫn văn bản. Sử dụng các bộ mã hóa thị giác đạt độ phân giải cao để trích xuất thông tin từ tín hiệu thị giác, tương tác chạm. Đề xuất sử dụng cơ chế chú ý chéo (cross-attention) cải tiến để nhúng trực tiếp các đặc trưng đa thể thức này vào quá trình khử nhiễu của mô hình khuếch tán. Cuối cùng là đánh giá hiệu quả của phương pháp và so sánh với các phương pháp hiện đại trên các bộ dữ liệu đánh giá.
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=\textwidth]{figures/Framework_Example.pdf} 
+    \caption{Ví dụ minh hoạ hệ thống tạo sinh hình ảnh khai thác đa thể thức tương tác.}
+    \label{fig:framework_example}
+\end{figure}
+
+
+
+
+\subsection{Nội dung 3: Thiết kế kỹ thuật tích hợp suy luận ngữ cảnh trong sinh ảnh}
+
+\noindent \textbf{Động lực nghiên cứu:}  
+Các mô hình khuếch tán hiện nay gặp một số hạn chế về kiểm soát chi tiết và suy luận ngữ cảnh. Những vấn đề này xuất phát từ việc mô hình chỉ học các tương quan thống kê giữa các điểm ảnh mà thiếu khả năng suy luận về cấu trúc vật lý của không gian ba chiều. 
+Do đó, việc nghiên cứu các cơ chế ràng buộc ngữ nghĩa và tích hợp suy luận ngữ cảnh trên các mô hình tạo sinh gọn nhẹ là động lực chính của nội dung này.
+
+
+\noindent \textbf{Mục tiêu:}
+Mục tiêu là đề xuất một framework tích hợp các kỹ thuật kiểm soát thuộc tính cục bộ và suy luận ngữ cảnh trên mô hình ít tham số. Tập trung nghiên cứu các cơ chế bản đồ chú ý (attention mapping) nhằm xác định đúng vùng ảnh hưởng của các chỉ dẫn, từ đó ngăn chặn triệt để hiện tượng rò rỉ thuộc tính giữa các đối tượng trong ảnh. Song song đó, nghiên cứu hướng đến việc đưa các ràng buộc về quy luật vật lý và tương quan không gian vào quá trình tạo sinh để đảm bảo tính nhất quán về phối cảnh. Thiết kế các mô-đun thích nghi gọn nhẹ (lightweight adapters) nhằm giảm thiểu số lượng tham số cần huấn luyện và tối ưu hóa tốc độ suy luận. Kết quả cuối cùng là một hệ thống tạo sinh vừa đảm bảo được độ chân thực, vừa có khả năng vận hành hiệu quả trên các hệ thống có tài nguyên tính toán hạn chế.
+
+\noindent \textbf{Sản phẩm khoa học dự kiến:}
+Kết quả của nội dung này dự kiến là 01 bài báo khoa học đăng trên tạp chí ISI. Sản phẩm kỹ thuật bao gồm mô hình tạo sinh ảnh có tham chiếu có khả năng giải quyết vấn đề rò rỉ thuộc tính và tích hợp khả năng suy luận ngữ cảnh.
+
+\noindent \textbf{Phương pháp:}
+Đề tài hướng đến áp dụng kỹ thuật huấn luyện LORA kết hợp với việc thiết kế các mô-đun thích nghi (adapters), giúp mô hình chỉ cập nhật một phần nhỏ trọng số hệ thống mà không ảnh hưởng đến tri thức từ các mô hình tạo sinh cơ sở. Khai thác các backbone hiện đại có tốc độ xử lý nhanh và cho kết quả chất lượng cao về độ phân giải và nội dung.
+Để giải quyết vấn đề rò rỉ thuộc tính, đề tài nghiên cứu các cơ chế kiểm soát bản đồ chú ý chéo (cross-attention maps) nhằm phân tách đặc trưng ngữ nghĩa của từng đối tượng theo không gian. Sử dụng các mặt nạ ngữ nghĩa (semantic masks) được trích xuất tự động để ràng buộc vùng ảnh hưởng của các chỉ dẫn. Đối với khả năng suy luận ngữ cảnh, để tài đề xuất tích hợp các hàm mất mát ràng buộc hình học và ngữ cảnh vào quá trình khử nhiễu của mô hình khuếch tán. Bên cạnh đó, sử dụng mô hình ngôn ngữ lớn để lập kế hoạch bố cục (layout planning) trước khi tạo hình ảnh, đảm bảo sự tương quan không gian giữa các đối tượng luôn hợp lý. Cuối cùng, tiến hành đánh giá tính hiệu quả của phương pháp thông qua các độ đo và bộ dữ liệu đánh giá chuẩn \cite{kawar2023imagic,ye2026imgedit,ryu2025towards,sheynin2024emu}.
+
+
+
+
+
+
+
+
+
+\section{Một số kết quả sơ khởi}
+\label{sec:preliminary_results}
+
+Ứng viên đã thực hiện một nghiên cứu liên quan đến các bài toán điều khiển quá trình tạo sinh và chỉnh sửa hình ảnh thông qua các cơ chế chú ý (attention mechanism). Những kết quả này đã được công bố tại các tạp chí quốc tế uy tín và hội nghị chuyên ngành, tạo tiền đề cho việc triển khai các nội dung tiếp theo của luận án.
+
+\noindent \textbf{Kiểm soát vùng ảnh hưởng thông qua cơ chế chú ý cục bộ:}
+Ứng viên đã đề xuất kỹ thuật chú ý thành phần cục bộ (local part attention) nhằm cho phép người dùng tác động chính xác vào từng vùng đối tượng cụ thể bằng văn bản. Kết quả thực nghiệm cho thấy việc tách biệt các bản đồ chú ý giúp mô hình tập trung thay đổi phong cách hoặc thuộc tính của đối tượng mà không làm biến đổi cấu trúc của vùng nền lân cận. Nghiên cứu này đã được công bố trên tạp chí \textbf{Scopus-Q1} \cite{truong2024local}, ứng viên là tác giả chính. Bên cạnh đó, ứng viên cũng mở rộng cơ chế chú ý nhận biết vùng (region-aware) cho tác vụ chuyển đổi phong cách video, giúp duy trì tính nhất quán về mặt thời gian và không gian giữa các khung hình. Nghiên cứu này đã được công bố trên hội nghị \textbf{hạng B} \cite{truong2025ravis}, ứng viên là tác giả chính.
+
+\vspace{5mm}
+\noindent \textbf{Nghiên cứu khả năng điều khiển trong mô hình khuếch tán:}
+Các nghiên cứu này bước đầu khai thác sức mạnh của các mô hình khuếch tán (Diffusion Models) để giải quyết bài toán tạo sinh dữ liệu có kiểm soát. Cụ thể, nghiên cứu đề xuất một phương pháp tổng hợp các lớp đối tượng cơ sở nhằm hỗ trợ cho các bài toán nhận diện đối tượng trong điều kiện ít mẫu (few-shot). Nghiên cứu này chứng minh rằng việc sử dụng các mô hình tạo sinh SOTA có thể tạo ra các mẫu dữ liệu đa dạng và giàu ngữ nghĩa, giúp cải thiện đáng kể độ chính xác của các mô hình thị giác máy tính truyền thống. Kết quả nghiên cứu đã công bố tại hội nghị quốc tế \textbf{Scopus}\cite{truong2024controllable}, ứng viên là tác giả chính. Bênh cạnh đó, ứng viên là đồng tác giả của 01 bài báo hội nghị \textbf{hạng} $\textbf{A}^\textbf{*}$ \cite{vu2025multi}, 01 bài báo hội nghị \textbf{Scopus} \cite{nguyen2024dual}.
+
+Những kết quả sơ khởi này tạo tiền đề cho ứng viên thực hiện và hoàn thành tốt các mục tiêu mà đề tài đưa ra. Từ đó hướng đến việc phát triển tiếp các phương pháp tạo sinh ảnh khai thác đa thể thức tương tác toàn diện trong các giai đoạn tiếp theo.
+
+
+
+\section{Lý do thực hiện đề tài}
+\label{sec:rationale}
+
+Việc nghiên cứu và phát triển các phương pháp tạo sinh hình ảnh đa thể thức tương tác xuất phát từ những nhu cầu thực tế và những vấn đề còn tồn tại trong các mô hình tạo sinh ảnh. Đề tài thực hiện đề tài này dựa trên ba lý do chính sau đây:
+
+\noindent \textbf{Thứ nhất, nhu cầu về khả năng điều khiển chính xác trong tạo sinh ảnh.} 
+Các mô hình tạo sinh hiện đại đã chứng minh khả năng tạo ra hình ảnh thực tế vượt trội. Tuy nhiên, việc chỉ sử dụng văn bản để mô tả ý tưởng thường dẫn đến sự sai lệch giữa mong muốn của người dùng và kết quả đầu ra. Trong nhiều lĩnh vực chuyên sâu như thiết kế và đồ họa kỹ thuật, người dùng cần can thiệp chi tiết vào bố cục, màu sắc và hình thái đối tượng. Việc khai thác đa thể thức tương tác là hướng đi tất yếu để hiện thực hóa khả năng điều khiển chính xác này.
+
+\noindent \textbf{Thứ hai, yêu cầu về tính toán hiệu quả và ứng dụng thực tế.} 
+Phần lớn các mô hình tạo sinh hiện nay đều đòi hỏi tài nguyên tính toán rất lớn, gây khó khăn cho việc triển khai rộng rãi. Đề tài này chú trọng vào việc thiết kế các kiến trúc mạng nhỏ gọn và các mô-đun thích nghi hiệu quả nhằm giảm thiểu chi phí tính toán và thời gian xử lý, giúp công nghệ tạo sinh ảnh trở nên gần gũi và dễ tiếp cận hơn trong đời sống hàng ngày. Đây là một đóng góp quan trọng hướng tới xu hướng phát triển trí tuệ nhân tạo bền vững và hiệu quả.
+
+\noindent \textbf{Thứ ba, giải quyết các vấn đề nhất quán ngữ cảnh trong tạo sinh.} 
+Dù đạt được chất lượng hình ảnh cao, các phương pháp hiện tại vẫn thường xuyên gặp phải vấn đề rò rỉ thuộc tính và thiếu tính logic về mặt vật lý. Những hình ảnh có bóng đổ sai hướng hoặc cấu trúc không gian phi lý làm ảnh hưởng đến chất lượng của kết quả. Đề tài hướng đến mục tiêu đưa khả năng suy luận và các ràng buộc vật lý vào quá trình tạo sinh. Việc đảm bảo tính nhất quán về ngữ nghĩa và bối cảnh của kết quả tạo sinh.
+
+
+
+\section{Kế hoạch nghiên cứu}
+\label{sec:plan}
+Lộ trình nghiên cứu được xây dựng trong vòng 03 năm, chia thành các giai đoạn cụ thể. Mỗi giai đoạn tập trung giải quyết các nhiệm vụ trọng tâm tương ứng với ba nội dung nghiên cứu đã đề ra, hướng tới các công bố khoa học cụ thể (Hình \ref{fig:plan}).
+
+
+\paragraph{Năm 1: Đề xuất tập dữ liệu đánh giá toàn diện:}
+Tập trung vào khảo sát hệ thống tài liệu chuyên ngành và cài đặt các phương pháp tạo sinh hiện đại. Xây dựng tập dữ liệu đánh giá đa dạng, bao phủ các kịch bản thực tế như góc nhìn từ trên cao, vật thể bị che khuất và các hiệu ứng bối cảnh đặc thù. Đề xuất các tiêu chí đánh giá trên nhiều khía cạnh nhằm đánh giá chính xác kết quả trong bài toán tạo sinh ảnh có tham chiếu với chỉ dẫn đa thể thức.
+% Sau khi thực hiện các đánh giá định tính và định lượng, đề tài tiến hành tổng hợp kết quả và hoàn thiện luận án tiến sĩ.
+
+\begin{itemize}
+\item \textbf{Mục tiêu:} Hoàn thành báo cáo tổng quan và xây dựng bộ dữ liệu và hệ thống đánh giá kết quả tạo sinh trên nhiều khía cạnh.
+\item \textbf{Công bố dự kiến:} 01 bài báo khoa học tạp chí ISI.
+\end{itemize}
+
+\paragraph{Năm 2: Nghiên cứu và phát triển mô hình tạo sinh ảnh có tham chiếu với chỉ dẫn đa thể thức:}
+Nghiên cứu cơ chế kết hợp linh hoạt các loại điều kiện đầu vào như văn bản, tín hiệu thị giác và tương tác chạm. Triển khai xây dựng không gian biểu diễn chung (joint embedding space) để đồng bộ nội dung ngữ nghĩa giữa các loại chỉ dẫn. Kết hợp các mô-đun để hoàn thiện framework tạo sinh ảnh đa thể thức tương tác hoàn chỉnh.
+
+\begin{itemize}
+\item \textbf{Mục tiêu:} Đề xuất mô hình với không gian biểu diễn chung có thể liên kết chặt chẽ và cân bằng mức độ ảnh hưởng của từng loại chỉ dẫn
+\item \textbf{Công bố dự kiến:} 01 bài báo tạp chí ISI và 01 bài báo hội nghị quốc tế.
+\end{itemize}
+
+\paragraph{Năm 3: Tích hợp suy luận ngữ cảnh trong tạo sinh ảnh:}
+Năm cuối tập trung vào việc cải tiến các kỹ thuật kiểm soát nội dung và hiệu suất. Nghiên cứu các cơ chế bản đồ chú ý chéo để phân tách đặc trưng ngữ nghĩa, giải quyết triệt để hiện tượng rò rỉ thuộc tính. Tích hợp các ràng buộc hình học và bối cảnh để nâng cao khả năng suy luận cho mô hình. Thiết kế các mô-đun thích nghi nhỏ gọn (adapters) giúp giảm số lượng tham số và tăng tốc độ suy luận.
+\begin{itemize}
+\item \textbf{Mục tiêu:} Hoàn thiện framework tích hợp khả năng suy luận và kiểm soát thuộc tính và bảo vệ luận án.
+\item \textbf{Công bố dự kiến:} 01 bài báo tạp chí ISI.
+\end{itemize}
+
+
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/KeHoach.pdf} 
+    \caption{Kế hoạch nghiên cứu 3 năm của ứng viên.}
+    \label{fig:plan}
+\end{figure}
+
+
+\section{Tài liệu tham khảo}
+
+\begingroup
+\setlength{\emergencystretch}{8em}
+\setstretch{1.03} % Giảm khoảng cách dòng
+\leavevmode\printbibliography[heading=none]
+\justifying
+\endgroup
+
+\end{document}

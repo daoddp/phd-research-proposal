@@ -1,0 +1,278 @@
+\usepackage[utf8]{inputenc}
+\usepackage[T1,T5]{fontenc}
+\usepackage{fancyhdr}
+\usepackage{geometry}
+\usepackage{caption}
+\usepackage{multido}
+\usepackage{etoolbox}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{ragged2e}
+\usepackage{IEEEtrantools}
+\usepackage{times,latexsym,amsfonts,amssymb,amsmath,graphicx,bbm,rotating}
+\usepackage{enumitem,multirow,hhline,stmaryrd,bussproofs,mathtools,siunitx,arydshln}
+\usepackage{xcolor}
+\usepackage[titles]{tocloft}
+\usepackage{titlesec}
+\usepackage{pifont}
+\usepackage{adforn}
+\usepackage{tikz}
+\usepackage{subfig}
+\usetikzlibrary{calc}
+\usepackage{float}
+\usepackage{lipsum}
+\usepackage{pdfpages}
+\usepackage{amsmath}
+\usepackage[mathscr]{euscript}
+\providecommand\phantomsection{}
+
+\usepackage{array,booktabs,arydshln,xcolor}
+\newcommand\VRule[1][\arrayrulewidth]{\vrule width #1}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+%\usepackage{showframe}
+\renewcommand{\labelitemii}{$\diamond$}
+\renewcommand\cftchappresnum{}
+\renewcommand\cftchapaftersnum{.}
+\newlength\mylen
+\settowidth\mylen{\bfseries\cftchappresnum\thechapter\cftpartaftersnum\ }
+\addtolength{\cftchapnumwidth}{\mylen}
+% \cftsetindents{chap}{0pt}{\mylen}
+
+\setlength\headheight{32pt}
+
+\usepackage[fontsize=13pt]{scrextend}
+
+\usepackage{setspace}
+\renewcommand{\baselinestretch}{1.35}
+
+
+\titlespacing{\chapter}{0in}{13pt}{0in}
+
+\titleformat*{\section}{\normalsize\bfseries}
+\titleformat*{\subsection}{\normalsize\bfseries}
+\titleformat*{\subsubsection}{\normalsize\bfseries}
+\titleformat*{\paragraph}{\normalsize\bfseries}
+\titleformat*{\subparagraph}{\normalsize\bfseries}
+
+
+\usepackage[maxcitenames=1, mincitenames=1, backend=biber, style=numeric, sorting=none, bibencoding=utf8, natbib=true, maxbibnames=99]{biblatex}
+
+% \DefineBibliographyStrings{english}{andothers={và các cộng sự}}
+% \DefineBibliographyStrings{english}{and={và}}
+% \DefineBibliographyStrings{english}{pages={trang}}
+% \DefineBibliographyStrings{english}{in={trong}}
+
+% \newcommand{\citenumauthor}[1]{(\citeauthor{#1}, \citeyear{#1})~\cite{#1}}
+
+
+
+\addbibresource{proposal.bib}
+
+\usepackage[
+	colorlinks=true,
+	pdfstartview=FitV,
+	linkcolor=blue,
+	citecolor=blue,
+	urlcolor=blue,
+	breaklinks=true
+]{hyperref}
+
+\geometry{a4paper, left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+
+
+\captionsetup[figure]{name={Hình},labelsep=period}
+\captionsetup[table]{name={Bảng},labelsep=period}
+
+\renewcommand{\thechapter}{\Roman{chapter}}
+\renewcommand{\chaptername}{}
+\renewcommand\appendixname{Phụ lục}
+\renewcommand{\contentsname}{Mục lục}
+\renewcommand{\listtablename}{Danh mục các bảng}
+\renewcommand\listfigurename{Danh mục các hình vẽ và đồ thị}
+\renewcommand{\bibname}{Tài liệu tham khảo}
+
+
+\overfullrule=2pt
+
+\fancypagestyle{customfancy}
+{
+   \fancyhf{}
+    \fancyhead[L]{\ifodd\value{page}\parbox[t]{0.985\textwidth}{
+    \Ifstr{\rightmark}{}
+    {
+    \RaggedRight\leftmark\strut
+    }
+    {
+    \RaggedRight\rightmark\strut
+    }
+    }\else\parbox[t]{0.985\textwidth}{\RaggedRight\leftmark\strut}\fi}
+    \fancyfoot[C]{\thepage}
+}
+
+
+\renewcommand{\headrulewidth}{1pt}
+\renewcommand{\footrulewidth}{1pt}
+
+
+\RequirePackage{setspace}
+
+\if@twoside
+ \setlength\oddsidemargin   {36.1\p@}
+ \setlength\evensidemargin  {0\p@}
+ \setlength\marginparwidth {40\p@}
+\else
+ \setlength\oddsidemargin   {36.1\p@}
+ \setlength\evensidemargin  {36.1\p@}
+ \setlength\marginparwidth  {40\p@}
+\fi
+
+\marginparsep 10pt
+\topmargin -46pt
+\headsep .1in
+\textheight 10in
+\textwidth 6in
+
+\brokenpenalty=10000
+
+\newif\iffigurespage
+\newif\iftablespage
+\figurespagetrue
+\tablespagetrue
+\def\firsttitlep{
+    \thispagestyle{empty}
+    \begin{center}
+	{\par{\small ĐẠI HỌC QUỐC GIA TP.HCM}\par}
+    {\par{\textbf{\small TRƯỜNG ĐẠI HỌC CÔNG NGHỆ THÔNG TIN}}\par}
+    \end{center}
+    \vspace*{8ex}
+    \begin{center}
+    {\par{\noindent Họ tên NCS: Trương Quốc Trường}\par}
+    \end{center}
+    \vspace*{8ex}
+    \begin{center}
+    {\par{\textbf{\large BÀI LUẬN VỀ HƯỚNG NGHIÊN CỨU}}\par}
+    {\par{\textbf{\large LUẬN ÁN TIẾN SĨ}}\par}
+    \end{center}
+    \vspace*{6ex}
+    
+    
+    \vspace*{6ex}
+    {\par{\noindent Tên đề tài:
+    \begin{center}
+        \textbf{NGHIÊN CỨU MỘT SỐ PHƯƠNG PHÁP TẠO SINH ẢNH \\ CÓ THAM CHIẾU VỚI ĐA THỂ THỨC CHỈ DẪN HỖN HỢP}
+    \end{center}
+    }}
+    \begin{center}
+    {\par{\noindent Ngành: Khoa Học Máy Tính}\par}
+    {\par{\noindent Mã số: 9480101}\par}
+    \end{center}
+    
+    \vspace*{6ex}
+    {
+    \begin{center} 
+    \par{\noindent Cán bộ hướng dẫn 1: TS. Nguyễn Vinh Tiệp}\par
+    \par{\noindent Cán bộ hướng dẫn 2: PGS. TS. Trần Minh Triết}\par
+    \end{center}
+    }
+    
+    \begin{center}
+	\vfill
+	{\par{Thành phố Hồ Chí Minh, tháng 05 năm 2026}\par}
+    \end{center}
+    \newpage
+    
+}
+
+\def\firstbeforepreface{
+    \pagenumbering{roman}
+    \pagestyle{plain}
+    \begin{tikzpicture}[remember picture, overlay]
+      \draw[line width = 1pt] ($(current page.north west) + (98pt,-65pt)$) rectangle ($(current page.south east) + (-46pt,56pt)$);
+    \end{tikzpicture}
+    \firsttitlep
+    \cleardoublepage
+}
+        
+\def\prefacesection#1{
+    \chapter*{#1}
+    \addcontentsline{toc}{chapter}{#1}
+}
+
+\def\afterpreface{
+    % \pagestyle{customfancy}
+
+    \newpage
+    \phantomsection
+    {
+        % \titleformat{\chapter}[hang]
+     %    {\bfseries}{\cftchappresnum\thechapter.}{0.5 em}{\centering\MakeUppercase}
+    	% \addcontentsline{toc}{chapter}{\contentsname}
+        \titleformat{\chapter}[hang]
+        {\bfseries}{\cftchappresnum\thechapter.}{0.5 em}{\MakeUppercase}
+    	\tableofcontents
+    }    
+    \cleardoublepage
+    \pagenumbering{arabic}
+    % \pagestyle{customfancy}
+}
+
+
+\let\@ldthebibliography\thebibliography
+\renewcommand{\thebibliography}[1]{\newpage
+                \@ldthebibliography{#1}
+\addcontentsline{toc}{chapter}{\bibname}}
+
+
+\def\@endpart{\vfil\newpage
+              \if@twoside
+               \if@openright
+                \null
+                \thispagestyle{plain}%
+                \newpage
+               \fi
+              \fi
+              \if@tempswa
+                \twocolumn
+              \fi}
+
+
+\usepackage{mathtools} % for '\mathrlap' and '\DeclarePairedDelimiter' macros
+
+\makeatletter  
+%% Switch meanings of starred and unstarred macros
+%% (see https://tex.stackexchange.com/a/278398/5001)
+\newcommand{\XDeclarePairedDelimiter}[3]{%  "X" for "exchange"
+  \expandafter\DeclarePairedDelimiter\csname RIGHT\string#1\endcsname{#2}{#3}%
+  \newcommand#1{%
+    \@ifstar{\csname RIGHT\string#1\endcsname}
+            {\@ifnextchar[{\csname RIGHT\string#1\endcsname}
+                          {\csname RIGHT\string#1\endcsname*}%
+}}}
+\makeatother
+\let\norm\relax % undefine existing "\norm" macro
+\XDeclarePairedDelimiter{\norm}{\lVert}{\rVert}
+
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+
+\titleformat{\chapter}[hang]
+{\bfseries}{\cftchappresnum\thechapter.}{0.5 em}{\MakeUppercase}
+
+\titleclass{\chapter}{straight}
+
+% Adjust section numbering
+\renewcommand\thesection{\arabic{section}}
+\renewcommand\thesubsection{\arabic{section}.\arabic{subsection}}
+
+% Adjust TOC formatting
+\renewcommand{\cftsecpresnum}{\hfill} % Removes the dot before section number
+\renewcommand{\cftsubsecpresnum}{\hfill} % Removes the dot before subsection number
+\renewcommand{\cftsecaftersnum}{\quad} % Space after the section number in the TOC
+\renewcommand{\cftsubsecaftersnum}{\quad} % Space after the subsection number in the TOC
+
+\setlength{\cftsecindent}{0pt}
+\setlength{\cftsubsecindent}{0pt}
+\setlength{\cftsubsubsecindent}{0pt}

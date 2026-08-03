@@ -49,6 +49,13 @@ Qua khảo sát, các phương pháp hiện tại bộc lộ hai khoảng trốn
     \item \textbf{Thiếu khả năng nhận biết ý định (Intent-awareness):} Hầu hết các mô hình sửa lỗi đều áp dụng chiến lược Inpainting một cách mù quáng (blind correction), dễ dàng phá hỏng ý định nghệ thuật nguyên bản của tác giả~\cite{anomreason2024}.
 \end{enumerate}
 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/fig_problem.png}
+    \caption{Minh họa bài toán Intent-aware AI Generated Content Anomaly Correction: Phân biệt và loại bỏ lỗi tạo sinh (như sai lệch giải phẫu) trong khi vẫn bảo toàn ý định sáng tạo nguyên bản của người dùng (như bối cảnh phi thực tế).}
+    \label{fig:intro_problem}
+\end{figure}
+
 \section{Lý do thực hiện đề tài}
 \label{sec:rationale}
 
@@ -87,10 +94,24 @@ Diffusion Inpainting (ví dụ như nghiên cứu của Tabatabaei et al.~\cite{
 
 Đề tài được triển khai qua ba nội dung nghiên cứu gắn liền với ba thành phần cốt lõi của pipeline thống nhất.
 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{figures/fig_pipeline.png}
+    \caption{Tổng quan kiến trúc hệ thống (Pipeline) tích hợp 3 module cốt lõi: Phát hiện \& Định vị (Detection), Lý giải nguyên nhân nhận biết ý định (Reasoning), và Chỉnh sửa thích ứng (Adaptive Correction).}
+    \label{fig:overall_pipeline}
+\end{figure}
+
 \subsection{Nội dung 1: Mô hình phát hiện và định vị bất thường tổng quát}
 \noindent \textbf{Mục tiêu:} Xây dựng mô hình (Detection \& Localization) tổng quát hóa trên nhiều loại bất thường: từ tần số, kết cấu bề mặt đến hình học, giải phẫu và bố cục.
 
 \noindent \textbf{Phương pháp:} Khai thác khả năng biểu diễn của Vision Foundation Models và Vision-Language Models, kết hợp thông tin thị giác và mô tả ngôn ngữ để sinh bản đồ vị trí (anomaly map) và phân loại danh mục lỗi. Xây dựng taxonomy thống nhất cho các lỗi sinh bởi AI.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.95\textwidth]{figures/fig_taxonomy.png}
+    \caption{Cấu trúc phân tầng (Taxonomy) của các dạng bất thường trong nội dung thị giác AI tạo sinh: từ cấp độ bề mặt (pixel-level) đến cấp độ cấu trúc hình học và ngữ nghĩa (semantic).}
+    \label{fig:taxonomy}
+\end{figure}
 
 \subsection{Nội dung 2: Suy luận nguyên nhân và nhận biết ý định tạo sinh}
 \noindent \textbf{Mục tiêu:} Phân biệt giữa "artifact cần sửa" và "nội dung phi thực tế theo đúng ý định", xác định chiến lược sửa chữa cho bước tiếp theo.
@@ -129,6 +150,13 @@ Hoàn thiện pipeline thống nhất Detection - Reasoning - Correction. Tối 
 
 \paragraph{Năm 4: Đánh giá diện rộng và bảo vệ luận án:}
 Mở rộng thực nghiệm, thực hiện các giao thức đánh giá với người dùng (Human Studies). Hoàn thiện bản thảo luận án, công bố mã nguồn và bảo vệ thành công luận án Tiến sĩ.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/fig_plan.png}
+    \caption{Lộ trình và kế hoạch nghiên cứu chi tiết 04 năm của đề tài luận án Tiến sĩ, ánh xạ với các sản phẩm khoa học đầu ra dự kiến.}
+    \label{fig:research_plan}
+\end{figure}
 
 \section{Tài liệu tham khảo}
 

@@ -1,0 +1,58 @@
+# Build outputs
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.idx
+*.ilg
+*.ind
+*.lof
+*.log
+*.lot
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.xdv
+
+# Bibliography
+*-blx.bib
+
+# Glossaries
+*.acn
+*.acr
+*.alg
+*.glg
+*.glo
+*.gls
+*.glsdefs
+
+# Nomenclature
+*.nlo
+*.nls
+
+# Listings
+*.lol
+
+# Minted
+_minted*
+*.pyg
+
+# TikZ externalization
+*.dpth
+*.md5
+
+# Temporary backups
+*~
+*.bak
+*.swp
+*.swo
+
+# macOS
+.DS_Store
+
+# VS Code
+.vscode/settings.json
+.vscode/latexmkrc

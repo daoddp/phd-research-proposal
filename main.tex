@@ -25,17 +25,25 @@
 \label{sec:intro} %[span_14](start_span)[span_14](end_span)
 
 \subsection{Bối cảnh nghiên cứu}
-Trong  những năm gần đây, sự phát triển mạnh mẽ của các mô hình học máy tạo sinh (AI-Generated Content - AIGC) đã tạo nên nhiều nội dung độc đáo, trở thành xu hướng trong nhiều lĩnh vực lớn như giải trí, truyền thông,... Trong đó, các mô hình nổi bật là Mạng đối kháng tạo sinh (Generative Adversarial Networks - GANs) \cite{goodfellow2020generative} và đặc biệt là mô hình Khuếch tán (Diffusion Models) \cite{ho2020denoising} đã tạo ra một bước ngoặt vượt bậc trong việc tổng hợp nội dung thị giác.
+Trong  những năm gần đây, sự phát triển mạnh mẽ của các mô hình học máy tạo sinh (AI-Generated Content - AIGC) đã tạo nên nhiều nội dung độc đáo. Trong đó, các mô hình nổi bật là Mạng đối kháng tạo sinh (Generative Adversarial Networks - GANs) \cite{goodfellow2020generative} và đặc biệt là mô hình Khuếch tán (Diffusion Models) \cite{ho2020denoising} đã tạo ra một bước ngoặt vượt bậc trong việc tổng hợp nội dung thị giác.
 Dựa trên đó, các mô hình như Stable Diffusion \cite{rombach2022high}, DALLE-3 \cite{betker2023improving}, Midjourney hay FLUX \cite{yang2024first} đã thể hiện khả năng tạo sinh ra các hình ảnh có độ phân giải cao, nội dung phong phú và tiệm cận giống với ảnh thật. Nhờ đó, AIGC đang ngày càng được ứng dụng rộng rãi trong nhiều lĩnh vực đa dạng như thiết kế đồ họa, thương mại điện tử, quảng cáo, điện ảnh, trò chơi và sáng tạo nội dung số.
 
-Mặc dù chất lượng ảnh sinh ra ngày càng được cải thiện đáng kể, không ít những nghiên cứu gần đây [cite] đã chỉ ra rằng ngày cả những mô hình tiên nhất vẫn thường xuyên tạo ra các chi tiết không hợp lý hoặc vi phạm các quy luật vật lý và ngữ nghĩa của thế giới thực. Những lỗi này vô hình chung sẽ làm giảm tính chân thực của hình ảnh, làm ảnh hưởng đến trải nghiệm của người dùng và hạn chế khả năng ứng dụng của AIGC trong các lĩnh vực đòi hỏi độ tin cậy cao như thiết kế sản phẩm hay y học.
+Mặc dù chất lượng ảnh sinh ra ngày càng được cải thiện đáng kể, không ít những nghiên cứu gần đây \cite{kamali2024distinguish, kamali2025characterizing} đã chỉ ra rằng ngày cả những mô hình tiên nhất vẫn thường xuyên tạo ra các chi tiết không hợp lý hoặc vi phạm các quy luật vật lý và ngữ nghĩa của thế giới thực. Những lỗi này vô hình chung sẽ làm giảm tính chân thực của hình ảnh, làm ảnh hưởng đến trải nghiệm của người dùng và hạn chế khả năng ứng dụng của AIGC trong các lĩnh vực đòi hỏi độ tin cậy cao như thiết kế sản phẩm hay y học.
 
-Khác với các bài toán khôi phục ảnh truyền thống (image restoration) [cite], trong đó quá trình suy giảm ảnh (degradation process) thường được mô hình hóa rõ ràng (ví dụ như nhiễu Gaussian, mờ chuyển động, mất mẫu,...), các lỗi trong ảnh sinh bởi AI không tuân theo một mô hình suy giảm xác định. Chúng xuất hiện ngẫu nhiên trong quá trình tạo sinh và chịu ảnh hưởng đồng thời bởi nhiều yếu tố như kiến trúc mô hình, dữ liệu huấn luyện, chiến lược lấy mẫu cũng như khả năng hiểu biết về thế giới của mô hình [cite]. Do đó, bài toán phát hiện và hiệu chỉnh các bất thường trong ảnh được tạo sinh bởi AI được xem là khó hơn đáng kể so với các bài toán khôi phục ảnh truyền thống.
+Khác với các bài toán khôi phục ảnh truyền thống (image restoration) \cite{li2025diffusion, jiang2025survey}, trong đó quá trình suy giảm ảnh (degradation process) thường được mô hình hóa rõ ràng (ví dụ như nhiễu Gaussian, mờ chuyển động, mất mẫu,...), các lỗi trong ảnh sinh bởi AI không tuân theo một mô hình suy giảm xác định. Chúng xuất hiện ngẫu nhiên trong quá trình tạo sinh và chịu ảnh hưởng đồng thời bởi nhiều yếu tố như kiến trúc mô hình, dữ liệu huấn luyện, chiến lược lấy mẫu cũng như khả năng hiểu biết về thế giới của mô hình \cite{betker2023improving}. Do đó, bài toán phát hiện và hiệu chỉnh các bất thường trong ảnh được tạo sinh bởi AI được xem là khó hơn đáng kể so với các bài toán khôi phục ảnh truyền thống.
 
 \subsection{Định nghĩa bài toán}
 Về mặt phạm vi, nghiên cứu định nghĩa các điểm bất thường trong ảnh tạo sinh bởi AI (AI-generated image anomaly) là những chi tiết bất thường hoặc không mong muốn xuất hiện trong ảnh do mô hình tạo sinh sinh ra, khiến hình ảnh mất đi tính chân thực hoặc vi phạm các quy luật thị giác, vật lý hay tri thức thông thường của con người.
-Khái niệm này được tổng quát hóa từ các nghiên cứu phân loại các dạng bất thường gần đây [cite]. Cụ thể, các nghiên cứu này định nghĩa phân loại bất thường xuất hiện ở nhiều cấp độ khác nhau, từ các lỗi cục bộ trên các pixel ảnh cho tới những sai lệch về cấu trúc, giải phẫu và ngữ nghĩa của toàn bộ cảnh.
-Nhìn chung, có thể tổng quát các loại bất thường thành 5 nhóm chính: (1) Lỗi giải phẫu và cấu trúc: những biến dạng trên cơ thể động vật; (2) Lỗi văn bản: chữ viết méo mó hoặc vô nghĩa; (3) Không nhất quán về mặt hình học và ánh sáng: những phối cảnh không hợp lý về ánh sáng, bóng đổ hoặc quan hệ giữa các vật thể; (4) Lỗi ở mức kết cấu: những hiện tượng mờ, nhòe hoặc vỡ kết cấu ở các vật thể trong ảnh; và (5) Lỗi ngữ nghĩa và bố cục: những vật thể có quan hệ phi logic, kích thước bất thường hoặc tương tác vi phạm kiến thức phổ thông thế giới.
+Khái niệm này được tổng quát hóa từ các nghiên cứu phân loại các dạng bất thường gần đây \cite{cao2024synartifact, kamali2024distinguish}. Cụ thể, các nghiên cứu này định nghĩa phân loại bất thường xuất hiện ở nhiều cấp độ khác nhau, từ các lỗi cục bộ trên các pixel ảnh cho tới những sai lệch về cấu trúc, giải phẫu và ngữ nghĩa của toàn bộ cảnh.
+Nhìn chung, có thể tổng quát các loại bất thường thành 5 nhóm chính: (1) Lỗi giải phẫu và cấu trúc: những biến dạng trên cơ thể động vật; (2) Lỗi văn bản: chữ viết méo mó hoặc vô nghĩa; (3) Không nhất quán về mặt hình học và ánh sáng: những phối cảnh không hợp lý về ánh sáng, bóng đổ hoặc quan hệ giữa các vật thể; (4) Lỗi ở mức kết cấu: những hiện tượng mờ, nhòe hoặc vỡ kết cấu ở các vật thể trong ảnh; và (5) Lỗi ngữ nghĩa và bố cục: những vật thể có quan hệ phi logic, kích thước bất thường hoặc tương tác vi phạm kiến thức phổ thông thế giới. Một số minh họa về các loại bất thường này được thể hiện trong Hình~\ref{fig:example_artifact}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/Artifact_example.pdf}
+    \caption{Minh họa một số bất thường trong ảnh do AI tạo sinh.}
+    \label{fig:example_artifact}
+\end{figure}
+
 Trong số các nhóm trên, các lỗi về mặt ngữ nghĩa được xem là khó phát hiện và sửa chữa nhất vì chúng không thể được xác định chỉ bằng thông tin ở mức pixel mà đòi hỏi mô hình phải có khả năng suy luận về ngữ cảnh và tri thức thế giới.
 
 Về mặt định nghĩa, bài toán AI Generated Content Anomaly Correction được định nghĩa là quá trình tự động phát hiện, định vị và chỉnh sửa các bất thường xuất hiện trong nội dung hình ảnh được tạo bởi các mô hình AI, nhằm nâng cao tính chân thực, tính nhất quán và chất lượng thị giác của ảnh, đồng thời bảo toàn nội dung hợp lệ và ý định tạo sinh ban đầu của người dùng. Cụ thể:
@@ -47,34 +55,25 @@ Về mặt định nghĩa, bài toán AI Generated Content Anomaly Correction đ
 \subsection{Khoảng trống và động lực nghiên cứu}
 Thông qua các khảo sát, các phương pháp hiện tại bộc lộ ba khoảng trống lớn:
 \begin{itemize}
-    \item \textbf{Thứ nhất, thiếu tính tổng quát và thống nhất.} Phần lớn các nghiên cứu hiện nay tập trung vào việc khai thác độc lập hai bài toán phát hiện bất thường hoặc sửa ảnh. Các phương pháp phát hiện có thể xác định loại lỗi hoặc vị trí lỗi với độ chính xác ngày càng ấn tượng, cho cả những lỗi ngữ nghĩa nâng cao. Trong khi đó, các phương pháp sửa lỗi chủ yếu sử dụng các mô hình diffusion cho tác vụ inpainting hoặc tinh chỉnh quá trình sinh ảnh để cải thiện chất lượng. Tuy nhiên, hiện vẫn tồn tại số ít hiếm hoi một hệ thống tổng quát có khả năng vừa phát hiện, vừa hiểu bản chất của bất thường và tự động lựa chọn chiến lược hiệu chỉnh phù hợp [cite GenShield].
+    \item \textbf{Thứ nhất, thiếu tính tổng quát và thống nhất.} Phần lớn các nghiên cứu hiện nay tập trung vào việc khai thác độc lập hai bài toán phát hiện bất thường hoặc sửa ảnh. Các phương pháp phát hiện có thể xác định loại lỗi hoặc vị trí lỗi với độ chính xác ngày càng ấn tượng, cho cả những lỗi ngữ nghĩa nâng cao. Trong khi đó, các phương pháp sửa lỗi chủ yếu sử dụng các mô hình diffusion cho tác vụ inpainting hoặc tinh chỉnh quá trình sinh ảnh để cải thiện chất lượng. Tuy nhiên, hiện vẫn tồn tại số ít hiếm hoi một hệ thống tổng quát có khả năng vừa phát hiện, vừa hiểu bản chất của bất thường và tự động lựa chọn chiến lược hiệu chỉnh phù hợp \cite{genshield2024}.
     \item \textbf{Thứ hai, các pipeline tổng quát cho bài toán lại phụ thuộc vào quá trình hậu xử lý.} Điều này có nghĩa là, các nghiên cứu mới nhất giải quyết bài toán tổng quan một cách tuần tự khi đều đợi hình ảnh được sinh ra hoàn toàn rối mới chẩn đoán và chỉnh sửa, dẫn đến lãng phí tài nguyên tính toán và không thể giải quyết tận gốc nguyên nhân gốc rễ trong quá trình khuếch tán.
     \item \textbf{Thứ ba, tất cả các hướng tiếp cận cho bài toán đều thiếu đi khả năng nhận biết ý định của người dùng.} Các hệ thống hiện tại đều áp dụng các quy tắc “thường thức” (common-sense) để đánh giá các điểm bất thường trong ảnh tạo sinh để “ép” hình ảnh về trạng thái “bình thường”. Điều này vô tình bỏ quên đi ý định tạo sinh ảnh ban đầu của người dùng, nơi chứa đựng các yếu tố sáng tạo, ý định nghệ thuật nguyên bản của tác giả.
 \end{itemize}
 
-\begin{figure}[htbp] %[span_34](start_span)[span_34](end_span)
-    \centering
-    \includegraphics[width=0.9\textwidth]{figures/fig_problem.png} %[span_35](start_span)[span_35](end_span)
-    \caption{Minh họa bài toán Intent-aware In-Situ Anomaly Correction: Biểu diễn sự khác biệt giữa việc hậu xử lý mù quáng (blind post-hoc) và can thiệp quỹ đạo tiềm ẩn trực tiếp để bảo vệ ý định sáng tạo nguyên bản của người dùng (Creative Intent).}
-    \label{fig:intro_problem} %[span_36](start_span)[span_36](end_span)
-\end{figure}
+% \begin{figure}[htbp]
+%     \centering
+%     \includegraphics[width=0.9\textwidth]{figures/fig_problem.png}
+%     \caption{Minh họa bài toán Intent-aware In-Situ Anomaly Correction: Biểu diễn sự khác biệt giữa việc hậu xử lý mù quáng (blind post-hoc) và can thiệp quỹ đạo tiềm ẩn trực tiếp để bảo vệ ý định sáng tạo nguyên bản của người dùng (Creative Intent).}
+%     \label{fig:intro_problem} 
+% \end{figure}
 
 Nhìn chung, bài toán phát hiện và chỉnh sửa các bất thường trong ảnh tạo sinh không đơn thuần là một bài toán khôi phục ảnh truyền thống mà còn là sự kết hợp giữa suy luận điểm bất thường, hiểu ý định người dùng và tạo sinh ảnh hiệu chỉnh phù hợp. Đây cũng chính là những khoảng trống còn bỏ ngỏ mà nghiên cứu này muốn tập trung khai thác và phát triển.
 
-% \section{Lý do thực hiện đề tài}
-% \label{sec:rationale} %[span_37](start_span)[span_37](end_span)
-
-% \noindent \textbf{Thứ nhất, ý nghĩa khoa học:} Đề tài đóng góp một khung bài toán hoàn toàn mới, chuyển dịch từ việc "xóa lỗi hậu kỳ" sang việc can thiệp động học "tại chỗ" (in-situ), giúp phân tách rõ ràng giữa ý định văn bản (Textual Intent) và quy luật vật lý. %[span_38](start_span)[span_38](end_span)
-
-% \noindent \textbf{Thứ hai, ý nghĩa kỹ thuật:} Việc can thiệp trực tiếp vào quỹ đạo của hàm score trong suy luận (Temporal-Spatial Dynamic Score Correction) mang lại khả năng ngăn chặn lỗi theo thời gian thực mà không cần chạy lại các vòng lặp VCoT đắt đỏ. %[span_39](start_span)[span_39](end_span)
-
-% \noindent \textbf{Thứ ba, ý nghĩa thực tiễn:} Các kết quả của luận án sẽ thúc đẩy các hệ thống tạo sinh đạt độ tin cậy cao hơn cho công nghiệp sáng tạo nội dung số chuyên nghiệp, nơi ý định nghệ thuật phải được đặt lên hàng đầu. %[span_40](start_span)[span_40](end_span)
-
 \section{Mục tiêu nghiên cứu}
-\label{sec:objectives} %[span_41](start_span)[span_41](end_span)
+\label{sec:objectives} 
 Mục tiêu tổng quát là nghiên cứu và phát triển một mô hình có khả năng tự động phát hiện, định vị và hiệu chỉnh các bất thường trong nội dung hình ảnh do mô hình AI tạo sinh, đồng thời đảm bảo kết quả sau chỉnh sửa giữ được tính chân thực, nhất quán về ngữ nghĩa và không làm thay đổi ý định tạo sinh ban đầu của người dùng.
 
-\noindent \textbf{Các mục tiêu cụ thể:} %[span_43](start_span)[span_43](end_span)
+\noindent \textbf{Các mục tiêu cụ thể:} 
 \begin{itemize}
     \item \textbf{MT1 -- Phát hiện và phân tích bất thường trong nội dung do AI tạo sinh.} Nghiên cứu không chỉ định vị các lỗi bất thường trong ảnh hậu kỳ mà còn tập trung khai thác sâu vào kiến trúc của các mô hình khuếch tán nhằm tìm ra nguyên nhân gốc rễ của các điểm bất thường trong ảnh.
     \item \textbf{MT2 -- Xây dựng mô hình hiệu chỉnh bất thường phù hợp.} Đề xuất phương pháp tự động chỉnh sửa các vùng bất thường được phát hiện, đồng thời bảo toàn nội dung ảnh và duy trì tính nhất quán cho toàn bộ ảnh. Nếu bắt được các nguyên nhân gốc rễ từ kiến trúc, nghiên cứu đề xuất can thiệp sâu hơn nhằm nắn chỉnh quỹ đạo trong quá trình tạo sinh mà không cần inpainting ở giai đoạn hậu kỳ.
@@ -82,7 +81,7 @@ Mục tiêu tổng quát là nghiên cứu và phát triển một mô hình có
 \end{itemize}
 
 \section{Tổng quan tình hình nghiên cứu}
-\label{sec:literature_review} %[span_46](start_span)[span_46](end_span)
+\label{sec:literature_review} 
 
 \subsection{Các phương pháp phát hiện bất thường (Detection Methods)}
 Những bất thường trong ảnh có thể xuất hiện ở nhiều mức độ khác nhau, từ các lỗi ở mức pixel (blur, checkerboard, aliasing) đến các lỗi về cấu trúc, giải phẫu và ngữ nghĩa như thừa ngón tay, sai quan hệ không gian hoặc vi phạm các quy luật vật lý.
@@ -93,10 +92,10 @@ Một công trình tiêu biểu là SynArtifact, mô hình nghiên cứu xây d�
 Nhìn chung, ưu điểm của hướng tiếp cận này là độ chính xác cao và khả năng phân loại cụ thể từng loại bất thường. Tuy nhiên, hiệu năng phụ thuộc mạnh vào dữ liệu gán nhãn và thường giảm đáng kể khi gặp các loại bất thường chưa xuất hiện trong quá trình huấn luyện, dẫn đến hạn chế về khả năng tổng quát hóa. Bên cạnh đó, các bất thường được phân loại theo hướng này thường chỉ ở mức bề mặt, không mang tính suy luận nâng cao.
 
 \textbf{Thứ hai, với hướng nghiên cứu phân đoạn và định vị vùng bất thường (Segmentation and Localization).} Đối với các hệ thống chỉnh sửa tự động, việc xác định vị trí của bất thường quan trọng hơn chỉ phát hiện sự tồn tại của chúng. Do đó, nhiều nghiên cứu tập trung xây dựng các mô hình sinh anomaly map hoặc segmentation mask làm đầu vào cho bước chỉnh sửa.
-Một ví dụ tiêu biểu là nghiên cứu của Tabatabaei [cite], trong đó tác giả đề xuất pipeline hai giai đoạn gồm phát hiện vùng biến dạng trong ảnh Virtual Try-on và Pose Transfer, sau đó sử dụng Conditional Stable Diffusion Inpainting để tái tạo vùng lỗi. Phương pháp cho chất lượng phục hồi cao nhưng chỉ được thiết kế cho một miền ứng dụng cụ thể, nên khả năng tổng quát hóa sang các loại bất thường khác còn hạn chế.
+Một ví dụ tiêu biểu là nghiên cứu của Tabatabaei \cite{tabatabaei2024beyond}, trong đó tác giả đề xuất pipeline hai giai đoạn gồm phát hiện vùng biến dạng trong ảnh Virtual Try-on và Pose Transfer, sau đó sử dụng Conditional Stable Diffusion Inpainting để tái tạo vùng lỗi. Phương pháp cho chất lượng phục hồi cao nhưng chỉ được thiết kế cho một miền ứng dụng cụ thể, nên khả năng tổng quát hóa sang các loại bất thường khác còn hạn chế.
 
 \textbf{Cuối cùng, với hướng nghiên cứu phát hiện kết hợp suy luận ngữ nghĩa (Semantic Reasoning).} Khi chất lượng ảnh AI ngày càng được cải thiện, nhiều bất thường chuyển từ mức pixel sang mức ngữ nghĩa, như vật thể vi phạm quy luật vật lý, quan hệ không gian bất hợp lý hoặc tương tác không phù hợp. Những lỗi này đòi hỏi mô hình phải có khả năng suy luận thay vì chỉ khai thác đặc trưng thị giác.
-Một công trình tiêu biểu là AnomReason [cite], nghiên cứu đầu tiên xây dựng bài toán Semantic Visual Anomaly Detection and Reasoning với bộ dữ liệu chú thích theo bốn thành phần: Name, Phenomenon, Reasoning và Severity. Bên cạnh đó, các nghiên cứu như RADAR khai thác Vision-Language Models để phát hiện semantic anomalies dựa trên tri thức thường thức (commonsense knowledge) thay vì chỉ dựa vào các bất thường mức thấp.
+Một công trình tiêu biểu là AnomAgent \cite{tan2026semantic}, nghiên cứu đầu tiên xây dựng bài toán Semantic Visual Anomaly Detection and Reasoning với bộ dữ liệu chú thích theo bốn thành phần: Name, Phenomenon, Reasoning và Severity. Bên cạnh đó, các nghiên cứu như RADAR khai thác Vision-Language Models để phát hiện semantic anomalies dựa trên tri thức thường thức (commonsense knowledge) thay vì chỉ dựa vào các bất thường mức thấp.
 Mặc dù cho phép giải thích nguyên nhân gây bất thường, các phương pháp này vẫn chủ yếu dừng ở bước phát hiện và suy luận, chưa hỗ trợ lựa chọn chiến lược chỉnh sửa và chưa xem xét ý định tạo sinh ban đầu của người dùng.
 
 Nhìn chung, các nghiên cứu về phát hiện bất thường đã phát triển từ phân loại có giám sát, phát hiện không giám sát, đến định vị vùng lỗi và gần đây là suy luận ngữ nghĩa với sự hỗ trợ của Vision-Language Models. Tuy nhiên, các phương pháp hiện nay chủ yếu giải quyết từng bài toán riêng lẻ: hoặc phát hiện loại lỗi, hoặc định vị vùng bất thường, hoặc giải thích nguyên nhân.
@@ -106,13 +105,13 @@ Chưa có một hệ thống thống nhất kết hợp phát hiện, suy luận
 Sau khi phát hiện và định vị được vùng bất thường, mục tiêu tiếp theo là khôi phục ảnh sao cho loại bỏ được artifact nhưng vẫn bảo toàn các vùng không bị lỗi và duy trì tính nhất quán của toàn cảnh. Khác với các bài toán image restoration truyền thống, các bất thường trong ảnh AI không tuân theo một mô hình suy giảm xác định mà có thể xuất hiện từ mức pixel đến mức ngữ nghĩa.
 Vì vậy, phương pháp sửa lỗi cần vừa khôi phục chất lượng thị giác, vừa đảm bảo tính hợp lý về cấu trúc và nội dung. Các nghiên cứu hiện nay có thể chia thành ba hướng chính: (1) Diffusion-based Image Inpainting, (2) Post-processing Restoration và (3) Can thiệp trực tiếp vào quá trình sinh ảnh.
 
-\textbf{Thứ nhất, với hướng nghiên cứu Diffusion-based Image Inpainting.} Đây là hướng tiếp cận phổ biến nhất hiện nay. Ý tưởng là xác định vùng chứa artifact, tạo mask, sau đó sử dụng diffusion inpainting để tái tạo riêng vùng lỗi thay vì sinh lại toàn bộ ảnh. Nhờ khả năng mô hình hóa phân phối dữ liệu mạnh, diffusion models có thể phục hồi các vùng khuyết lớn đồng thời duy trì sự nhất quán với bối cảnh.
-Một nghiên cứu tiêu biểu là Beyond Imperfections của Tabatabaei et al. (2024). Tác giả đề xuất pipeline end-to-end gồm phát hiện vùng biến dạng trong ảnh Virtual Try-on và Pose Transfer, sau đó sử dụng Stable Diffusion Inpainting kết hợp ControlNet, IP-Adapter, Canny Edge, keypoints và semantic segmentation để tái tạo vùng lỗi. Phương pháp cho chất lượng phục hồi cao nhưng vẫn phụ thuộc vào độ chính xác của bước phát hiện và chủ yếu được thiết kế cho các miền ứng dụng cụ thể.
+\textbf{Thứ nhất, hướng nghiên cứu hiệu chỉnh bằng kỹ thuật điền khuyết ảnh dựa trên mô hình khuếch tán (Diffusion-based Image Inpainting).} Đây là hướng tiếp cận phổ biến nhất hiện nay. Ý tưởng là xác định vùng chứa artifact, tạo mặt nạ (mask), sau đó sử dụng mô hình khuếch tán để tái tạo riêng vùng lỗi thay vì sinh lại toàn bộ ảnh. Nhờ khả năng mô hình hóa phân phối dữ liệu mạnh, các mô hình khuếch tán có thể phục hồi các vùng khuyết lớn đồng thời duy trì sự nhất quán với bối cảnh.
+Một nghiên cứu tiêu biểu là Beyond Imperfections \cite{tabatabaei2024beyond}. Tác giả đề xuất một quy trình đầu-cuối (end-to-end) gồm phát hiện vùng biến dạng trong ảnh Virtual Try-on và Pose Transfer, sau đó sử dụng Stable Diffusion Inpainting kết hợp ControlNet, IP-Adapter, Canny Edge, các điểm khóa (keypoints) và phân đoạn ngữ nghĩa (semantic segmentation) để tái tạo vùng lỗi. Phương pháp cho chất lượng phục hồi cao nhưng vẫn phụ thuộc vào độ chính xác của bước phát hiện và chủ yếu được thiết kế cho các miền ứng dụng cụ thể.
 
-\textbf{Thứ hai, với hướng nghiên cứu Post-processing Restoration.} Khác với inpainting, nhóm phương pháp này xem ảnh AI như đầu vào của một mô hình phục hồi độc lập, không cần truy cập vào mô hình tạo sinh gốc. Đại diện tiêu biểu là DiffGAR [cite], hay mới đây nhất là mô hình GenSheild, trong đó tác giả thực hiện hiệu chỉnh các bất thường dựa vào ảnh bị lỗi sau quá trình tạo sinh.
-Ưu điểm của hướng tiếp cận này là có thể áp dụng cho các mô hình black-box và dễ tích hợp vào nhiều hệ thống khác nhau. Tuy nhiên, do không khai thác thông tin từ quá trình sinh ảnh nên khả năng xử lý các lỗi ngữ nghĩa và cấu trúc phức tạp còn hạn chế.
+\textbf{Thứ hai, hướng nghiên cứu phục hồi hậu xử lý (Post-processing Restoration).} Khác với phương pháp điền khuyết ảnh, nhóm phương pháp này xem ảnh AI như đầu vào của một mô hình phục hồi độc lập, không cần truy cập vào mô hình tạo sinh gốc. Đại diện tiêu biểu là DiffGAR \cite{yin2022diffgar}, hay mới đây nhất là mô hình GenSheild, trong đó tác giả thực hiện hiệu chỉnh các bất thường dựa vào ảnh bị lỗi sau quá trình tạo sinh.
+Ưu điểm của hướng tiếp cận này là có thể áp dụng cho các mô hình dạng hộp đen (black-box) và dễ tích hợp vào nhiều hệ thống khác nhau. Tuy nhiên, do không khai thác thông tin từ quá trình sinh ảnh nên khả năng xử lý các lỗi ngữ nghĩa và cấu trúc phức tạp còn hạn chế.
 
-\textbf{Thứ ba, với hướng nghiên cứu can thiệp trực tiếp vào quá trình sinh ảnh.} Thay vì sửa ảnh sau khi sinh xong, một số nghiên cứu gần đây đề xuất can thiệp trực tiếp vào quá trình diffusion. Tiêu biểu là Temporal Score Analysis for Understanding and Correcting Diffusion Artifacts [cite]. Nghiên cứu chỉ ra rằng artifact chủ yếu xuất hiện trong giai đoạn Mutation của quá trình diffusion và đề xuất phương pháp nhằm theo dõi sự thay đổi của hàm score và điều chỉnh quỹ đạo sinh ảnh trước khi artifact hình thành.
+\textbf{Thứ ba, với hướng nghiên cứu can thiệp trực tiếp vào quá trình sinh ảnh.} Thay vì sửa ảnh sau khi sinh xong, một số nghiên cứu gần đây đề xuất can thiệp trực tiếp vào quá trình khuếch tán (diffusion). Tiêu biểu là phương pháp ASCED \cite{cao2025temporal}, vừa được đề xuất năm 2025. Nghiên cứu chỉ ra rằng artifact chủ yếu xuất hiện trong giai đoạn Mutation của quá trình diffusion và đề xuất phương pháp nhằm theo dõi sự thay đổi của hàm score và điều chỉnh quỹ đạo sinh ảnh trước khi artifact hình thành.
 Đây là hướng nghiên cứu đầu tiên giải thích được cơ chế sinh artifact thay vì chỉ xử lý kết quả đầu ra. Tuy nhiên, phương pháp yêu cầu truy cập trực tiếp vào mô hình diffusion nên khó áp dụng cho các hệ thống thương mại hoặc mô hình đóng.
 
 Nhìn chung, các phương pháp hiện nay chưa có khả năng tổng quát trên nhiều loại bất thường, chưa kết hợp bước suy luận để lựa chọn chiến lược chỉnh sửa, và chưa xem xét ý định tạo sinh ban đầu của người dùng. Đây chính là khoảng trống mà luận án hướng tới giải quyết thông qua một mô hình thống nhất, có khả năng lựa chọn chiến lược hiệu chỉnh phù hợp với từng loại bất thường đồng thời bảo toàn ý định sáng tạo của người dùng. 
@@ -120,9 +119,9 @@ Nhìn chung, các phương pháp hiện nay chưa có khả năng tổng quát t
 \subsection{Bộ dữ liệu và các thước đo đánh giá}
 Các bộ dữ liệu lớn đáng chú ý hiện nay:
 \begin{itemize}
-    \item \textbf{SynArtifact-1K.} Đây là một trong những bộ dữ liệu đầu tiên dành riêng cho bài toán phát hiện artifact trong ảnh AI. Bộ dữ liệu gồm 1.310 ảnh được tạo từ các mô hình như Stable Diffusion và DALL·E, mỗi ảnh được gán nhãn theo 13 loại artifact, vị trí xuất hiện (bounding box) và mô tả ngôn ngữ. Nhờ kết hợp thông tin phân loại, định vị và mô tả, SynArtifact-1K hỗ trợ nhiều bài toán như classification, localization và Vision-Language Learning. Tuy nhiên, quy mô còn nhỏ và chưa bao phủ đầy đủ các mô hình tạo sinh mới.
-    \item \textbf{AnomReason.} Bộ dữ liệu này đã mở rộng bài toán sang semantic anomaly reasoning. Thay vì chỉ gán nhãn loại lỗi, bộ dữ liệu gồm hơn 21.500 ảnh được chú thích theo bốn thành phần: Name, Phenomenon, Reasoning và Severity Score, cho phép đánh giá không chỉ khả năng phát hiện mà còn khả năng giải thích nguyên nhân gây bất thường. Đây là benchmark tiêu biểu cho hướng nghiên cứu kết hợp Vision-Language Models với commonsense reasoning.
-    \item \textbf{Human Perception Benchmarks.} Đây là nghiên cứu của Kamali, thu thập hơn 50.000 lượt đánh giá của người dùng đối với ảnh thật và ảnh diffusion nhằm xây dựng taxonomy các artifact theo nhận thức của con người và phân tích các yếu tố ảnh hưởng đến khả năng phát hiện ảnh AI. 
+    \item \textbf{SynArtifact-1K \cite{cao2024synartifact}.} Đây là một trong những bộ dữ liệu đầu tiên dành riêng cho bài toán phát hiện artifact trong ảnh AI. Bộ dữ liệu gồm 1.310 ảnh được tạo từ các mô hình như Stable Diffusion và DALL·E, mỗi ảnh được gán nhãn theo 13 loại artifact, vị trí xuất hiện (bounding box) và mô tả ngôn ngữ. Nhờ kết hợp thông tin phân loại, định vị và mô tả, SynArtifact-1K hỗ trợ nhiều bài toán như classification, localization và Vision-Language Learning. Tuy nhiên, quy mô còn nhỏ và chưa bao phủ đầy đủ các mô hình tạo sinh mới.
+    \item \textbf{AnomReason \cite{tan2026semantic}.} Bộ dữ liệu này đã mở rộng bài toán sang semantic anomaly reasoning. Thay vì chỉ gán nhãn loại lỗi, bộ dữ liệu gồm hơn 21.500 ảnh được chú thích theo bốn thành phần: Name, Phenomenon, Reasoning và Severity Score, cho phép đánh giá không chỉ khả năng phát hiện mà còn khả năng giải thích nguyên nhân gây bất thường. Đây là benchmark tiêu biểu cho hướng nghiên cứu kết hợp Vision-Language Models với commonsense reasoning.
+    \item \textbf{Human Perception Benchmarks \cite{kamali2025characterizing}.} Đây là nghiên cứu của Kamali, thu thập hơn 50.000 lượt đánh giá của người dùng đối với ảnh thật và ảnh diffusion nhằm xây dựng taxonomy các artifact theo nhận thức của con người và phân tích các yếu tố ảnh hưởng đến khả năng phát hiện ảnh AI. 
 \end{itemize}
 
 Do bài toán liên quan đồng thời đến chất lượng hình ảnh và tính hợp lý về ngữ nghĩa, các nghiên cứu thường kết hợp nhiều nhóm chỉ số đánh giá khác nhau:
@@ -136,26 +135,26 @@ Do bài toán liên quan đồng thời đến chất lượng hình ảnh và t
 Nhìn chung, các bộ dữ liệu như SynArtifact-1K và AnomReason đã tạo nền tảng cho nghiên cứu phát hiện bất thường ở cả mức thị giác và ngữ nghĩa, trong khi các benchmark dựa trên đánh giá của con người giúp phản ánh tốt hơn chất lượng cảm nhận của ảnh AI. Tuy nhiên, chưa có một benchmark thống nhất có khả năng đánh giá đồng thời (i) phát hiện bất thường, (ii) định vị vùng lỗi, (iii) chất lượng ảnh sau chỉnh sửa và (iv) khả năng bảo toàn ý định tạo sinh của người dùng. Đây là khoảng trống quan trọng cần được giải quyết trong các nghiên cứu tương lai.
 
 \section{Nội dung nghiên cứu}
-\label{sec:research_content} %[span_54](start_span)[span_54](end_span)
+\label{sec:research_content} 
 Nhằm giải quyết các khoảng trống nghiên cứu đã phân tích, luận án đề xuất xây dựng một hệ thống phát hiện và hiệu chỉnh các bất thường trong nội dung do AI tạo sinh thống nhất, có khả năng phát hiện, suy luận và chỉnh sửa các bất thường trong ảnh AI tạo sinh, đồng thời bảo toàn ý định sáng tạo của người dùng.
 
-\begin{figure}[htbp] %[span_56](start_span)[span_56](end_span)
+\begin{figure}[htbp] 
     \centering
-    \includegraphics[width=\textwidth]{figures/fig_pipeline.png} %[span_57](start_span)[span_57](end_span)
+    \includegraphics[width=\textwidth]{figures/fig_pipeline.png} 
     \caption{Tổng quan kiến trúc hệ thống (Pipeline) tích hợp 3 module cốt lõi: Phân tách ý định (Intent Disentanglement), Bắt giữ đột biến (Mutation Trapping Detection), và Can thiệp nắn chỉnh quỹ đạo (In-situ Trajectory Steering).}
-    \label{fig:overall_pipeline} %[span_58](start_span)[span_58](end_span)
+    \label{fig:overall_pipeline}
 \end{figure}
 
 \subsection{Nội dung 1: Xây dựng hệ thống tổng quát cho bài toán phát hiện và hiệu chỉnh bất thường}
 Nội dung đầu tiên tập trung nghiên cứu và xây dựng một pipeline thống nhất cho toàn bộ bài toán AI Generated Content Anomaly Correction. Hệ thống được thiết kế theo hướng tích hợp các thành phần phát hiện bất thường (Detection), định vị (Localization), suy luận nguyên nhân (Reasoning) và lựa chọn chiến lược hiệu chỉnh (Correction) trong cùng một kiến trúc.
 Thay vì giải quyết riêng lẻ từng bài toán như các nghiên cứu hiện nay, hệ thống hướng tới khả năng xử lý nhiều loại bất thường khác nhau trên nhiều mô hình tạo sinh và nhiều miền dữ liệu, tạo nền tảng cho một framework tổng quát có khả năng mở rộng và tổng quát hóa cao.
 
-\begin{figure}[htbp] %[span_60](start_span)[span_60](end_span)
-    \centering
-    \includegraphics[width=0.95\textwidth]{figures/fig_taxonomy.png} %[span_61](start_span)[span_61](end_span)
-    \caption{Cấu trúc phân tầng (Taxonomy) định hướng ý định: Phân loại các vi phạm vật lý không mong muốn so với các biến đổi hình học do chủ đích sáng tạo của prompt.}
-    \label{fig:taxonomy} %[span_62](start_span)[span_62](end_span)
-\end{figure}
+% \begin{figure}[htbp] %[span_60](start_span)[span_60](end_span)
+%     \centering
+%     \includegraphics[width=0.95\textwidth]{figures/fig_taxonomy.png} %[span_61](start_span)[span_61](end_span)
+%     \caption{Cấu trúc phân tầng (Taxonomy) định hướng ý định: Phân loại các vi phạm vật lý không mong muốn so với các biến đổi hình học do chủ đích sáng tạo của prompt.}
+%     \label{fig:taxonomy} %[span_62](start_span)[span_62](end_span)
+% \end{figure}
 
 \subsection{Nội dung nghiên cứu 2: Tích hợp cơ chế chỉnh sửa nhận biết ý định người dùng}
 Nội dung thứ hai tập trung nghiên cứu cơ chế phân biệt bất thường từ ý định người dùng (Intent-aware Anomaly Correction), giúp hệ thống phân biệt giữa các bất thường thực sự và những chi tiết phi thực tế được tạo ra có chủ đích theo yêu cầu của người dùng.
@@ -166,7 +165,7 @@ Nội dung thứ ba hướng đến việc cải thiện chất lượng ảnh n
 Trên cơ sở đó, luận án đề xuất cơ chế theo dõi và can thiệp vào quỹ đạo sinh ảnh để phát hiện sớm các vùng có nguy cơ hình thành bất thường và thực hiện hiệu chỉnh kịp thời. Hướng tiếp cận này kỳ vọng giảm sự phụ thuộc vào các bước hậu xử lý, nâng cao chất lượng ảnh tạo sinh và tăng khả năng tổng quát của hệ thống trên nhiều mô hình tạo sinh khác nhau.
 
 \section{Kế hoạch nghiên cứu}
-\label{sec:plan} %[span_72](start_span)[span_72](end_span)
+\label{sec:plan} 
 Luận án được triển khai trong 04 năm, bao gồm các giai đoạn từ khảo sát, xây dựng mô hình, phát triển thuật toán, thực nghiệm đến hoàn thiện hệ thống và luận án. Kế hoạch nghiên cứu được trình bày như sau:
 
 \paragraph{Năm thứ nhất: Khảo sát và xây dựng hệ thống tổng quát.}
@@ -193,20 +192,20 @@ Luận án tiến hành đánh giá toàn diện trên nhiều bộ dữ liệu,
 Kết quả dự kiến: (1) Hoàn thiện framework AI Generated Content Anomaly Correction. (2) Xây dựng bộ thực nghiệm và giao thức đánh giá thống nhất. (3) So sánh với các phương pháp tiên tiến trên nhiều benchmark. (4) Công bố các bài báo quốc tế còn lại. (5) Hoàn thành và bảo vệ luận án tiến sĩ.
 
 
-\begin{figure}[htbp] %[span_78](start_span)[span_78](end_span)
-    \centering
-    \includegraphics[width=1.0\textwidth]{figures/fig_plan.png} %[span_79](start_span)[span_79](end_span)
-    \caption{Lộ trình và kế hoạch nghiên cứu chi tiết 04 năm của đề tài luận án Tiến sĩ, ánh xạ với các mô-đun can thiệp In-situ mới và sản phẩm khoa học đầu ra dự kiến.}
-    \label{fig:research_plan} %[span_80](start_span)[span_80](end_span)
-\end{figure}
+% \begin{figure}[htbp] %[span_78](start_span)[span_78](end_span)
+%     \centering
+%     \includegraphics[width=1.0\textwidth]{figures/fig_plan.png} %[span_79](start_span)[span_79](end_span)
+%     \caption{Lộ trình và kế hoạch nghiên cứu chi tiết 04 năm của đề tài luận án Tiến sĩ, ánh xạ với các mô-đun can thiệp In-situ mới và sản phẩm khoa học đầu ra dự kiến.}
+%     \label{fig:research_plan} %[span_80](start_span)[span_80](end_span)
+% \end{figure}
 
-\section{Tài liệu tham khảo} %[span_81](start_span)[span_81](end_span)
+\section{Tài liệu tham khảo} 
 
-\begingroup %[span_82](start_span)[span_82](end_span)
-\setlength{\emergencystretch}{8em} %[span_83](start_span)[span_83](end_span)
-\setstretch{1.03} %[span_84](start_span)[span_84](end_span)
-\leavevmode\printbibliography[heading=none] %[span_85](start_span)[span_85](end_span)
-\justifying %[span_86](start_span)[span_86](end_span)
-\endgroup %[span_87](start_span)[span_87](end_span)
+\begingroup 
+\setlength{\emergencystretch}{8em} 
+\setstretch{1.03} 
+\leavevmode\printbibliography[heading=none] 
+\justifying 
+\endgroup
 
 \end{document}

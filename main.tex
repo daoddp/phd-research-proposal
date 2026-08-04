@@ -138,12 +138,12 @@ Nhìn chung, các bộ dữ liệu như SynArtifact-1K và AnomReason đã tạo
 \label{sec:research_content} 
 Nhằm giải quyết các khoảng trống nghiên cứu đã phân tích, luận án đề xuất xây dựng một hệ thống phát hiện và hiệu chỉnh các bất thường trong nội dung do AI tạo sinh thống nhất, có khả năng phát hiện, suy luận và chỉnh sửa các bất thường trong ảnh AI tạo sinh, đồng thời bảo toàn ý định sáng tạo của người dùng.
 
-\begin{figure}[htbp] 
-    \centering
-    \includegraphics[width=\textwidth]{figures/fig_pipeline.png} 
-    \caption{Tổng quan kiến trúc hệ thống (Pipeline) tích hợp 3 module cốt lõi: Phân tách ý định (Intent Disentanglement), Bắt giữ đột biến (Mutation Trapping Detection), và Can thiệp nắn chỉnh quỹ đạo (In-situ Trajectory Steering).}
-    \label{fig:overall_pipeline}
-\end{figure}
+% \begin{figure}[htbp] 
+%     \centering
+%     \includegraphics[width=\textwidth]{figures/fig_pipeline.png} 
+%     \caption{Tổng quan kiến trúc hệ thống (Pipeline) tích hợp 3 module cốt lõi: Phân tách ý định (Intent Disentanglement), Bắt giữ đột biến (Mutation Trapping Detection), và Can thiệp nắn chỉnh quỹ đạo (In-situ Trajectory Steering).}
+%     \label{fig:overall_pipeline}
+% \end{figure}
 
 \subsection{Nội dung 1: Xây dựng hệ thống tổng quát cho bài toán phát hiện và hiệu chỉnh bất thường}
 Nội dung đầu tiên tập trung nghiên cứu và xây dựng một pipeline thống nhất cho toàn bộ bài toán AI Generated Content Anomaly Correction. Hệ thống được thiết kế theo hướng tích hợp các thành phần phát hiện bất thường (Detection), định vị (Localization), suy luận nguyên nhân (Reasoning) và lựa chọn chiến lược hiệu chỉnh (Correction) trong cùng một kiến trúc.

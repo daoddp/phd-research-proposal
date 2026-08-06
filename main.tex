@@ -123,16 +123,15 @@ Nhìn chung, các phương pháp hiện nay chưa có khả năng tổng quát t
 \subsection{Bộ dữ liệu và các thước đo đánh giá}
 Các bộ dữ liệu lớn đáng chú ý hiện nay:
 \begin{itemize}
-    \item \textbf{SynArtifact-1K \cite{cao2024synartifact}.} Đây là một trong những bộ dữ liệu đầu tiên dành riêng cho bài toán phát hiện artifact trong ảnh AI. Bộ dữ liệu gồm 1.310 ảnh được tạo từ các mô hình như Stable Diffusion và DALL·E, mỗi ảnh được gán nhãn theo 13 loại artifact, vị trí xuất hiện (bounding box) và mô tả ngôn ngữ. Nhờ kết hợp thông tin phân loại, định vị và mô tả, SynArtifact-1K hỗ trợ nhiều bài toán như classification, localization và Vision-Language Learning. Tuy nhiên, quy mô còn nhỏ và chưa bao phủ đầy đủ các mô hình tạo sinh mới.
-    \item \textbf{AnomReason \cite{tan2026semantic}.} Bộ dữ liệu này đã mở rộng bài toán sang semantic anomaly reasoning. Thay vì chỉ gán nhãn loại lỗi, bộ dữ liệu gồm hơn 21.500 ảnh được chú thích theo bốn thành phần: Name, Phenomenon, Reasoning và Severity Score, cho phép đánh giá không chỉ khả năng phát hiện mà còn khả năng giải thích nguyên nhân gây bất thường. Đây là benchmark tiêu biểu cho hướng nghiên cứu kết hợp Vision-Language Models với commonsense reasoning.
-    \item \textbf{Human Perception Benchmarks \cite{kamali2025characterizing}.} Đây là nghiên cứu của Kamali, thu thập hơn 50.000 lượt đánh giá của người dùng đối với ảnh thật và ảnh diffusion nhằm xây dựng taxonomy các artifact theo nhận thức của con người và phân tích các yếu tố ảnh hưởng đến khả năng phát hiện ảnh AI. 
+    \item \textbf{SynArtifact-1K \cite{cao2024synartifact}.} Đây là một trong những bộ dữ liệu đầu tiên dành riêng cho bài toán phát hiện bất thường trong ảnh AI. Bộ dữ liệu gồm 1.310 ảnh được tạo từ các mô hình như Stable Diffusion và DALL·E, mỗi ảnh được gán nhãn theo 13 loại artifact, vị trí xuất hiện (bounding box) và mô tả ngôn ngữ.
+    \item \textbf{AnomReason \cite{tan2026semantic}.} Bộ dữ liệu này đã mở rộng bài toán sang semantic anomaly reasoning. Thay vì chỉ gán nhãn loại lỗi, bộ dữ liệu gồm hơn 21.500 ảnh được chú thích theo bốn thành phần: Name, Phenomenon, Reasoning và Severity Score, cho phép đánh giá không chỉ khả năng phát hiện mà còn khả năng giải thích nguyên nhân gây bất thường.
+    \item \textbf{Human Perception Benchmarks \cite{kamali2025characterizing}.} Nghiên cứu này thu thập hơn 50.000 lượt đánh giá của người dùng đối với ảnh thật và ảnh tạo sinh nhằm xây dựng phân loại bất thường theo nhận thức của con người. 
 \end{itemize}
 
 Do bài toán liên quan đồng thời đến chất lượng hình ảnh và tính hợp lý về ngữ nghĩa, các nghiên cứu thường kết hợp nhiều nhóm chỉ số đánh giá khác nhau:
 \begin{itemize}
     \item \textbf{Pixel-level metrics.} Chỉ số này bao gồm PSNR, MSE và MAE, đánh giá mức độ tương đồng giữa ảnh phục hồi và ảnh gốc. Các chỉ số này đơn giản và hiệu quả khi có ground truth, nhưng chưa phản ánh tốt chất lượng cảm nhận của con người.
     \item \textbf{Structural metrics.} Chỉ số này bao gồm SSIM và MS-SSIM đánh giá sự tương đồng về cấu trúc, độ sáng và độ tương phản giữa hai ảnh, thường có tương quan với cảm nhận thị giác tốt hơn các chỉ số mức pixel.
-    \item \textbf{Perceptual metrics.} LPIPS đo khoảng cách đặc trưng học sâu giữa hai ảnh và được sử dụng rộng rãi trong các bài toán tạo sinh. Ngoài ra, CLIP Score, ImageReward và PickScore được sử dụng để đánh giá mức độ phù hợp giữa ảnh và mô tả văn bản.
     \item \textbf{Human Evaluation.} Đây vẫn được xem là tiêu chuẩn quan trọng nhất. Các giao thức phổ biến gồm Likert Scale, Pairwise Preference, Realism Evaluation và Artifact Severity Rating. Các nghiên cứu như Kamali et al. (2025) cho thấy chưa có chỉ số tự động nào phản ánh đầy đủ đánh giá của con người, đặc biệt đối với các lỗi ngữ nghĩa.
 \end{itemize}
 

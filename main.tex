@@ -22,13 +22,13 @@
 \afterpreface 
 
 \section{Giới thiệu bài toán}
-\label{sec:intro} %[span_14](start_span)[span_14](end_span)
+\label{sec:intro}
 
 \subsection{Bối cảnh nghiên cứu}
 Trong  những năm gần đây, sự phát triển mạnh mẽ của các mô hình học máy tạo sinh (AI-Generated Content - AIGC) đã tạo nên nhiều nội dung độc đáo. Trong đó, các mô hình nổi bật là Mạng đối kháng tạo sinh (Generative Adversarial Networks - GANs) \cite{goodfellow2020generative} và đặc biệt là mô hình Khuếch tán (Diffusion Models) \cite{ho2020denoising} đã tạo ra một bước ngoặt vượt bậc trong việc tổng hợp nội dung thị giác.
-Dựa trên đó, các mô hình như Stable Diffusion \cite{rombach2022high}, DALLE-3 \cite{betker2023improving}, Midjourney hay FLUX \cite{yang2024first} đã thể hiện khả năng tạo sinh ra các hình ảnh có độ phân giải cao, nội dung phong phú và tiệm cận giống với ảnh thật. Nhờ đó, AIGC đang ngày càng được ứng dụng rộng rãi trong nhiều lĩnh vực đa dạng như thiết kế đồ họa, thương mại điện tử, quảng cáo, điện ảnh, trò chơi và sáng tạo nội dung số.
+Dựa trên đó, các mô hình như Stable Diffusion \cite{rombach2022high}, DALLE-3 \cite{betker2023improving}, hay FLUX \cite{yang2024first} đã thể hiện khả năng tạo sinh ra các hình ảnh có độ phân giải cao, nội dung phong phú và tiệm cận giống với ảnh thật. Nhờ đó, AIGC đang ngày càng được ứng dụng rộng rãi trong nhiều lĩnh vực đa dạng như quảng cáo, điện ảnh, trò chơi và sáng tạo nội dung số.
 
-Mặc dù chất lượng ảnh sinh ra ngày càng được cải thiện đáng kể, không ít những nghiên cứu gần đây \cite{kamali2024distinguish, kamali2025characterizing} đã chỉ ra rằng ngày cả những mô hình tiên nhất vẫn thường xuyên tạo ra các chi tiết không hợp lý hoặc vi phạm các quy luật vật lý và ngữ nghĩa của thế giới thực. Những lỗi này vô hình chung sẽ làm giảm tính chân thực của hình ảnh, làm ảnh hưởng đến trải nghiệm của người dùng và hạn chế khả năng ứng dụng của AIGC trong các lĩnh vực đòi hỏi độ tin cậy cao như thiết kế sản phẩm hay y học.
+Mặc dù chất lượng ảnh sinh ra ngày càng được cải thiện đáng kể, không ít những nghiên cứu gần đây \cite{kamali2024distinguish, kamali2025characterizing} đã chỉ ra rằng ngày cả những mô hình tiên nhất vẫn thường xuyên tạo ra các chi tiết không hợp lý hoặc vi phạm các quy luật vật lý và ngữ nghĩa của thế giới thực. Những lỗi này vô hình chung sẽ làm giảm tính chân thực của hình ảnh, làm ảnh hưởng đến trải nghiệm của người dùng.
 
 Khác với các bài toán khôi phục ảnh truyền thống (image restoration) \cite{li2025diffusion, jiang2025survey}, trong đó quá trình suy giảm ảnh (degradation process) thường được mô hình hóa rõ ràng (ví dụ như nhiễu Gaussian, mờ chuyển động, mất mẫu,...), các lỗi trong ảnh sinh bởi AI không tuân theo một mô hình suy giảm xác định. Chúng xuất hiện ngẫu nhiên trong quá trình tạo sinh và chịu ảnh hưởng đồng thời bởi nhiều yếu tố như kiến trúc mô hình, dữ liệu huấn luyện, chiến lược lấy mẫu cũng như khả năng hiểu biết về thế giới của mô hình \cite{betker2023improving}. Do đó, bài toán phát hiện và hiệu chỉnh các bất thường trong ảnh được tạo sinh bởi AI được xem là khó hơn đáng kể so với các bài toán khôi phục ảnh truyền thống.
 
@@ -45,7 +45,7 @@ Khái niệm này được tổng quát hóa từ các nghiên cứu phân loạ
 
 Trong số các nhóm trên, các lỗi về mặt ngữ nghĩa được xem là khó phát hiện và sửa chữa nhất vì chúng không thể được xác định chỉ bằng thông tin ở mức pixel mà đòi hỏi mô hình phải có khả năng suy luận về ngữ cảnh và tri thức thế giới.
 
-Về mặt định nghĩa, bài toán AI Generated Content Anomaly Correction được định nghĩa là quá trình tự động phát hiện, định vị và chỉnh sửa các bất thường xuất hiện trong nội dung hình ảnh được tạo bởi các mô hình AI, nhằm nâng cao tính chân thực, tính nhất quán và chất lượng thị giác của ảnh, đồng thời bảo toàn nội dung hợp lệ và ý định tạo sinh ban đầu của người dùng, xem thêm Hình~\ref{fig:input_output}. Cụ thể:
+Về mặt định nghĩa, bài toán AI Generated Content Anomaly Correction được định nghĩa là quá trình tự động phát hiện, định vị và chỉnh sửa các bất thường xuất hiện trong nội dung hình ảnh được tạo bởi các mô hình AI, nhằm nâng cao tính chân thực và chất lượng thị giác của ảnh, đồng thời bảo toàn nội dung hợp lệ và ý định tạo sinh ban đầu của người dùng, xem thêm Hình~\ref{fig:input_output}. Cụ thể:
 \begin{itemize}
     \item \textbf{Đầu vào:} (1) Hình ảnh được tạo bởi mô hình AI, có thể chứa một hoặc nhiều bất thường. (2) Trong một số trường hợp, hệ thống cũng có thể khai thác thêm một số thông tin bổ sung như Prompt văn bản dùng để sinh ảnh từ người dùng.
     \item \textbf{Đầu ra:} (1) Xác định các điểm bất thường trong ảnh. (2) Định vị vị trí xuất hiện của từng bất thường. (3) Xác định nguyên nhân gây ra bất thường thông qua các suy luận. (4) Tạo sinh ảnh mới loại bỏ các bất thường không tuân theo ý định người dùng.
@@ -177,22 +177,21 @@ Trong năm đầu tiên, nghiên cứu tập trung khảo sát toàn diện các
 Đồng thời, nghiên cứu phân tích các loại bất thường, nguyên nhân hình thành và các bộ dữ liệu, tiêu chuẩn đánh giá hiện có để xác định khoảng trống nghiên cứu. Trên cơ sở khảo sát, đề xuất kiến trúc tổng quát cho bài toán AI Generated Content Anomaly Correction, xây dựng pipeline thống nhất gồm các thành phần phát hiện bất thường, định vị vùng lỗi, suy luận nguyên nhân và lựa chọn chiến lược hiệu chỉnh.
 Kết quả dự kiến: (1) Khảo sát và tổng hợp tài liệu nghiên cứu;
 (2) Đề xuất kiến trúc tổng quát cho bài toán;
-(3) Hoàn thành phiên bản đầu tiên của hệ thống Detection-Localization-Reasoning-Correction;
-(5) Công bố 01 bài báo về phương pháp nền tảng.
+(3) Hoàn thành phiên bản đầu tiên của hệ thống Detection-Localization-Reasoning-Correction.
 \paragraph{Năm thứ hai: Hoàn thiện mô hình phát hiện và tích hợp cơ chế nhận biết ý định người dùng.}
 Năm thứ hai tập trung nâng cao khả năng suy luận của hệ thống thông qua việc tích hợp thông tin đa phương thức và cơ chế nhận biết ý định tạo sinh của người dùng. Nghiên cứu khai thác prompt, lịch sử tương tác và tri thức thường thức nhằm phân biệt giữa các bất thường thực sự và các chi tiết phi thực tế được tạo ra có chủ đích.
 Bên cạnh đó, luận án nghiên cứu cơ chế lựa chọn chiến lược hiệu chỉnh dựa trên kết quả suy luận, giúp mỗi loại bất thường được xử lý bằng phương pháp phù hợp thay vì áp dụng một quy trình chỉnh sửa cố định.
-Kết quả dự kiến: (1) Xây dựng mô hình Intent-aware Anomaly Correction. (2) Phát triển cơ chế suy luận phục vụ quyết định chỉnh sửa. (3) Hoàn thiện pipeline phát hiện – suy luận – lựa chọn chiến lược hiệu chỉnh. (4) Thực nghiệm trên nhiều loại bất thường và nhiều mô hình tạo sinh. (5) Công bố 01 bài báo quốc tế về mô hình phát hiện và nhận biết ý định người dùng.
+Kết quả dự kiến: (1) Tích hợp cơ chế suy luận và xây dựng mô hình Intent-aware Anomaly Correction; (2) Khảo sát dữ liệu và thực nghiệm trên nhiều loại bất thường và nhiều mô hình tạo sinh; (3) Công bố 01 bài báo quốc tế về mô hình phát hiện và nhận biết ý định người dùng.
 
 \paragraph{Năm thứ ba: Nghiên cứu cơ chế hiệu chỉnh trong quá trình sinh ảnh.}
-Năm thứ ba tập trung nghiên cứu bản chất hình thành các bất thường trong quá trình tạo sinh, đặc biệt đối với các mô hình diffusion. Luận án phân tích quỹ đạo lấy mẫu, theo dõi sự biến đổi của các đặc trưng trung gian nhằm xác định thời điểm và nguyên nhân xuất hiện các đột biến (mutation) dẫn đến artifact.
-Trên cơ sở đó, nghiên cứu đề xuất cơ chế phát hiện sớm và can thiệp trực tiếp vào quá trình sinh ảnh, cho phép hiệu chỉnh bất thường trước khi chúng xuất hiện ở ảnh đầu ra. Đồng thời, cơ chế này sẽ được tích hợp với pipeline tổng quát đã xây dựng ở các giai đoạn trước để hình thành một hệ thống thống nhất.
-Kết quả dự kiến: (1) Phân tích cơ chế hình thành artifact trong mô hình tạo sinh. (2) Đề xuất thuật toán hiệu chỉnh trong quỹ đạo sinh ảnh. (3) Tích hợp cơ chế in-generation correction với hệ thống tổng quát. (4) Đánh giá trên nhiều mô hình diffusion và các bộ dữ liệu khác nhau. (5) Công bố 01 bài báo quốc tế về phương pháp hiệu chỉnh trong quá trình sinh ảnh.
+Năm thứ ba tập trung nghiên cứu bản chất hình thành các bất thường trong quá trình tạo sinh, đặc biệt đối với các mô hình khuếch tán. Luận án phân tích quỹ đạo lấy mẫu, theo dõi sự biến đổi của các đặc trưng trung gian nhằm xác định thời điểm và nguyên nhân xuất hiện các đột biến.
+Trên cơ sở đó, nghiên cứu đề xuất cơ chế phát hiện sớm và can thiệp trực tiếp vào quá trình sinh ảnh, cho phép hiệu chỉnh bất thường trước khi chúng xuất hiện ở ảnh đầu ra.
+Kết quả dự kiến: (1) Đề xuất thuật toán hiệu chỉnh trong quỹ đạo sinh ảnh; (2) So sánh và đánh giá trên nhiều mô hình diffusion và các bộ dữ liệu khác nhau; (3) Công bố 01 bài báo quốc tế về phương pháp hiệu chỉnh trong quá trình sinh ảnh.
 
 \paragraph{Năm thứ tư: Hoàn thiện hệ thống và đánh giá tổng thể.}
 Năm cuối cùng tập trung tối ưu và hoàn thiện toàn bộ hệ thống AI Generated Content Anomaly Correction. Các thành phần phát hiện, suy luận, nhận biết ý định người dùng và hiệu chỉnh trong quá trình sinh ảnh sẽ được tích hợp thành một framework thống nhất.
-Luận án tiến hành đánh giá toàn diện trên nhiều bộ dữ liệu, nhiều loại bất thường và nhiều mô hình tạo sinh khác nhau nhằm kiểm chứng khả năng tổng quát hóa, hiệu quả chỉnh sửa và khả năng bảo toàn ý định sáng tạo của người dùng. Đồng thời, các kết quả nghiên cứu sẽ được tổng hợp để hoàn thiện luận án và công bố các công trình khoa học còn lại.
-Kết quả dự kiến: (1) Hoàn thiện framework AI Generated Content Anomaly Correction. (2) Xây dựng bộ thực nghiệm và giao thức đánh giá thống nhất. (3) So sánh với các phương pháp tiên tiến trên nhiều benchmark. (4) Công bố các bài báo quốc tế còn lại. (5) Hoàn thành và bảo vệ luận án tiến sĩ.
+Luận án tiến hành đánh giá toàn diện trên nhiều bộ dữ liệu, nhiều loại bất thường và nhiều mô hình tạo sinh khác nhau nhằm kiểm chứng khả năng tổng quát hóa, hiệu quả chỉnh sửa và khả năng bảo toàn ý định sáng tạo của người dùng.
+Kết quả dự kiến: (1) Hoàn thiện framework AI Generated Content Anomaly Correction; (2) Xây dựng bộ thực nghiệm và giao thức đánh giá thống nhất; (3) Hoàn thành và bảo vệ luận án tiến sĩ.
 
 
 % \begin{figure}[htbp] %[span_78](start_span)[span_78](end_span)

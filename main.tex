@@ -169,76 +169,38 @@ Trên cơ sở đó, luận án đề xuất cơ chế theo dõi và can thiệp
 
 \section{Kế hoạch nghiên cứu}
 \label{sec:plan} 
-Luận án được triển khai trong 04 năm, bao gồm các giai đoạn từ khảo sát, xây dựng mô hình, phát triển thuật toán, thực nghiệm đến hoàn thiện hệ thống và luận án. Kế hoạch nghiên cứu chi tiết được trình bày trong Bảng~\ref{tab:research_plan}.
+Luận án được triển khai trong 04 năm và được trình bày chi tiết trong Bảng~\ref{tab:research_plan}.
 
 \begin{table}[H]
 \centering
 \caption{Kế hoạch nghiên cứu dự kiến}
 \label{tab:research_plan}
-\renewcommand{\arraystretch}{1.4}
-\begin{tabular}{|p{1.8cm}|p{5.8cm}|p{7cm}|}
+\renewcommand{\arraystretch}{1.3}
+
+\begin{tabularx}{0.95\textwidth}{|>{\centering\arraybackslash}m{1.8cm}|
+>{\raggedright\arraybackslash}X|
+>{\raggedright\arraybackslash}X|}
 \hline
-\textbf{Thời gian} & \textbf{Nội dung nghiên cứu} & \textbf{Kết quả dự kiến} \\ \hline
+\textbf{Năm} & \textbf{Nội dung nghiên cứu} & \textbf{Kết quả dự kiến} \\ \hline
 
-\textbf{Năm 1} &
-\begin{itemize}\setlength\itemsep{0em}
-    \item Khảo sát các nghiên cứu về phát hiện và hiệu chỉnh nội dung AI tạo sinh.
-    \item Phân tích các loại bất thường, nguyên nhân, bộ dữ liệu và tiêu chuẩn đánh giá.
-    \item Đề xuất kiến trúc tổng quát cho bài toán.
-\end{itemize}
-&
-\begin{itemize}\setlength\itemsep{0em}
-    \item Tổng quan tài liệu và khoảng trống nghiên cứu.
-    \item Kiến trúc tổng quát cho hệ thống.
-    \item Phiên bản đầu tiên của pipeline Detection--Localization--Reasoning--Correction.
-\end{itemize}
-\\ \hline
+\textbf{1} &
+Khảo sát tài liệu; phân tích các loại bất thường, bộ dữ liệu và thước đo; đề xuất kiến trúc tổng quát. &
+(1) Tổng hợp tổng quan nghiên cứu; (2) Hoàn thiện pipeline phát hiện--định vị--suy luận--hiệu chỉnh. \\ \hline
 
-\textbf{Năm 2} &
-\begin{itemize}\setlength\itemsep{0em}
-    \item Tích hợp cơ chế nhận biết ý định người dùng.
-    \item Nghiên cứu mô hình suy luận và lựa chọn chiến lược hiệu chỉnh.
-    \item Thực nghiệm trên nhiều loại bất thường.
-\end{itemize}
-&
-\begin{itemize}\setlength\itemsep{0em}
-    \item Mô hình Intent-aware Anomaly Correction.
-    \item Đánh giá trên nhiều mô hình tạo sinh.
-    \item Công bố 01 bài báo quốc tế.
-\end{itemize}
-\\ \hline
+\textbf{2} &
+Xây dựng mô hình nhận biết ý định người dùng; phát triển cơ chế suy luận và lựa chọn chiến lược hiệu chỉnh. &
+(1) Hoàn thiện mô hình \textit{Intent-aware Anomaly Correction}; (2) 01 bài báo quốc tế. \\ \hline
 
-\textbf{Năm 3} &
-\begin{itemize}\setlength\itemsep{0em}
-    \item Nghiên cứu cơ chế hình thành bất thường trong mô hình khuếch tán.
-    \item Đề xuất phương pháp hiệu chỉnh trong quá trình sinh ảnh.
-    \item Thực nghiệm và đánh giá.
-\end{itemize}
-&
-\begin{itemize}\setlength\itemsep{0em}
-    \item Thuật toán hiệu chỉnh trong quỹ đạo sinh ảnh.
-    \item Đánh giá trên nhiều mô hình và bộ dữ liệu.
-    \item Công bố 01 bài báo quốc tế.
-\end{itemize}
-\\ \hline
+\textbf{3} &
+Nghiên cứu cơ chế hình thành bất thường trong quá trình sinh ảnh; đề xuất phương pháp hiệu chỉnh trong quỹ đạo sinh. &
+(1) Xây dựng thuật toán \textit{In-generation Correction}; (2) 01 bài báo quốc tế. \\ \hline
 
-\textbf{Năm 4} &
-\begin{itemize}\setlength\itemsep{0em}
-    \item Tích hợp các mô-đun thành hệ thống hoàn chỉnh.
-    \item Đánh giá tổng thể và tối ưu hệ thống.
-    \item Hoàn thiện luận án.
-\end{itemize}
-&
-\begin{itemize}\setlength\itemsep{0em}
-    \item Framework AI Generated Content Anomaly Correction hoàn chỉnh.
-    \item Bộ thực nghiệm và giao thức đánh giá thống nhất.
-    \item Hoàn thành luận án và bảo vệ.
-\end{itemize}
-\\ \hline
+\textbf{4} &
+Tích hợp các mô-đun; đánh giá tổng thể và hoàn thiện hệ thống. &
+(1) Hoàn thiện framework hoàn chỉnh; (2) hoàn thành và bảo vệ luận án. \\ \hline
 
-\end{tabular}
+\end{tabularx}
 \end{table}
-
 % \begin{figure}[htbp] %[span_78](start_span)[span_78](end_span)
 %     \centering
 %     \includegraphics[width=1.0\textwidth]{figures/fig_plan.png} %[span_79](start_span)[span_79](end_span)

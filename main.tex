@@ -169,29 +169,75 @@ Trên cơ sở đó, luận án đề xuất cơ chế theo dõi và can thiệp
 
 \section{Kế hoạch nghiên cứu}
 \label{sec:plan} 
-Luận án được triển khai trong 04 năm, bao gồm các giai đoạn từ khảo sát, xây dựng mô hình, phát triển thuật toán, thực nghiệm đến hoàn thiện hệ thống và luận án. Kế hoạch nghiên cứu được trình bày như sau:
+Luận án được triển khai trong 04 năm, bao gồm các giai đoạn từ khảo sát, xây dựng mô hình, phát triển thuật toán, thực nghiệm đến hoàn thiện hệ thống và luận án. Kế hoạch nghiên cứu chi tiết được trình bày trong Bảng~\ref{tab:research_plan}.
 
-\paragraph{Năm thứ nhất: Khảo sát và xây dựng hệ thống tổng quát.}
-Trong năm đầu tiên, nghiên cứu tập trung khảo sát toàn diện các công trình liên quan đến phát hiện và hiệu chỉnh bất thường trong ảnh AI tạo sinh, bao gồm các phương pháp phát hiện bất thường, các kỹ thuật chỉnh sửa dựa trên các hướng nghiên cứu mới nhất.
-Đồng thời, nghiên cứu phân tích các loại bất thường, nguyên nhân hình thành và các bộ dữ liệu, tiêu chuẩn đánh giá hiện có để xác định khoảng trống nghiên cứu. Trên cơ sở khảo sát, đề xuất kiến trúc tổng quát cho bài toán AI Generated Content Anomaly Correction, xây dựng pipeline thống nhất gồm các thành phần phát hiện bất thường, định vị vùng lỗi, suy luận nguyên nhân và lựa chọn chiến lược hiệu chỉnh.
-Kết quả dự kiến: (1) Khảo sát và tổng hợp tài liệu nghiên cứu;
-(2) Đề xuất kiến trúc tổng quát cho bài toán;
-(3) Hoàn thành phiên bản đầu tiên của hệ thống Detection-Localization-Reasoning-Correction.
-\paragraph{Năm thứ hai: Hoàn thiện mô hình phát hiện và tích hợp cơ chế nhận biết ý định người dùng.}
-Năm thứ hai tập trung nâng cao khả năng suy luận của hệ thống thông qua việc tích hợp thông tin đa phương thức và cơ chế nhận biết ý định tạo sinh của người dùng. Nghiên cứu khai thác prompt, lịch sử tương tác và tri thức thường thức nhằm phân biệt giữa các bất thường thực sự và các chi tiết phi thực tế được tạo ra có chủ đích.
-Bên cạnh đó, luận án nghiên cứu cơ chế lựa chọn chiến lược hiệu chỉnh dựa trên kết quả suy luận, giúp mỗi loại bất thường được xử lý bằng phương pháp phù hợp thay vì áp dụng một quy trình chỉnh sửa cố định.
-Kết quả dự kiến: (1) Tích hợp cơ chế suy luận và xây dựng mô hình Intent-aware Anomaly Correction; (2) Khảo sát dữ liệu và thực nghiệm trên nhiều loại bất thường và nhiều mô hình tạo sinh; (3) Công bố 01 bài báo quốc tế về mô hình phát hiện và nhận biết ý định người dùng.
+\begin{table}[H]
+\centering
+\caption{Kế hoạch nghiên cứu dự kiến}
+\label{tab:research_plan}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|p{1.8cm}|p{5.8cm}|p{7cm}|}
+\hline
+\textbf{Thời gian} & \textbf{Nội dung nghiên cứu} & \textbf{Kết quả dự kiến} \\ \hline
 
-\paragraph{Năm thứ ba: Nghiên cứu cơ chế hiệu chỉnh trong quá trình sinh ảnh.}
-Năm thứ ba tập trung nghiên cứu bản chất hình thành các bất thường trong quá trình tạo sinh, đặc biệt đối với các mô hình khuếch tán. Luận án phân tích quỹ đạo lấy mẫu, theo dõi sự biến đổi của các đặc trưng trung gian nhằm xác định thời điểm và nguyên nhân xuất hiện các đột biến.
-Trên cơ sở đó, nghiên cứu đề xuất cơ chế phát hiện sớm và can thiệp trực tiếp vào quá trình sinh ảnh, cho phép hiệu chỉnh bất thường trước khi chúng xuất hiện ở ảnh đầu ra.
-Kết quả dự kiến: (1) Đề xuất thuật toán hiệu chỉnh trong quỹ đạo sinh ảnh; (2) So sánh và đánh giá trên nhiều mô hình diffusion và các bộ dữ liệu khác nhau; (3) Công bố 01 bài báo quốc tế về phương pháp hiệu chỉnh trong quá trình sinh ảnh.
+\textbf{Năm 1} &
+\begin{itemize}\setlength\itemsep{0em}
+    \item Khảo sát các nghiên cứu về phát hiện và hiệu chỉnh nội dung AI tạo sinh.
+    \item Phân tích các loại bất thường, nguyên nhân, bộ dữ liệu và tiêu chuẩn đánh giá.
+    \item Đề xuất kiến trúc tổng quát cho bài toán.
+\end{itemize}
+&
+\begin{itemize}\setlength\itemsep{0em}
+    \item Tổng quan tài liệu và khoảng trống nghiên cứu.
+    \item Kiến trúc tổng quát cho hệ thống.
+    \item Phiên bản đầu tiên của pipeline Detection--Localization--Reasoning--Correction.
+\end{itemize}
+\\ \hline
 
-\paragraph{Năm thứ tư: Hoàn thiện hệ thống và đánh giá tổng thể.}
-Năm cuối cùng tập trung tối ưu và hoàn thiện toàn bộ hệ thống AI Generated Content Anomaly Correction. Các thành phần phát hiện, suy luận, nhận biết ý định người dùng và hiệu chỉnh trong quá trình sinh ảnh sẽ được tích hợp thành một framework thống nhất.
-Luận án tiến hành đánh giá toàn diện trên nhiều bộ dữ liệu, nhiều loại bất thường và nhiều mô hình tạo sinh khác nhau nhằm kiểm chứng khả năng tổng quát hóa, hiệu quả chỉnh sửa và khả năng bảo toàn ý định sáng tạo của người dùng.
-Kết quả dự kiến: (1) Hoàn thiện framework AI Generated Content Anomaly Correction; (2) Xây dựng bộ thực nghiệm và giao thức đánh giá thống nhất; (3) Hoàn thành và bảo vệ luận án tiến sĩ.
+\textbf{Năm 2} &
+\begin{itemize}\setlength\itemsep{0em}
+    \item Tích hợp cơ chế nhận biết ý định người dùng.
+    \item Nghiên cứu mô hình suy luận và lựa chọn chiến lược hiệu chỉnh.
+    \item Thực nghiệm trên nhiều loại bất thường.
+\end{itemize}
+&
+\begin{itemize}\setlength\itemsep{0em}
+    \item Mô hình Intent-aware Anomaly Correction.
+    \item Đánh giá trên nhiều mô hình tạo sinh.
+    \item Công bố 01 bài báo quốc tế.
+\end{itemize}
+\\ \hline
 
+\textbf{Năm 3} &
+\begin{itemize}\setlength\itemsep{0em}
+    \item Nghiên cứu cơ chế hình thành bất thường trong mô hình khuếch tán.
+    \item Đề xuất phương pháp hiệu chỉnh trong quá trình sinh ảnh.
+    \item Thực nghiệm và đánh giá.
+\end{itemize}
+&
+\begin{itemize}\setlength\itemsep{0em}
+    \item Thuật toán hiệu chỉnh trong quỹ đạo sinh ảnh.
+    \item Đánh giá trên nhiều mô hình và bộ dữ liệu.
+    \item Công bố 01 bài báo quốc tế.
+\end{itemize}
+\\ \hline
+
+\textbf{Năm 4} &
+\begin{itemize}\setlength\itemsep{0em}
+    \item Tích hợp các mô-đun thành hệ thống hoàn chỉnh.
+    \item Đánh giá tổng thể và tối ưu hệ thống.
+    \item Hoàn thiện luận án.
+\end{itemize}
+&
+\begin{itemize}\setlength\itemsep{0em}
+    \item Framework AI Generated Content Anomaly Correction hoàn chỉnh.
+    \item Bộ thực nghiệm và giao thức đánh giá thống nhất.
+    \item Hoàn thành luận án và bảo vệ.
+\end{itemize}
+\\ \hline
+
+\end{tabular}
+\end{table}
 
 % \begin{figure}[htbp] %[span_78](start_span)[span_78](end_span)
 %     \centering

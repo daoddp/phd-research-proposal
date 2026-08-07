@@ -30,10 +30,8 @@ Dựa trên đó, các mô hình như Stable Diffusion \cite{rombach2022high}, D
 
 Mặc dù chất lượng ảnh sinh ra ngày càng được cải thiện đáng kể, không ít những nghiên cứu gần đây \cite{kamali2024distinguish, kamali2025characterizing} đã chỉ ra rằng ngày cả những mô hình tiên nhất vẫn thường xuyên tạo ra các chi tiết không hợp lý hoặc vi phạm các quy luật vật lý và ngữ nghĩa của thế giới thực. Những lỗi này vô hình chung sẽ làm giảm tính chân thực của hình ảnh, làm ảnh hưởng đến trải nghiệm của người dùng.
 
-Khác với các bài toán khôi phục ảnh truyền thống (image restoration) \cite{li2025diffusion, jiang2025survey}, trong đó quá trình suy giảm ảnh (degradation process) thường được mô hình hóa rõ ràng (ví dụ như nhiễu Gaussian, mờ chuyển động, mất mẫu,...), các lỗi trong ảnh sinh bởi AI không tuân theo một mô hình suy giảm xác định. Chúng xuất hiện ngẫu nhiên trong quá trình tạo sinh và chịu ảnh hưởng đồng thời bởi nhiều yếu tố như kiến trúc mô hình, dữ liệu huấn luyện, chiến lược lấy mẫu cũng như khả năng hiểu biết về thế giới của mô hình \cite{betker2023improving}. Do đó, bài toán phát hiện và hiệu chỉnh các bất thường trong ảnh được tạo sinh bởi AI được xem là khó hơn đáng kể so với các bài toán khôi phục ảnh truyền thống.
-
 \subsection{Định nghĩa bài toán}
-Về mặt phạm vi, nghiên cứu định nghĩa các điểm bất thường trong ảnh tạo sinh bởi AI (AI-generated image anomaly) là những chi tiết bất thường hoặc không mong muốn xuất hiện trong ảnh do mô hình tạo sinh sinh ra, khiến hình ảnh mất đi tính chân thực hoặc vi phạm các quy luật thị giác, vật lý hay tri thức thông thường của con người.
+Về mặt phạm vi, nghiên cứu định nghĩa các điểm bất thường (anomaly) hay lỗi khiếm khuyết (artifact) trong ảnh tạo sinh bởi AI (AI-generated image anomaly) là những chi tiết bất thường hoặc không mong muốn xuất hiện trong ảnh do mô hình tạo sinh sinh ra, khiến hình ảnh mất đi tính chân thực hoặc vi phạm các quy luật thị giác, vật lý hay tri thức thông thường của con người.
 Khái niệm này được tổng quát hóa từ các nghiên cứu phân loại các dạng bất thường gần đây \cite{cao2024synartifact, kamali2024distinguish}. Cụ thể, các nghiên cứu này định nghĩa phân loại bất thường xuất hiện ở nhiều cấp độ khác nhau, từ các lỗi cục bộ trên các pixel ảnh cho tới những sai lệch về cấu trúc, giải phẫu và ngữ nghĩa của toàn bộ cảnh.
 
 \begin{figure}[htbp]

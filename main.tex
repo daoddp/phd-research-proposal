@@ -45,7 +45,7 @@ Khái niệm này được tổng quát hóa từ các nghiên cứu phân loạ
 
 Trong số các nhóm trên, các lỗi về mặt ngữ nghĩa được xem là khó phát hiện và sửa chữa nhất vì chúng không thể được xác định chỉ bằng thông tin ở mức pixel mà đòi hỏi mô hình phải có khả năng suy luận về ngữ cảnh và tri thức thế giới.
 
-Về mặt định nghĩa, bài toán AI Generated Content Anomaly Correction được định nghĩa là quá trình tự động phát hiện, định vị và chỉnh sửa các bất thường xuất hiện trong nội dung hình ảnh được tạo bởi các mô hình AI, nhằm nâng cao tính chân thực và chất lượng thị giác của ảnh, đồng thời bảo toàn nội dung hợp lệ và ý định tạo sinh ban đầu của người dùng, xem thêm Hình~\ref{fig:input_output}. Cụ thể:
+Về mặt định nghĩa, bài toán hiệu chỉnh điểm bất thường được định nghĩa là quá trình tự động phát hiện, định vị và chỉnh sửa các bất thường xuất hiện trong nội dung hình ảnh được tạo bởi các mô hình AI, nhằm nâng cao tính chân thực và chất lượng thị giác của ảnh, đồng thời bảo toàn nội dung hợp lệ và ý định tạo sinh ban đầu của người dùng, xem thêm Hình~\ref{fig:input_output}. Cụ thể:
 \begin{itemize}
     \item \textbf{Đầu vào:} (1) Hình ảnh được tạo bởi mô hình AI, có thể chứa một hoặc nhiều bất thường. (2) Trong một số trường hợp, hệ thống cũng có thể khai thác thêm một số thông tin bổ sung như Prompt văn bản dùng để sinh ảnh từ người dùng.
     \item \textbf{Đầu ra:} (1) Xác định các điểm bất thường trong ảnh. (2) Định vị vị trí xuất hiện của từng bất thường. (3) Xác định nguyên nhân gây ra bất thường thông qua các suy luận. (4) Tạo sinh ảnh mới loại bỏ các bất thường không tuân theo ý định người dùng.

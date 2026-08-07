@@ -32,7 +32,9 @@ Mặc dù chất lượng ảnh sinh ra ngày càng được cải thiện đán
 
 \subsection{Định nghĩa bài toán}
 Về mặt phạm vi, nghiên cứu định nghĩa các điểm bất thường (anomaly) hay lỗi khiếm khuyết (artifact) trong ảnh tạo sinh bởi AI (AI-generated image anomaly) là những chi tiết bất thường hoặc không mong muốn xuất hiện trong ảnh do mô hình tạo sinh sinh ra, khiến hình ảnh mất đi tính chân thực hoặc vi phạm các quy luật thị giác, vật lý hay tri thức thông thường của con người.
+Hình~\ref{fig:example_artifact} minh họa một số lỗi khiếm khuyết do mô hình sinh ra.
 Khái niệm này được tổng quát hóa từ các nghiên cứu phân loại các dạng bất thường gần đây \cite{cao2024synartifact, kamali2024distinguish}. Cụ thể, các nghiên cứu này định nghĩa phân loại bất thường xuất hiện ở nhiều cấp độ khác nhau, từ các lỗi cục bộ trên các pixel ảnh cho tới những sai lệch về cấu trúc, giải phẫu và ngữ nghĩa của toàn bộ cảnh.
+Trong số các nhóm trên, các lỗi về mặt ngữ nghĩa được xem là khó phát hiện và sửa chữa nhất vì chúng không thể được xác định chỉ bằng thông tin ở mức pixel mà đòi hỏi mô hình phải có khả năng suy luận về ngữ cảnh và tri thức thế giới.
 
 \begin{figure}[htbp]
     \centering
@@ -40,8 +42,6 @@ Khái niệm này được tổng quát hóa từ các nghiên cứu phân loạ
     \caption{Minh họa một số bất thường trong ảnh do AI tạo sinh.}
     \label{fig:example_artifact}
 \end{figure}
-
-Trong số các nhóm trên, các lỗi về mặt ngữ nghĩa được xem là khó phát hiện và sửa chữa nhất vì chúng không thể được xác định chỉ bằng thông tin ở mức pixel mà đòi hỏi mô hình phải có khả năng suy luận về ngữ cảnh và tri thức thế giới.
 
 Về mặt định nghĩa, bài toán hiệu chỉnh điểm bất thường được định nghĩa là quá trình tự động phát hiện, định vị và chỉnh sửa các bất thường xuất hiện trong nội dung hình ảnh được tạo bởi các mô hình AI, nhằm nâng cao tính chân thực và chất lượng thị giác của ảnh, đồng thời bảo toàn nội dung hợp lệ và ý định tạo sinh ban đầu của người dùng, xem thêm Hình~\ref{fig:input_output}. Cụ thể:
 \begin{itemize}

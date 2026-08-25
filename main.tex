@@ -32,7 +32,7 @@ Tuy nhiên, sự phát triển này đồng thời cũng tạo ra một vấn đ
 Mặt khác, các bộ phát hiện ảnh thật hay ảnh tạo sinh cũng đang mắc phải một vấn đề khi chúng có thể dự đoán rất chính khác rằng một ảnh là ảnh tạo sinh bởi AI, nhưng lại không biết được bằng chứng nào trong ảnh đã dẫn đến quyết định đó. Ví dụ, một mô hình có thể trả lời rằng “Ảnh này có xác suất lên đến 97\% là do AI tạo ra.” nhưng nếu hỏi tại sao thì mô hình có thể không trả lời được hoặc chỉ có thể trả lời một cách mập mờ như “Do ảnh chứa các chi tiết không tự nhiên.”. Có thể thấy rằng, câu trả lời này là hoàn toàn không đủ cơ sở để con người có thể kiểm chứng. Do đó, hiện nay, nhu cầu không còn chỉ nằm ở việc phát hiện ảnh có phải do AI tạo sinh không mà đang chuyển dần sang việc giải thích được các yếu tố khiến mô hình đưa ra quyết định phân loại ảnh.
 
 \subsection{Định nghĩa bài toán}
-Định nghĩa bài toán được minh họa trong hình \ref{fig:input_output}, theo đó ta có thể tổng quát hóa như sau:
+Định nghĩa bài toán được minh họa trong Hình~\ref{fig:input_output}, theo đó ta có thể tổng quát hóa như sau:
 
 \begin{itemize}
     \item \textbf{Đầu vào:} Đầu vào: Một hình ảnh bất kỳ $I$, có thể là ảnh chụp thật, ảnh được tạo hoàn toàn bởi AI hoặc ảnh thật được chỉnh sửa bởi AI.
@@ -71,16 +71,28 @@ khiếm khuyết (artifact) trong quá trình sinh ảnh hay mối quan hệ phi
 Vì vậy, việc hệ thống các bằng chứng này đặc biệt quan trọng giúp các giải thích được đưa ra một cách chặt chẽ dựa trên bằng chứng cụ thể. Đồng thời, việc xác định chính xác phân loại của các dấu vết tạo sinh trong ảnh giúp việc chỉnh sửa và cải thiện các dấu vết này trở nên dễ dàng và có cơ sở hơn.
 
 \subsection{MT2: Xây dựng hệ thống phân loại dựa trên cơ sở bằng chứng}
-Các hệ thống trước đây, thường xây dựng bộ phân loại dựa trên các đặc trưng được khai thác một cách riêng lẻ hoặc phụ thuộc hoàn toàn vào các MLLMs [ref hình a, ]. Tuy đạt được độ chính xác cao trong việc phân loại nhưng lại chưa thật sự để lại dấu ấn trong phần giải thích. Phần giải thích thường dài dòng, khó hiểu và không chỉ ra được vấn đề thật sự đang tồn tại trong ảnh do AI tạo sinh.
+Các hệ thống trước đây, thường xây dựng bộ phân loại dựa trên các đặc trưng được khai thác một cách riêng lẻ hoặc phụ thuộc hoàn toàn vào các MLLMs, xem Hình~\ref{fig:sosanh}(a, b). Tuy đạt được độ chính xác cao trong việc phân loại nhưng lại chưa thật sự để lại dấu ấn trong phần giải thích. Phần giải thích thường dài dòng, khó hiểu và không chỉ ra được vấn đề thật sự đang tồn tại trong ảnh do AI tạo sinh.
 
-Nghiên cứu này hướng đến xây dựng một hệ thống [ref hình c] trong đó ảnh được phân tích bởi nhiều góc độ và bằng chứng, mỗi yếu tố tập trung vào một nhóm dấu vết khác nhau. Các kết quả sau đó được tổng hợp để hình thành tập bằng chứng và đưa vào quá trình suy luận.
+Nghiên cứu này hướng đến xây dựng một hệ thống, được minh họa trong Hình~\ref{fig:sosanh}(c) trong đó ảnh được phân tích bởi nhiều góc độ và bằng chứng, mỗi yếu tố tập trung vào một nhóm dấu vết khác nhau. Các kết quả sau đó được tổng hợp để hình thành tập bằng chứng và đưa vào quá trình suy luận.
 
-<ref ảnh so sánh hệ thống trước đây với hệ thống dựa trên bằng chứng đưa ra quyết định> 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/so_sanh_pp.pdf}
+    \caption{So sánh các hướng tiếp cận trong phát hiện và giải thích ảnh tạo sinh: (a) phương pháp phân loại nhị phân dựa trên đặc trưng, (b) phương pháp dựa trên mô hình ngôn ngữ lớn đa phương thức (MLLM), và (c) phương pháp đề xuất dựa trên chuỗi bằng chứng kết hợp phát hiện, giải thích và định vị bằng chứng trên ảnh.}
+    \label{fig:sosanh}
+\end{figure}
 
-\subsection{Tạo sinh các giải thích chính xác và trực quan}
+\subsection{MT3: Tạo sinh các giải thích chính xác và trực quan}
 Các giải thích của phần lớn mô hình hiện nay vấp phải hai vấn đề lớn, chính là phụ thuộc vào kết quả phân loại trước đó và học ánh xạ từ dữ liệu huấn luyện. Điều này không chỉ làm hạn chế hiệu suất phân loại mà các lý giải còn bị giới hạn trong những giải thích tổng quát từ các bộ dữ liệu được xây dựng. Vì vậy, các bằng chứng được tổng hợp và phát triển trong nghiên cứu này đóng vai trò đặc biệt quan trọng trong việc làm cơ sở cho các giải thích, giúp chúng bám sát vào nội dung hình ảnh thực tế ở nhiều khía cạnh khác nhau.
 
-Bên cạnh đó, việc đưa ra các giải thích trong các nghiên cứu trước đây \cite{tan2026semantic} cũng gặp phải hạn chế lớn trong việc truyền tải thông tin đến người dùng cuối. Hình <ref ảnh anom> minh họa nội dung giải thích của AnomAgent. Theo đó, các nội dung giải thích thường khá dài dòng, phức tạp nhưng đôi lúc lại không thật sự ánh xạ chính xác đến một đối tượng cụ thể trong ảnh đang được nhắc đến gây ra những mập mờ và khó hiểu. Vì vậy, nghiên cứu này cũng hướng đến giải quyết các bất cập này thông qua một cơ chế định vị trực quan bằng các công cụ như bounding box, mask,... giúp xác định chính xác vùng hoặc vị trí vật thể đang được nhắc đến trong các bằng chứng lý giải.
+Bên cạnh đó, việc đưa ra các giải thích trong các nghiên cứu trước đây \cite{tan2026semantic} cũng gặp phải hạn chế lớn trong việc truyền tải thông tin đến người dùng cuối. Hình \ref{fig:exampleAnom} minh họa nội dung giải thích của AnomAgent. Theo đó, các nội dung giải thích thường khá dài dòng, phức tạp nhưng đôi lúc lại không thật sự ánh xạ chính xác đến một đối tượng cụ thể trong ảnh đang được nhắc đến gây ra những mập mờ và khó hiểu. Vì vậy, nghiên cứu này cũng hướng đến giải quyết các bất cập này thông qua một cơ chế định vị trực quan bằng các công cụ như bounding box, mask,... giúp xác định chính xác vùng hoặc vị trí vật thể đang được nhắc đến trong các bằng chứng lý giải.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/Anom_example.pdf}
+    \caption{Minh họa hạn chế trong giải thích của AnomAgent: các mô tả dài và phức tạp dẫn đến định vị bằng chứng mơ hồ hoặc không thể xác định chính xác vật thể được đề cập trong ảnh.}
+    \label{fig:exampleAnom}
+\end{figure}
 
 \section{Tổng quan tình hình nghiên cứu}
 \label{sec:literature_review} 

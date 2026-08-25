@@ -27,20 +27,20 @@
 \subsection{Bối cảnh nghiên cứu}
 Trong những năm gần đây, các mô hình tạo sinh hình ảnh như Stable Diffusion \cite{rombach2022high}, DALL-E \cite{betker2023improving}, FLUX \cite{esser2024scaling},... đã có nhiều bước phát triển vượt trội, mang lại nhiều ứng dụng ấn tượng trong việc tạo ra hình ảnh chất lượng cao chỉ từ một câu mô tả bằng ngôn ngữ tự nhiên. Khả năng này mở ra nhiều ứng dụng tích cực trong các lĩnh vực như thiết kế, quảng cáo, sáng tạo nội dung và giáo dục.
 
-Tuy nhiên, sự phát triển này đồng thời cũng tạo ra một vấn đề quan trọng trong việc xác định một hình ảnh là ảnh chụp thực tế hay ảnh được tạo sinh nhờ vào trí tuệ nhân tạo (AI). Câu hỏi này đặc biệt đáng quan tâm khi hình ảnh được sử dụng trong các ngữ cảnh đòi hỏi độ tin cậy cao như báo chí, bằng chứng số hay thông tin chính trị và xã hội. Để giải quyết bài toán phát hiện ảnh tạo sinh này, một số bộ dữ liệu đã được nghiên cứu và phát triển như GenImage \cite{zhu2023genimage}, một benchmark quy mô lớn trên một triệu cặp ảnh thật và ảnh tạo sinh từ nhiều mô hình tạo ảnh đa dạng, CIFAKE \cite{bird2024cifake}, một bộ dữ liệu với quy mô nhỏ hơn cũng chứa các thông tin về ảnh thật và ảnh tạo sinh. 
+Tuy nhiên, sự phát triển này đồng thời cũng tạo ra một vấn đề quan trọng trong việc xác định một hình ảnh là ảnh chụp thực tế hay ảnh được tạo sinh nhờ vào trí tuệ nhân tạo (AI). Câu hỏi này đặc biệt đáng quan tâm khi hình ảnh được sử dụng trong các ngữ cảnh đòi hỏi độ tin cậy cao như báo chí, bằng chứng số hay thông tin chính trị và xã hội. Để giải quyết bài toán phát hiện ảnh tạo sinh này, một số bộ dữ liệu đã được nghiên cứu và phát triển như GenImage \cite{zhu2023genimage} hay CIFAKE \cite{bird2024cifake} đều là những benchmark lớn chứa thông tin về những cặp ảnh thật và ảnh tạo sinh từ nhiều mô hình tạo ảnh đa dạng, được dùng để huấn luyện các mô hình phân loại tự động. 
 
-Mặt khác, các bộ phát hiện ảnh thật hay ảnh tạo sinh cũng đang mắc phải một vấn đề khi chúng có thể dự đoán rất chính khác rằng một ảnh là ảnh tạo sinh bởi AI, nhưng lại không biết được bằng chứng nào trong ảnh đã dẫn đến quyết định đó. Ví dụ, một mô hình có thể trả lời rằng “Ảnh này có xác suất lên đến 97\% là do AI tạo ra.” nhưng nếu hỏi tại sao thì mô hình có thể không trả lời được hoặc chỉ có thể trả lời một cách mập mờ như “Do ảnh chứa các chi tiết không tự nhiên.”. Có thể thấy rằng, câu trả lời này là hoàn toàn không đủ cơ sở để con người có thể kiểm chứng. Do đó, hiện nay, nhu cầu không còn chỉ nằm ở việc phát hiện ảnh có phải do AI tạo sinh không mà đang chuyển dần sang việc giải thích được các yếu tố khiến mô hình đưa ra quyết định phân loại ảnh.
+Tuy vậy, các bộ phát hiện ảnh thật hay ảnh tạo sinh này cũng đang vấp phải vấn đề khi chúng có thể dự đoán rất chính khác rằng một ảnh là ảnh tạo sinh bởi AI, nhưng lại không biết được bằng chứng nào trong ảnh đã dẫn đến quyết định đó. Ví dụ, một mô hình có thể trả lời rằng “Ảnh này có xác suất lên đến 97\% là do AI tạo ra.” nhưng nếu hỏi tại sao thì mô hình có thể không trả lời được hoặc chỉ có thể trả lời một cách mập mờ như “Do ảnh chứa các chi tiết không tự nhiên.”. Có thể thấy rằng, câu trả lời này là hoàn toàn không đủ cơ sở để con người có thể kiểm chứng. Do đó, hiện nay, nhu cầu không còn chỉ nằm ở việc phát hiện ảnh có phải do AI tạo sinh không mà đang chuyển dần sang việc giải thích được các yếu tố khiến mô hình đưa ra quyết định phân loại ảnh.
 
 \subsection{Định nghĩa bài toán}
 Định nghĩa bài toán được minh họa trong Hình~\ref{fig:input_output}, theo đó ta có thể tổng quát hóa như sau:
 
 \begin{itemize}
-    \item \textbf{Đầu vào:} Đầu vào: Một hình ảnh bất kỳ $I$, có thể là ảnh chụp thật, ảnh được tạo hoàn toàn bởi AI hoặc ảnh thật được chỉnh sửa bởi AI.
+    \item \textbf{Đầu vào:} Một hình ảnh bất kỳ $I$.
 
     \item \textbf{Đầu ra:} 
     \begin{itemize}
-        \item (1) Nhãn phân loại $y$ thuộc ${Real; AI Generated}$, tương ứng với ảnh thật và ảnh được tạo bởi AI.
-        \item (2)  Các giải thích: $R = {r_1, r_2,...,r_n}$ với $r_i$ biểu diễn một yếu tố chứng minh ảnh là ảnh tạo sinh.
+        \item (1) Nhãn phân loại $y$ thuộc $\{Real; AI-Generated\}$, tương ứng với ảnh thật và ảnh được tạo bởi AI.
+        \item (2)  Các giải thích: $R = \{r_1, r_2,...,r_n\}$ với $r_i$ biểu diễn một yếu tố chứng minh ảnh là ảnh tạo sinh.
         \item (3) Vị trí các dấu vết có tính cục bộ: $M_i = Localization(e_i)$
     \end{itemize}
 \end{itemize}
@@ -55,16 +55,16 @@ Mặt khác, các bộ phát hiện ảnh thật hay ảnh tạo sinh cũng đan
 \subsection{Khoảng trống và động lực nghiên cứu}
 Nghiên cứu được đề xuất xuất phát từ ba vấn đề chính:
 \begin{itemize}
-    \item Thứ nhất, giải thích chưa gắn chặt với quá trình ra quyết định. Các hệ thống như trước đây \cite{huang2025sida, li2025fakebench, zhou2025aigi} thường thực hiện theo hướng I→Detection→Explanation, tức đưa ra nhãn Real/AI trước rồi mới sinh lời giải thích. Vì vậy, lời giải thích có thể hợp lý về mặt ngôn ngữ nhưng chưa chắc phản ánh những bằng chứng thực sự được sử dụng để phân loại.
-    \item Thứ hai, giải thích còn phụ thuộc vào dữ liệu huấn luyện. Các mô hình dựa trên MLLM \cite{yang2025explainable, zhou2025aigi} thường được tinh chỉnh trên dữ liệu gồm ảnh, nhãn và lời giải thích tương ứng. Cách này giúp tạo ra giải thích tự nhiên, nhưng có nguy cơ mô hình học lại các kiểu giải thích thường xuất hiện trong dữ liệu thay vì thực sự kiểm tra và phát hiện những dấu vết đó trong ảnh. Điều này làm hạn chế khả năng tổng quát khi gặp những dạng bất thường hoặc ảnh tạo sinh mới.
-    \item Thứ ba, các phương pháp phát hiện hiện nay \cite{wang2020cnn, ojha2023towards,ricker2024aeroblade} chủ yếu khai thác từng loại dấu vết riêng biệt. Các phương pháp như HyperDet \cite{cao2024hyperdet} và NPR \cite{tan2024rethinking} tập trung vào các dấu vết ở mức điểm ảnh, nhiễu hoặc quan hệ thống kê; trong khi Sarkar và cộng sự \cite{sarkar2024shadows} cho thấy ảnh tạo sinh còn có thể được phát hiện thông qua bất nhất về hình học, đường thẳng, bóng và quan hệ vật thể–bóng. Điều này cho thấy một ảnh có thể chứa nhiều loại bằng chứng khác nhau, nhưng các phương pháp hiện nay vẫn chưa có cơ chế thống nhất để tổng hợp chúng trong cùng một quá trình phân loại.
-    \item Thứ tư, thiếu cơ chế định vị bằng chứng một cách trực quan. Phần lớn hệ thống chỉ cung cấp nhãn và mô tả bằng văn bản, trong khi chưa chỉ rõ bằng chứng được đề cập nằm ở đâu trên ảnh. Do đó, một hệ thống lý giải hiệu quả cần kết hợp phân loại + giải thích + định vị, chẳng hạn sử dụng bounding box hoặc mask để ánh xạ từng bằng chứng về vị trí tương ứng trên ảnh.
+    \item \textbf{Thứ nhất, các giải thích hiện nay chưa gắn chặt với quá trình ra quyết định.} Các hệ thống như trước đây \cite{huang2025sida, li2025fakebench, zhou2025aigi} thường thực hiện theo hướng I→Detection→Explanation, tức đưa ra nhãn Real/AI trước rồi mới sinh lời giải thích. Vì vậy, lời giải thích có thể hợp lý về mặt ngôn ngữ nhưng chưa chắc phản ánh những bằng chứng thực sự được sử dụng để phân loại.
+    \item \textbf{Thứ hai, giải thích còn phụ thuộc vào dữ liệu huấn luyện.} Các mô hình dựa trên MLLM \cite{yang2025explainable, zhou2025aigi} thường được tinh chỉnh trên dữ liệu gồm ảnh, nhãn và lời giải thích tương ứng. Cách này giúp tạo ra giải thích tự nhiên, nhưng có nguy cơ mô hình học lại các kiểu giải thích thường xuất hiện trong dữ liệu thay vì thực sự kiểm tra và phát hiện những dấu vết đó trong ảnh. Điều này làm hạn chế khả năng tổng quát khi gặp những dạng bất thường hoặc ảnh tạo sinh mới.
+    \item \textbf{Thứ ba, các phương pháp phát hiện hiện nay \cite{wang2020cnn, ojha2023towards,ricker2024aeroblade} chủ yếu khai thác từng loại dấu vết riêng biệt.} Các phương pháp như HyperDet \cite{cao2024hyperdet} và NPR \cite{tan2024rethinking} tập trung vào các dấu vết ở mức điểm ảnh như nhiễu hoặc quan hệ thống kê; trong khi Sarkar và cộng sự \cite{sarkar2024shadows} cho thấy ảnh tạo sinh còn có thể được phát hiện thông qua sự thiếu nhất quán về hình học, đường thẳng, bóng và quan hệ vật thể–bóng. Điều này cho thấy một ảnh có thể chứa nhiều loại bằng chứng khác nhau, nhưng các phương pháp hiện nay vẫn chưa có cơ chế thống nhất để tổng hợp chúng trong cùng một quá trình phân loại.
+    \item \textbf{Thứ tư, thiếu cơ chế định vị bằng chứng một cách trực quan.} Phần lớn hệ thống chỉ cung cấp nhãn và mô tả bằng văn bản, trong khi chưa chỉ rõ bằng chứng được đề cập nằm ở đâu trên ảnh. Do đó, một hệ thống lý giải hiệu quả cần kết hợp phân loại + giải thích + định vị, chẳng hạn sử dụng bounding box hoặc mask để ánh xạ từng bằng chứng về vị trí tương ứng trên ảnh.
 \end{itemize}
 Tất cả những vấn đề nêu trên chính là động lực chính thúc đẩy nghiên cứu này.
 
 \section{Mục tiêu nghiên cứu}
 \label{sec:objectives} 
-\subsection{MT1: Tổng hợp và phân loại các bằng chứng chứng minh ảnh là ảnh được tạo sinh}
+\subsection{MT1: Tổng hợp và phân loại các bằng chứng phân loại ảnh tạo sinh}
 Như đã trình bày trước đó, các bằng chứng được dùng để phân loại ảnh tạo sinh và ảnh thật đã và đang được nghiên cứu rộng rãi. Mỗi nghiên cứu đều chứng minh khả năng phân loại ở những khía cạnh khác nhau của ảnh từ những bằng chứng mang tính toàn cục như độ chênh lệch bất thường giữa các điểm ảnh hoặc nhiễu trong các biểu diễn đặc trưng, cho đến những bằng chứng mang tính cục bộ như các
 khiếm khuyết (artifact) trong quá trình sinh ảnh hay mối quan hệ phi logic của các vật thể trong ảnh. Mỗi dấu vết đều cung cấp một góc nhìn quan trọng trên ảnh, tuy nhiên, chưa có nghiên cứu nào thực hiện tổng hợp và phân loại các bằng chứng này một cách hệ thống và tổng quát. Điều này khiến cho các hệ thống trước đây bị phụ thuộc vào một góc nhìn phiến diện trong ảnh, khiến chúng dễ dàng bị đánh lừa bởi những bộ tấn công \cite{diao2026vulnerabilities, chan2024evasion}.
 
@@ -90,7 +90,7 @@ Bên cạnh đó, việc đưa ra các giải thích trong các nghiên cứu tr
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.9\textwidth]{figures/Anom_example.pdf}
-    \caption{Minh họa hạn chế trong giải thích của AnomAgent: các mô tả dài và phức tạp dẫn đến định vị bằng chứng mơ hồ hoặc không thể xác định chính xác vật thể được đề cập trong ảnh.}
+    \caption{Minh họa hạn chế trong giải thích của AnomAgent \cite{tan2026semantic}: các mô tả dài và phức tạp dẫn đến định vị bằng chứng mơ hồ hoặc không thể xác định chính xác vật thể được đề cập trong ảnh.}
     \label{fig:exampleAnom}
 \end{figure}
 
@@ -154,7 +154,7 @@ Luận án được triển khai trong 04 năm và được trình bày chi ti�
 \begin{table}[H]
 \centering
 \caption{Kế hoạch nghiên cứu dự kiến}
-\label{tab:research_plan}ad
+\label{tab:research_plan}
 \renewcommand{\arraystretch}{1.3}
 
 \begin{tabularx}{0.95\textwidth}{|>{\centering\arraybackslash}m{1.8cm}|

@@ -148,117 +148,373 @@ Một khoảng trống nghiên cứu lớn khác trong bài toán truy tìm ngu�
 \subsection{Benchmark và dataset}
 Một vấn đề quan trọng là bộ dữ liệu, điều ảnh hưởng rất lớn việc một detector hay attribution system thực sự đang học điều gì. Các benchmark và dataset được tổng hợp trong bảng \ref{tab:datasets}.
 
-\begin{table*}[t]
+% \begin{table*}[t]
+% \centering
+% \caption{Tóm tắt một số bộ dữ liệu cho nhóm bài toán nhận diện ảnh tạo sinh, truy tìm nguồn gốc trên ảnh.}
+% \label{tab:datasets}
+% \resizebox{\textwidth}{!}{%
+% \begin{tabular}{l c c c p{6.5cm} c c c c c}
+% \hline
+% \textbf{Dataset / Benchmark} &
+% \textbf{Conference / Year} &
+% \textbf{Samples} &
+% \textbf{\# Sources} &
+% \textbf{Generation Sources} &
+% \textbf{Closed Source} &
+% \textbf{Detection} &
+% \textbf{Attribution} &
+% \textbf{Localization} &
+% \textbf{Explanation} \\
+% \hline
+
+% CIFAKE &
+% IEEE Access, 2024 &
+% 120K = 60K real + 60K fake &
+% 1 &
+% Stable Diffusion 1.4 &
+% None &
+% $\checkmark$ &
+% $\times$ &
+% $\times$ &
+% $\times$ \\
+
+% WildFake &
+% AAAI 2025 &
+% 3.69M = $\approx$1.01M real + $\approx$2.68M fake &
+% 23 &
+% BigGAN; StyleGAN; StarGAN; DF-GAN; GALIP; GigaGAN; ADM; DDPM; DDIM; Imagen; VQDM; DALL-E 2; DALL-E 3; Midjourney v4; Midjourney v5; SDXL; OriginalSD; ControlNet; LoRA-based SD models; LyCORIS-based models; personalized SD models; MAGE; VQGAN; VQVAE; MAE &
+% Imagen; DALL-E 2; DALL-E 3; Midjourney v4; Midjourney v5 &
+% $\checkmark$ &
+% $\times$ &
+% $\times$ &
+% $\times$ \\
+
+% AIGIBench &
+% NeurIPS 2025 Datasets \& Benchmarks &
+% 144K &
+% Multiple &
+% ProGAN; R3GAN; StyleGAN-XL; Stable Diffusion 1.4; Stable Diffusion 3; FLUX.1-dev; Midjourney V6; Imagen; DALL-E 3; InstantID; Infinite-ID; BLIP; FaceSwap; InSwap; BlendFace; WFIR; CommunityAI; SocialRF; open-source/community generators &
+% Midjourney V6; DALL-E 3; Imagen; Stable Diffusion 3; FLUX.1-dev &
+% $\checkmark$ &
+% $\times$ &
+% $\times$ &
+% $\times$ \\
+
+% SID-Set &
+% CVPR 2025 &
+% $\approx$300K &
+% Multiple &
+% FLUX; Kandinsky 3.0; SDXL; AbsoluteReality &
+% None &
+% $\checkmark$ &
+% $\times$ &
+% $\checkmark$ &
+% $\checkmark$ \\
+
+% Synthbuster &
+% IEEE Open Journal of Signal Processing, 2023 &
+% 10K fake + 1K real &
+% 9 &
+% DALL-E 2; DALL-E 3; Adobe Firefly; Midjourney v5; Stable Diffusion 1.3; Stable Diffusion 1.4; Stable Diffusion 2; Stable Diffusion XL; GLIDE &
+% DALL-E 2; DALL-E 3; Adobe Firefly; Midjourney v5 &
+% $\checkmark$ &
+% $\checkmark$ &
+% $\times$ &
+% $\times$ \\
+
+% GenImage &
+% 2024 &
+% $\approx$2.68M = $\approx$1.33M real + $\approx$1.35M fake &
+% 8 &
+% ADM; BigGAN; GLIDE; Midjourney; Stable Diffusion 1.4; Stable Diffusion 1.5; VQDM; Wukong &
+% Midjourney &
+% $\checkmark$ &
+% $\checkmark$ &
+% $\times$ &
+% $\times$ \\
+
+% DRAGON &
+% 2025 &
+% 2.6M &
+% 24 diffusion models &
+% SD 1.5; SD 2.1; SDXL; SDXL Turbo; SDXL Lightning; LCM-SDXL; Flash-SDXL; SDXL derivatives; SD 3; Flash-SD3; Flux.1; IF; Kandinsky; Lumina; PixArt-Alpha; PixArt-Sigma; Flash-PixArt; SSD-1B; LCM-SSD-1B; SD Cascade; Kolors; JuggernautXL; Realistic Stock Photo; Mobius; Hyper-SD &
+% None &
+% $\checkmark$ &
+% $\checkmark$ &
+% $\times$ &
+% $\times$ \\
+
+% AnomReason &
+% ICLR 2026 &
+% 21,539 images &
+% 3 &
+% Midjourney; SD3.5; Flux &
+% Midjourney; Flux &
+% $\checkmark$ &
+% $\times$ &
+% $\times$ &
+% $\checkmark$ \\
+
+% \hline
+% \end{tabular}%
+% }
+% \end{table*}
+
+\begin{sidewaystable*}[t]
 \centering
-\caption{Tóm tắt một số bộ dữ liệu cho nhóm bài toán nhận diện ảnh tạo sinh, truy tìm nguồn gốc trên ảnh.}
-\label{tab:datasets}
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{l c c c p{6.5cm} c c c c c}
-\hline
-\textbf{Dataset / Benchmark} &
-\textbf{Conference / Year} &
-\textbf{Samples} &
-\textbf{\# Sources} &
-\textbf{Generation Sources} &
-\textbf{Closed Source} &
-\textbf{Detection} &
-\textbf{Attribution} &
-\textbf{Localization} &
-\textbf{Explanation} \\
-\hline
+\caption{Comparison of representative datasets and benchmarks for
+AI-generated image detection and forensic analysis.}
+\label{tab:datasets_comparison}
 
-CIFAKE &
-IEEE Access, 2024 &
-120K = 60K real + 60K fake &
-1 &
-Stable Diffusion 1.4 &
-None &
-$\checkmark$ &
-$\times$ &
-$\times$ &
-$\times$ \\
+\small
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.25}
 
-WildFake &
-AAAI 2025 &
-3.69M = $\approx$1.01M real + $\approx$2.68M fake &
-23 &
-BigGAN; StyleGAN; StarGAN; DF-GAN; GALIP; GigaGAN; ADM; DDPM; DDIM; Imagen; VQDM; DALL-E 2; DALL-E 3; Midjourney v4; Midjourney v5; SDXL; OriginalSD; ControlNet; LoRA-based SD models; LyCORIS-based models; personalized SD models; MAGE; VQGAN; VQVAE; MAE &
-Imagen; DALL-E 2; DALL-E 3; Midjourney v4; Midjourney v5 &
-$\checkmark$ &
-$\times$ &
-$\times$ &
-$\times$ \\
-
-AIGIBench &
-NeurIPS 2025 Datasets \& Benchmarks &
-144K &
-Multiple &
-ProGAN; R3GAN; StyleGAN-XL; Stable Diffusion 1.4; Stable Diffusion 3; FLUX.1-dev; Midjourney V6; Imagen; DALL-E 3; InstantID; Infinite-ID; BLIP; FaceSwap; InSwap; BlendFace; WFIR; CommunityAI; SocialRF; open-source/community generators &
-Midjourney V6; DALL-E 3; Imagen; Stable Diffusion 3; FLUX.1-dev &
-$\checkmark$ &
-$\times$ &
-$\times$ &
-$\times$ \\
-
-SID-Set &
-CVPR 2025 &
-$\approx$300K &
-Multiple &
-FLUX; Kandinsky 3.0; SDXL; AbsoluteReality &
-None &
-$\checkmark$ &
-$\times$ &
-$\checkmark$ &
-$\checkmark$ \\
-
-Synthbuster &
-IEEE Open Journal of Signal Processing, 2023 &
-10K fake + 1K real &
-9 &
-DALL-E 2; DALL-E 3; Adobe Firefly; Midjourney v5; Stable Diffusion 1.3; Stable Diffusion 1.4; Stable Diffusion 2; Stable Diffusion XL; GLIDE &
-DALL-E 2; DALL-E 3; Adobe Firefly; Midjourney v5 &
-$\checkmark$ &
-$\checkmark$ &
-$\times$ &
-$\times$ \\
-
-GenImage &
-2024 &
-$\approx$2.68M = $\approx$1.33M real + $\approx$1.35M fake &
-8 &
-ADM; BigGAN; GLIDE; Midjourney; Stable Diffusion 1.4; Stable Diffusion 1.5; VQDM; Wukong &
-Midjourney &
-$\checkmark$ &
-$\checkmark$ &
-$\times$ &
-$\times$ \\
-
-DRAGON &
-2025 &
-2.6M &
-24 diffusion models &
-SD 1.5; SD 2.1; SDXL; SDXL Turbo; SDXL Lightning; LCM-SDXL; Flash-SDXL; SDXL derivatives; SD 3; Flash-SD3; Flux.1; IF; Kandinsky; Lumina; PixArt-Alpha; PixArt-Sigma; Flash-PixArt; SSD-1B; LCM-SSD-1B; SD Cascade; Kolors; JuggernautXL; Realistic Stock Photo; Mobius; Hyper-SD &
-None &
-$\checkmark$ &
-$\checkmark$ &
-$\times$ &
-$\times$ \\
-
-AnomReason &
-ICLR 2026 &
-21,539 images &
-3 &
-Midjourney; SD3.5; Flux &
-Midjourney; Flux &
-$\checkmark$ &
-$\times$ &
-$\times$ &
-$\checkmark$ \\
-
-\hline
-\end{tabular}%
+\begin{tabularx}{\textwidth}{
+    L{2.0cm}
+    L{2.3cm}
+    C{2.0cm}
+    C{1.0cm}
+    Y
+    Y
+    C{0.7cm}
+    C{0.7cm}
+    C{0.7cm}
+    C{0.7cm}
 }
-\end{table*}
+\toprule
+
+\makecell[l]{Dataset /\\Benchmark}
+&
+\makecell[l]{Conference /\\Year}
+&
+\makecell[c]{Number of\\Samples}
+&
+\makecell[c]{\#\\Sources}
+&
+\makecell[l]{Generative Sources}
+&
+\makecell[l]{Closed Sources}
+&
+\makecell[c]{Det.}
+&
+\makecell[c]{Attr.}
+&
+\makecell[c]{Loc.}
+&
+\makecell[c]{Expl.}
+\\
+
+\midrule
+
+CIFAKE
+&
+IEEE Access, 2024
+&
+120K = 60K real + 60K fake
+&
+1
+&
+Stable Diffusion 1.4
+&
+None
+&
+$\checkmark$
+&
+$\times$
+&
+$\times$
+&
+$\times$
+\\
+
+WildFake
+&
+AAAI 2025
+&
+3.69M = $\approx$1.01M real + $\approx$2.68M fake
+&
+23
+&
+BigGAN; StyleGAN; StarGAN; DF-GAN; GALIP;
+GigaGAN; ADM; DDPM; DDIM; Imagen; VQDM;
+DALL-E 2; DALL-E 3; Midjourney v4; Midjourney v5;
+SDXL; OriginalSD; ControlNet; LoRA-based SD models;
+LyCORIS-based models; personalized SD models;
+MAGE; VQGAN; VQVAE; MAE
+&
+Imagen; DALL-E 2; DALL-E 3;
+Midjourney v4; Midjourney v5
+&
+$\checkmark$
+&
+$\times$
+&
+$\times$
+&
+$\times$
+\\
+
+AIGIBench
+&
+NeurIPS 2025
+Datasets \& Benchmarks
+&
+144K
+&
+Multiple
+&
+ProGAN; R3GAN; StyleGAN-XL; Stable Diffusion 1.4;
+Stable Diffusion 3; FLUX.1-dev; Midjourney V6;
+Imagen; DALL-E 3; InstantID; Infinite-ID; BLIP;
+FaceSwap; InSwap; BlendFace; WFIR; CommunityAI;
+SocialRF; Open-source/community generators
+&
+Midjourney V6; DALL-E 3; Imagen;
+Stable Diffusion 3; FLUX.1-dev
+&
+$\checkmark$
+&
+$\times$
+&
+$\times$
+&
+$\times$
+\\
+
+SID-Set
+&
+CVPR 2025
+&
+$\approx$300K
+&
+Multiple
+&
+FLUX; Kandinsky 3.0; SDXL; AbsoluteReality
+&
+None
+&
+$\checkmark$
+&
+$\times$
+&
+$\checkmark$
+&
+$\checkmark$
+\\
+
+Synthbuster
+&
+IEEE Open Journal
+of Signal Processing, 2023
+&
+10K fake + 1K real
+&
+9
+&
+DALL-E 2; DALL-E 3; Adobe Firefly;
+Midjourney v5; Stable Diffusion 1.3;
+Stable Diffusion 1.4; Stable Diffusion 2;
+Stable Diffusion XL; GLIDE
+&
+DALL-E 2; DALL-E 3; Adobe Firefly;
+Midjourney v5
+&
+$\checkmark$
+&
+$\checkmark$
+&
+$\times$
+&
+$\times$
+\\
+
+GenImage
+&
+2024
+&
+$\approx$2.68M =
+$\approx$1.33M real + $\approx$1.35M fake
+&
+8
+&
+ADM; BigGAN; GLIDE; Midjourney;
+Stable Diffusion 1.4; Stable Diffusion 1.5;
+VQDM; Wukong
+&
+Midjourney
+&
+$\checkmark$
+&
+$\checkmark$
+&
+$\times$
+&
+$\times$
+\\
+
+DRAGON
+&
+2025
+&
+2.6M
+&
+24
+&
+SD 1.5; SD 2.1; SDXL; SDXL Turbo;
+SDXL Lightning; LCM-SDXL; Flash-SDXL;
+SDXL derivatives; SD 3; Flash-SD3; Flux.1;
+IF; Kandinsky; Lumina; PixArt-Alpha; PixArt-Sigma;
+Flash-PixArt; SSD-1B; LCM-SSD-1B; SD Cascade;
+Kolors; JuggernautXL; Realistic Stock Photo;
+Mobius; Hyper-SD
+&
+None
+&
+$\checkmark$
+&
+$\checkmark$
+&
+$\times$
+&
+$\times$
+\\
+
+AnomReason
+&
+ICLR 2026
+&
+21,539
+&
+3
+&
+Midjourney; SD3.5; Flux
+&
+Midjourney; Flux
+&
+$\checkmark$
+&
+$\times$
+&
+$\times$
+&
+$\checkmark$
+\\
+
+\bottomrule
+\end{tabularx}
+
+\vspace{2mm}
+
+\begin{flushleft}
+\footnotesize
+\textbf{Det.}: Detection; 
+\textbf{Attr.}: Attribution;
+\textbf{Loc.}: Localization;
+\textbf{Expl.}: Explanation.
+\end{flushleft}
+
+\end{sidewaystable*}
 
 Nhìn chung, các bộ dữ liệu hiện nay cho thấy mức độ đa dạng ngày càng tăng, không chỉ về loại mô hình sinh ảnh mà còn về miền dữ liệu, prompt và mức độ chân thực của ảnh. Một số benchmark gần đây đã bắt đầu mở rộng sang các generator thương mại/closed-source như Midjourney, DALL·E hay các nền tảng sinh ảnh thương mại, qua đó phản ánh tốt hơn sự đa dạng của ảnh AIGC trong thực tế. Tuy nhiên, các bộ dữ liệu có chứa các bằng chứng, định vị vùng bất thường và giải thích nguyên nhân vẫn còn tương đối hạn chế và thường chỉ tập trung vào một khía cạnh riêng lẻ. Điều này cho thấy vẫn còn khoảng trống trong việc xây dựng một benchmark thống nhất có khả năng đánh giá toàn diện.
 

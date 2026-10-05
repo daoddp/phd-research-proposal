@@ -1,5 +1,15 @@
 \documentclass[12pt]{report}
 
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{amssymb}
+
+% Define centered column
+\newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
+
+% Define left-aligned column
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}m{#1}}
+
 \usepackage{suproposal}
 \usepackage{array,tabularx,makecell}
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
@@ -264,11 +274,27 @@ Một vấn đề quan trọng là bộ dữ liệu, điều ảnh hưởng rấ
 
 \begin{table*}[t]
 \centering
+\small
+\renewcommand{\arraystretch}{1.15}
+
 \caption{Tóm tắt một số bộ dữ liệu cho nhóm bài toán nhận diện ảnh tạo sinh, truy tìm nguồn gốc trên ảnh.}
 \label{tab:datasets}
+
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{l c c c p{4.5cm} p{3.5cm} c c c c}
+\begin{tabular}{
+|L{2.5cm}
+|C{3.2cm}
+|C{3.5cm}
+|C{2.5cm}
+|C{4.5cm}
+|C{3.5cm}
+|C{1.2cm}
+|C{1.2cm}
+|C{1.2cm}
+|C{1.2cm}|
+}
 \hline
+
 \textbf{Dataset / Benchmark} &
 \textbf{Conference / Year} &
 \textbf{Number of Samples} &
@@ -278,7 +304,8 @@ Một vấn đề quan trọng là bộ dữ liệu, điều ảnh hưởng rấ
 \textbf{Detection} &
 \textbf{Attribution} &
 \textbf{Localization} &
-\textbf{Explanation} \\
+\textbf{Explanation}
+\\
 \hline
 
 CIFAKE &
@@ -290,7 +317,8 @@ None &
 $\checkmark$ &
 $\times$ &
 $\times$ &
-$\times$ \\
+$\times$
+\\
 \hline
 
 WildFake &
@@ -302,7 +330,8 @@ Imagen; DALL-E; Midjourney &
 $\checkmark$ &
 $\times$ &
 $\times$ &
-$\times$ \\
+$\times$
+\\
 \hline
 
 AIGIBench &
@@ -314,7 +343,8 @@ Midjourney; DALL-E; Imagen; Stable Diffusion 3; FLUX.1-dev &
 $\checkmark$ &
 $\times$ &
 $\times$ &
-$\times$ \\
+$\times$
+\\
 \hline
 
 SID-Set &
@@ -326,7 +356,8 @@ None &
 $\checkmark$ &
 $\times$ &
 $\checkmark$ &
-$\checkmark$ \\
+$\checkmark$
+\\
 \hline
 
 Synthbuster &
@@ -338,7 +369,8 @@ DALL-E; Adobe Firefly; Midjourney v5 &
 $\checkmark$ &
 $\checkmark$ &
 $\times$ &
-$\times$ \\
+$\times$
+\\
 \hline
 
 GenImage &
@@ -350,7 +382,8 @@ Midjourney &
 $\checkmark$ &
 $\checkmark$ &
 $\times$ &
-$\times$ \\
+$\times$
+\\
 \hline
 
 DRAGON &
@@ -362,7 +395,8 @@ None &
 $\checkmark$ &
 $\checkmark$ &
 $\times$ &
-$\times$ \\
+$\times$
+\\
 \hline
 
 AnomReason &
@@ -374,11 +408,13 @@ Midjourney; Flux &
 $\checkmark$ &
 $\times$ &
 $\times$ &
-$\checkmark$ \\
-
+$\checkmark$
+\\
 \hline
+
 \end{tabular}%
 }
+
 \end{table*}
 
 % \begin{sidewaystable*}[t]

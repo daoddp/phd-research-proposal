@@ -691,7 +691,7 @@ Về bản chất, bài toán nhận diện và truy tìm nguồn tạo sinh ả
 
 Bên cạnh đó, nghiên cứu cũng hướng đến một hệ thống thực tế phải có khả năng nói: “Ảnh chắc chắn là ảnh tạo sinh, nhưng chưa có đủ bằng chứng để gán cho các nguồn đã biết.” thay vì buộc chúng phải gán nguồn đã biết. Nghiên cứu vì vậy hướng đến cơ chế reject option (từ chối gán nguồn).
 
-\subsection{Nội dung 3: Suy luận và lý giải nguồn tạo sinh dựa trên bằng chứng}
+\subsection{Nội dung 3: Suy luận và lý giải kết quả dựa trên bằng chứng}
 Từ các bằng chứng và vị trí được định vị trên ảnh, nghiên cứu kỳ vọng sẽ xây dựng một lời giải thích bằng ngôn ngữ tự nhiên một cách dễ hiểu và thân thiện với người dùng cuối. Bởi lẽ, một hệ thống xác định nguồn sinh ảnh có độ chính xác cao nhưng không giải thích được vẫn còn hạn chế trong các môi trường cần kiểm chứng.
 
 Trong nghiên cứu này, MLLM có thể được sử dụng như một reasoning engine (bộ suy luận), nhưng không nên là nguồn duy nhất tạo ra bằng chứng. Mô hình có thể nhận ảnh toàn cảnh kèm với vị trí dấu vết và loại bằng chứng tương ứng và sinh ra các suy luận dựa trên các thông tin đó. Đây là khác biệt quan trọng về kiến trúc so với các hệ thống trước đây, thường chỉ cố sinh ra các giải thích có vẻ hợp lý cho quyết định trước đó.

@@ -37,26 +37,41 @@
 \label{sec:intro}
 
 \subsection{Bối cảnh nghiên cứu}
-Trong những năm gần đây, các mô hình tạo sinh hình ảnh như Stable Diffusion \cite{rombach2022high}, DALL-E \cite{betker2023improving}, Midjourney, FLUX \cite{labs2025flux1kontextflowmatching} và nhiều mô hình thế hệ mới đã có khả năng tạo ra hình ảnh chất lượng cao, đa dạng và ngày càng chân thực. Thông qua mô tả bằng ngôn ngữ tự nhiên, người dùng có thể tạo ra hình ảnh về con người, vật thể, phong cảnh hoặc những sự kiện chưa từng tồn tại. Sự phát triển này mang lại nhiều ứng dụng trong thiết kế, quảng cáo, giáo dục, giải trí và sáng tạo nội dung. Tuy nhiên, khả năng tạo ảnh ngày càng chân thực cũng đặt ra thách thức mới cho bài toán xác thực hình ảnh. Nếu trước đây trọng tâm trong lĩnh vực phân tích hình ảnh là xác định ảnh có bị chỉnh sửa hay không, thì hiện nay cần quan tâm thêm các câu hỏi như: ảnh có được tạo bởi AI hay không, nguồn nào có khả năng tạo ra ảnh và dấu hiệu nào cho thấy điều đó.
+Trong những năm gần đây, các mô hình tạo sinh hình ảnh như Stable Diffusion \cite{rombach2022high}, DALL-E \cite{betker2023improving}, FLUX \cite{labs2025flux1kontextflowmatching} và nhiều mô hình thế hệ mới đã có khả năng tạo ra hình ảnh chất lượng cao, đa dạng và ngày càng chân thực. Thông qua mô tả bằng ngôn ngữ tự nhiên, người dùng có thể tạo ra hình ảnh về con người, vật thể, phong cảnh hoặc những sự kiện chưa từng tồn tại. Sự phát triển này mang lại nhiều ứng dụng trong thiết kế, quảng cáo, giáo dục, giải trí và sáng tạo nội dung. Tuy nhiên, khả năng tạo ảnh ngày càng chân thực cũng đặt ra thách thức mới cho bài toán xác thực hình ảnh. Nếu trước đây trọng tâm trong lĩnh vực phân tích hình ảnh là xác định ảnh có bị chỉnh sửa hay không, thì hiện nay cần quan tâm thêm các câu hỏi như: ảnh có được tạo bởi AI hay không, nguồn nào có khả năng tạo ra ảnh và những dấu hiệu nào cho thấy điều đó.
 
-Các nghiên cứu gần đây cho thấy việc phân tích ảnh tạo sinh không chỉ đặt ra bài toán xác định ảnh có được tạo bởi AI hay không, mà còn mở rộng sang truy tìm nguồn tạo sinh và xác định bằng chứng làm cơ sở cho các quyết định này. Ở bài toán phát hiện, mục tiêu là phân biệt ảnh thật và ảnh được tạo hoặc chỉnh sửa bởi các hệ thống AI. Khi ảnh được xác định là ảnh tạo sinh, bài toán tiếp theo là truy tìm nguồn tạo sinh, chẳng hạn mô hình hoặc hệ thống nào có khả năng đã tạo ra ảnh đó. Để thực hiện hai nhiệm vụ này một cách đáng tin cậy, cần xác định được những dấu hiệu nào trên ảnh phản ánh quá trình tạo sinh và chúng xuất hiện ở đâu. Các nghiên cứu cho thấy những dấu hiệu này có thể tồn tại dưới nhiều dạng, từ đặc trưng ở mức điểm ảnh, miền tần số và quan hệ lân cận giữa các điểm ảnh, đến các bất thường về kết cấu, quy luật vật lý và quan hệ giữa các vật thể. Tuy nhiên, các hướng tiếp cận hiện nay thường chỉ tập trung vào một hoặc một số loại đặc trưng riêng biệt, trong khi mối quan hệ giữa các dấu vết tạo sinh, vị trí của chúng và quyết định phân loại chưa được mô hình hóa một cách thống nhất. Điều này dẫn đến một hạn chế quan trọng khi một hệ thống có thể đạt khả năng phân loại hoặc truy tìm nguồn tốt nhưng vẫn khó trả lời một cách rõ ràng “bằng chứng nào trên ảnh hỗ trợ cho kết luận đó?”. Gần đây, AIDE \cite{yan2025sanity} cũng cho thấy nhiều bộ phát hiện hiện có vẫn dễ thất bại trên Chameleon \cite{yan2025sanity}, một tập ảnh tạo sinh có mức độ chân thực cao, càng cho thấy sự cần thiết của các phương pháp phân tích dựa trên những bằng chứng có khả năng phản ánh và giải thích đặc trưng của quá trình tạo sinh. Vì vậy, thay vì chỉ xem các bài toán này là những bài toán phân loại độc lập, cần nghiên cứu một quá trình phân tích trong đó các yếu tố tạo sinh được phát hiện, định vị và sử dụng như bằng chứng cho quá trình suy luận về trạng thái và nguồn gốc của ảnh.
+Việc phân tích ảnh tạo sinh đặt ra hai bài toán có liên quan nhưng đòi hỏi những loại bằng chứng khác nhau. Thứ nhất, bài toán nhận diện ảnh tạo sinh (AI-generated image detection) nhằm phân biệt ảnh thật và ảnh được tạo hoặc chỉnh sửa bởi các hệ thống AI. Các bằng chứng phục vụ nhiệm vụ này có thể bao gồm những bất thường về kết cấu, quy luật vật lý, quan hệ ngữ nghĩa giữa các vật thể, cũng như các dấu vết thống kê ở mức điểm ảnh và miền tần số. Thứ hai, bài toán truy tìm nguồn tạo sinh (source attribution) hướng đến xác định mô hình hoặc hệ thống có khả năng đã tạo ra hình ảnh. Khác với bài toán nhận diện, nhiệm vụ này đòi hỏi những bằng chứng có khả năng phân biệt giữa các nguồn tạo sinh, chẳng hạn các đặc trưng thống kê hoặc dấu vân tay mô hình (model fingerprints). Đáng chú ý, một dấu vết có thể hữu ích trong việc phân biệt ảnh thật và ảnh tạo sinh nhưng không nhất thiết mang đủ thông tin để xác định nguồn sinh cụ thể, bởi những dấu vết tương tự có thể xuất hiện ở nhiều mô hình khác nhau. Ngược lại, một số dấu vết đặc trưng cho nguồn sinh có thể khó quan sát trực tiếp hoặc dễ bị ảnh hưởng bởi các phép xử lý ảnh. Vì vậy, việc phát hiện dấu vết tạo sinh cần đi kèm với phân tích vai trò và sự đóng góp của từng bằng chứng đối với từng bài toán. Các nghiên cứu gần đây như AIDE \cite{yan2025sanity} cũng cho thấy nhiều bộ phát hiện hiện có vẫn gặp khó khăn trên Chameleon \cite{yan2025sanity}, một tập ảnh tạo sinh có mức độ chân thực cao. Điều này cho thấy sự cần thiết của việc khai thác và kết hợp các dấu vết tạo sinh ở nhiều mức độ nhằm nâng cao khả năng nhận diện, truy tìm nguồn và giải thích kết quả.
 
-Nhìn chung, bài toán hiện nay không còn chỉ là phân loại ảnh thật hay ảnh tạo sinh mà còn đòi hỏi sự phân tích và lý giải một cách trực quan hơn về nguồn gốc của mô hình tạo sinh ảnh. Do đó, nghiên cứu này được đề xuất nhằm tập trung vào chuỗi vấn đề này, với trọng tâm là phân tích các yếu tố tạo sinh trong hình ảnh, định vị chúng, xác định mối quan hệ của chúng với nguồn tạo sinh và sử dụng chúng làm cơ sở cho suy luận và lý giải.
+Nhìn chung, thách thức trong phân tích ảnh tạo sinh không chỉ nằm ở việc đưa ra kết quả phân loại chính xác mà còn ở khả năng xác định những bằng chứng thực sự hỗ trợ cho từng kết luận. Các dấu vết tạo sinh có thể tồn tại ở nhiều mức độ và vị trí khác nhau, từ các bất thường trực quan có thể định vị trên ảnh đến những đặc trưng thống kê phân bố trên toàn bộ hình ảnh. Do đó, nghiên cứu này được đề xuất nhằm phân tích, hệ thống hóa và biểu diễn các dấu vết tạo sinh, đồng thời xác định vai trò của chúng trong nhận diện ảnh tạo sinh và truy tìm nguồn gốc. Trên cơ sở đó, nghiên cứu hướng đến xây dựng cơ chế suy luận và lý giải dựa trên bằng chứng, trong đó các kết luận về trạng thái và nguồn tạo sinh của ảnh được liên kết với những dấu vết tương ứng, góp phần nâng cao tính minh bạch và khả năng kiểm chứng của hệ thống.
+
 
 \subsection{Định nghĩa bài toán}
-Định nghĩa bài toán được minh họa trong Hình~\ref{fig:input_output}, theo đó ta có thể tổng quát hóa như sau:
+
+Bài toán được minh họa trong Hình~\ref{fig:input_output}, với mục tiêu phân tích các dấu vết tạo sinh trong hình ảnh nhằm hỗ trợ nhận diện ảnh tạo sinh, truy tìm nguồn gốc và lý giải kết quả dựa trên bằng chứng. Bài toán được tổng quát hóa như sau:
 
 \begin{itemize}
     \item \textbf{Đầu vào:} Một hình ảnh bất kỳ $I$.
 
-    \item \textbf{Đầu ra:} 
+    \item \textbf{Đầu ra:}
     \begin{itemize}
-        \item (1) $y$: nhãn phân loại thuộc $\{Real; AI-Generated\}$, tương ứng với ảnh thật và ảnh được tạo bởi AI.
-        \item (2) $E = \{e_1, e_2,...,e_n\}$: tập các yếu tố hay bằng chứng tạo sinh trên ảnh.
-        \item (3) $M = \{m_1, m_2,...,m_n\}$: tập các vị trí của từng bằng chứng tạo sinh trong ảnh.
-        \item (4) $s$: nguồn tạo sinh, có thể là mô hình, nhóm mô hình hoặc Unknown, đối với mô hình tạo sinh mà hệ thống chưa được huấn luyện;
+        \item (1) $\hat{y} \in \{\text{Real}, \text{AI-Generated}\}$: nhãn dự đoán cho biết ảnh là ảnh thật hay ảnh tạo sinh.
+
+        \item (2) $E_{\mathrm{det}}$: tập các bằng chứng hỗ trợ nhận diện ảnh tạo sinh.
+
+        \item (3) $\hat{s} \in \mathcal{S} \cup \{\text{Unknown}, \text{N/A}\}$: nguồn tạo sinh được dự đoán, trong đó $\mathcal{S}$ là tập các nguồn đã biết. Nhãn Unknown được sử dụng khi ảnh được nhận diện là ảnh tạo sinh nhưng không đủ cơ sở để gán cho một nguồn đã biết, trong khi N/A áp dụng cho ảnh được phân loại là ảnh thật.
+
+        \item (4) $E_{\mathrm{src}}$: tập các bằng chứng có khả năng phân biệt giữa các nguồn tạo sinh.
+
+        \item (5) $R$: lời giải thích dựa trên các bằng chứng tương ứng.
+
     \end{itemize}
 \end{itemize}
+
+Các bằng chứng trong $E_{\mathrm{det}}$ và $E_{\mathrm{src}}$ có thể được biểu diễn dưới nhiều dạng, bao gồm vùng ảnh (bounding box, segmentation mask) hoặc đặc trưng thống kê toàn cục. Hai tập bằng chứng này không nhất thiết độc lập, nghĩa là một dấu vết có thể hỗ trợ cả hai nhiệm vụ. Như vậy, đầu ra kỳ vọng của hệ thống được biểu diễn bởi:
+\begin{equation}
+    F(I) = (\hat{y}, E_{\mathrm{det}}, \hat{s},
+    E_{\mathrm{src}}, R).
+\end{equation}
+
 
 \begin{figure}[htbp]
     \centering
@@ -66,41 +81,45 @@ Nhìn chung, bài toán hiện nay không còn chỉ là phân loại ảnh th�
 \end{figure}
 
 \subsection{Khoảng trống và động lực nghiên cứu}
-Nghiên cứu được đề xuất xuất phát từ ba vấn đề chính:
+Mặc dù các nghiên cứu về nhận diện và truy tìm nguồn gốc ảnh tạo sinh đã đạt được nhiều tiến bộ, vẫn còn những thách thức liên quan đến việc khai thác, phân tích và sử dụng các dấu vết tạo sinh làm bằng chứng cho quá trình suy luận. Nghiên cứu được đề xuất xuất phát từ ba vấn đề chính:
 \begin{itemize}
-    \item \textbf{Thứ nhất, bằng chứng tạo sinh trên ảnh hiện còn đang được khai thác một cách rời rạc.} Ảnh tạo sinh có thể chứa đồng thời nhiều loại dấu vết khác nhau tùy theo các khía cạnh phân tích hình ảnh. Một hình ảnh tạo sinh có thể để lại dấu vết tần số ở nền, lỗi hình học ở vật thể, bất thường ánh sáng ở vùng bóng và bất thường ngữ nghĩa ở quan hệ giữa hai vật thể. Tuy nhiên, các hướng hiện nay thường chuyên sâu vào một dạng tín hiệu. Ví dụ như HyperDet \cite{cao2024hyperdet} và NPR \cite{tan2024rethinking} tập trung nhiều vào tín hiệu cấp thấp và quan hệ điểm ảnh; Sarkar và cộng sự \cite{sarkar2024shadows} tập trung vào hình học, đường thẳng và quan hệ vật thể–bóng; trong khi, AnomReason \cite{tan2026semantic} tập trung vào bất thường ngữ nghĩa. Khi các mô hình chỉ tập trung khai thác một khía cạnh trên ảnh, độ chính xác trong quá trình nhận diện ảnh tạo sinh có thể bị ảnh hưởng trong nhiều trường hợp ảnh tạo sinh quá chân thật và tinh vi. Vì thế, việc xem các tín hiệu khác nhau như những nguồn bằng chứng bổ sung, thay vì xem một loại tín hiệu là lời giải cho toàn bộ bài toán, sẽ mang lại nhiều giá trị nghiên cứu đầy hứa hẹn.
-    \item \textbf{Thứ hai, các giải thích hiện nay cho bài toán nhận diện ảnh tạo sinh chưa thực sự được ràng buộc và suy luận bởi bằng chứng.} Các mô hình ngôn ngữ lớn đa phương thức (MLLM) mở ra hướng tiếp cận mới cho bài toán phát hiện ảnh do AI tạo sinh, cho phép hệ thống không chỉ đưa ra dự đoán mà còn sinh các giải thích bằng ngôn ngữ tự nhiên. Tiêu biểu, AIGI-Holmes \cite{zhou2025aigi} xây dựng một bộ dữ liệu gồm cả nhãn phát hiện và các giải thích tương ứng. Theo hướng tích hợp toàn diện hơn, SIDA \cite{huang2025sida} kết hợp phát hiện, định vị và giải thích trong cùng một framework. Tuy nhiên, vẫn tồn tại một câu hỏi quan trọng: Lời giải thích có thực sự phản ánh bằng chứng mà hệ thống sử dụng để đưa ra quyết định hay chỉ là một lời giải thích hợp lý được sinh ra sau đó? Minh họa trong Hình~\ref{fig:exampleAnom} cho thấy lời giải thích do mô hình sinh ra vẫn còn tồn tại nhiều hạn chế. Cụ thể, mô hình có thể tạo ra lời lý giải sai lệch và không ánh xạ đến được vùng trực tiếp nào trong ảnh, hoặc đưa ra mô tả mơ hồ mà không xác định rõ được vật thể cụ thể. Vì vậy, nghiên cứu này xem giải thích không phải là một đoạn văn sinh ra sau kết quả phân loại mà là kết quả suy luận từ một tập bằng chứng đã được phát hiện và định vị.
-    \item \textbf{Thứ ba, hạn chế về khả năng lý giải và định vị bằng chứng trong truy tìm nguồn gốc ảnh tạo sinh.} Mặc dù bài toán truy tìm nguồn gốc ảnh tạo sinh (source attribution) đã đạt nhiều tiến bộ, phần lớn các nghiên cứu hiện nay vẫn tập trung giải quyết bài toán bằng cách thu thập dữ liệu hình ảnh từ nhiều nguồn sinh và học các đặc trưng để phân biệt chúng. Cùng với sự phát triển của các hệ thống tạo ảnh, nhiều benchmark \cite{hong2025wildfake, li2025artificial, bammey2024synthbuster, zhu2023genimage} cũng bắt đầu bổ sung thêm các mô hình thương mại và mã nguồn đóng (closed-source/proprietary) nhằm tăng tính đa dạng và phản ánh hình ảnh thực tế. Tuy nhiên, cách tiếp cận này chủ yếu tối ưu khả năng phân loại, trong khi chưa giải quyết tốt vấn đề lý giải và định vị bằng chứng làm cơ sở cho kết luận. Với các mô hình mã nguồn mở, có thể khai thác sâu vào kiến trúc, trọng số và quy trình sinh ảnh, từ đó phân tích mối quan hệ giữa cơ chế sinh, yếu tố tạo sinh và dấu vết trên ảnh. Ngược lại, với các hệ thống mã nguồn đóng, những thông tin này không được công khai, thậm chí một mô hình tạo sinh có thể kết hợp nhiều mô hình và nhiều bước xử lý khác nhau. Do đó, việc học trực tiếp từ dữ liệu đầu ra có thể phân biệt các nguồn sinh, nhưng khó xác định mô hình thực sự dựa trên bằng chứng nào và tại sao bằng chứng đó liên quan đến một nguồn cụ thể. Vì vậy, khoảng trống của bài toán truy tìm nguồn gốc sinh ảnh không chỉ nằm ở việc phân biệt nhiều nguồn sinh ảnh đa dạng hơn, mà còn ở khả năng xác định, định vị và lý giải các bằng chứng trên ảnh hỗ trợ cho kết luận phân loại. Thay vì chỉ mở rộng bộ phân loại cho ngày càng nhiều mô hình, hướng nghiên cứu này tập trung khai thác các mô hình mã nguồn mở như một môi trường có kiểm soát để phân tích mối quan hệ giữa cơ chế sinh ảnh – yếu tố tạo sinh – bằng chứng quan sát được.
+    \item \textbf{Thứ nhất, các dấu vết tạo sinh chưa được khai thác và phân tích một cách thống nhất theo vai trò của từng loại bằng chứng.}  Ảnh tạo sinh có thể chứa đồng thời nhiều loại dấu vết khác nhau, từ các đặc trưng thống kê ở mức điểm ảnh, miền tần số đến các bất thường về kết cấu, hình học, quy luật vật lý và quan hệ ngữ nghĩa giữa các vật thể. Các nghiên cứu hiện nay đã khai thác những khía cạnh này theo nhiều hướng tiếp cận khác nhau. Chẳng hạn, HyperDet \cite{cao2024hyperdet} và NPR \cite{tan2024rethinking} tập trung vào các tín hiệu cấp thấp và quan hệ giữa các điểm ảnh; Sarkar và cộng sự \cite{sarkar2024shadows} khai thác các bất thường hình học và quan hệ vật thể--bóng; trong khi AnomReason \cite{tan2026semantic} tập trung vào các bất thường ngữ nghĩa. Một số nghiên cứu gần đây cũng đã kết hợp nhiều loại đặc trưng nhằm cải thiện khả năng nhận diện ảnh tạo sinh. Tuy nhiên, bên cạnh việc kết hợp các đặc trưng để nâng cao hiệu quả phân loại, vẫn cần phân tích rõ hơn vai trò và giá trị của từng loại dấu vết đối với các nhiệm vụ khác nhau. Đặc biệt, một dấu vết có thể hữu ích trong việc phân biệt ảnh thật và ảnh tạo sinh nhưng chưa chắc mang đủ thông tin để phân biệt giữa các nguồn tạo sinh. Ngược lại, một số dấu vết có tính đặc trưng cho nguồn sinh có thể không dễ quan sát trực tiếp hoặc không thể định vị bằng một vùng ảnh cụ thể. Vì vậy, việc nghiên cứu cách phát hiện, biểu diễn và hệ thống hóa các dấu vết tạo sinh ở nhiều mức độ, đồng thời đánh giá khả năng đóng góp của chúng đối với từng nhiệm vụ, là cơ sở quan trọng để xây dựng quá trình phân tích dựa trên bằng chứng.
+
+    \item \textbf{Thứ hai, tính nhất quán và độ trung thực của lời giải thích đối với các bằng chứng trong bài toán nhận diện ảnh tạo sinh chưa đáng tin cậy.} Sự phát triển của các mô hình ngôn ngữ lớn đa phương thức (MLLM) đã mở ra hướng tiếp cận kết hợp nhận diện ảnh tạo sinh với định vị bằng chứng và sinh lời giải thích bằng ngôn ngữ tự nhiên. Tiêu biểu, AIGI-Holmes \cite{zhou2025aigi} xây dựng bộ dữ liệu chứa nhãn nhận diện cùng các lời giải thích tương ứng; SIDA \cite{huang2025sida} kết hợp nhận diện, định vị và giải thích trong cùng một hệ thống. Gần đây, FakeXplain \cite{ji2026fakexplain} tiếp tục phát triển hướng tiếp cận này thông qua việc xây dựng dữ liệu gồm các vùng bất thường được chú thích và mô tả bằng ngôn ngữ tự nhiên, nhằm cải thiện khả năng giải thích gắn với bằng chứng thị giác. Những nghiên cứu này cho thấy tiềm năng của việc kết hợp phát hiện, định vị và lý giải trong phân tích ảnh tạo sinh. Tuy nhiên, việc một mô hình có thể đưa ra lời giải thích hợp lý và xác định được vùng ảnh tương ứng chưa đủ để khẳng định rằng những bằng chứng đó thực sự được sử dụng trong quá trình đưa ra quyết định. Minh họa trong Hình~\ref{fig:exampleAnom} cho thấy một số trường hợp lời giải thích còn sai lệch, mô tả đối tượng mơ hồ hoặc khó ánh xạ chính xác đến vùng ảnh được đề cập. Bên cạnh đó, nghiên cứu X-AIGD \cite{xiao2026xaigd} cũng chỉ ra rằng các bộ phát hiện ảnh tạo sinh có thể chưa thực sự dựa nhiều vào những bất thường trực quan có thể diễn giải, ngay cả khi được huấn luyện để nhận biết các dấu vết này. Điều đó đặt ra yêu cầu không chỉ định vị và mô tả bằng chứng, mà còn phải kiểm chứng mối liên hệ giữa bằng chứng được trình bày và quyết định của hệ thống. Vì vậy, nghiên cứu này hướng đến cơ chế suy luận và lý giải dựa trên bằng chứng có thể kiểm chứng, thay vì chỉ tạo ra những lời giải thích có vẻ hợp lý sau khi đã đưa ra kết quả phân loại.
+    
+    \item \textbf{Thứ ba, mối quan hệ giữa dấu vết tạo sinh và khả năng lý giải kết quả truy tìm nguồn tạo sinh chưa được làm rõ đầy đủ.}  Bài toán truy tìm nguồn gốc ảnh tạo sinh (source attribution) đã đạt nhiều tiến bộ nhờ các phương pháp học đặc trưng và dấu vân tay mô hình (model fingerprints) từ dữ liệu ảnh. Các bộ dữ liệu và benchmark \cite{hong2025wildfake, li2025artificial, bammey2024synthbuster, zhu2023genimage} ngày càng mở rộng sang nhiều nguồn sinh, bao gồm cả các hệ thống thương mại và mã nguồn đóng (closed-source). Tuy nhiên, phần lớn các phương pháp vẫn tập trung tối ưu khả năng phân loại mà chưa làm rõ đầy đủ bản chất và nguyên nhân hình thành các dấu vết phân biệt nguồn. Đặc biệt, với các hệ thống mã nguồn đóng, thông tin về kiến trúc, trọng số và quy trình sinh ảnh thường không được công khai, gây khó khăn cho việc phân tích sâu. Vì vậy, nghiên cứu này ưu tiên khai thác các mô hình mã nguồn mở như một môi trường có kiểm soát để tìm hiểu mối quan hệ giữa cơ chế tạo sinh và dấu vết quan sát được. Các dấu vết này có thể chịu ảnh hưởng từ kiến trúc mô hình, dữ liệu huấn luyện và quá trình sinh ảnh, trong khi nhiều đặc trưng cấp thấp như nhiễu, tương quan điểm ảnh và phổ tần số thường khó diễn giải trực quan. Mặc dù một số nghiên cứu \cite{yu2019attributing, song2024manifpt} đã phân tích dấu vân tay mô hình, việc phân tách ảnh hưởng của từng yếu tố và xác định các bằng chứng thực sự mang giá trị phân biệt nguồn vẫn cần được nghiên cứu sâu hơn. Gần đây, EXACT \cite{shi2026exact} đã kết hợp nhận diện, truy tìm nguồn, định vị và giải thích bằng ngôn ngữ tự nhiên, nhưng việc tích hợp các chức năng này chưa đồng nghĩa với việc đã làm rõ nguồn gốc và mức độ đóng góp của từng bằng chứng. Do đó, nghiên cứu hướng đến phân tích bản chất các dấu vết tạo sinh, lựa chọn bằng chứng có giá trị phân biệt nguồn và xây dựng lời giải thích có thể kiểm chứng, đồng thời hỗ trợ nhận biết và từ chối gán nguồn khi gặp các mô hình chưa xuất hiện trong dữ liệu huấn luyện.
 \end{itemize}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.9\textwidth]{figures/Anom_example.pdf}
-    \caption{Minh họa hạn chế trong giải thích của AnomAgent \cite{tan2026semantic}: các mô tả dài và phức tạp dẫn đến định vị bằng chứng mơ hồ hoặc không thể xác định chính xác vật thể được đề cập trong ảnh.}
+    \caption{Một số hạn chế trong giải thích của AnomAgent \cite{tan2026semantic}: các mô tả dài và phức tạp dẫn đến định vị bằng chứng mơ hồ hoặc không thể xác định chính xác vật thể được đề cập trong ảnh.}
     \label{fig:exampleAnom}
 \end{figure}
 
 Những khoảng trống nghiên cứu trên đã đặt ra ba câu hỏi nghiên cứu chính làm động lực thúc đẩy cho nghiên cứu này, bao gồm:
 \begin{itemize}
-    \item \textbf{Research Question 1:} Những dấu vết và đặc trưng nào trong nội dung hình ảnh có thể được sử dụng làm bằng chứng cho quá trình tạo sinh, và làm thế nào để biểu diễn và định vị chúng một cách thống nhất? 
-    \item \textbf{Research Question 2:} Làm thế nào để xây dựng quá trình suy luận từ các bằng chứng đã được phát hiện và định vị, kết hợp với nội dung hình ảnh tại các vùng tương ứng, nhằm đưa ra kết luận và giải thích có thể kiểm chứng? 
-    \item \textbf{Research Question 3:} Làm thế nào có thể xác định nguồn tạo sinh của một hình ảnh dựa trên các dấu vết và bằng chứng trực quan, đặc biệt khi nguồn sinh là mô hình chưa xuất hiện trong dữ liệu huấn luyện?
+    \item \textbf{Research Question 1 -- Evidence Discovery and Localization:} Làm thế nào để phát hiện, biểu diễn và định vị các dấu vết tạo sinh ở nhiều mức độ, đồng thời đánh giá vai trò của chúng như những bằng chứng phục vụ nhận diện ảnh tạo sinh và truy tìm nguồn? 
+    \item \textbf{Research Question 2 -- Evidence-based Source Attribution:} Làm thế nào để phân tích mối quan hệ giữa cơ chế tạo sinh và các dấu vết quan sát được, từ đó xác định và lựa chọn những bằng chứng có giá trị phân biệt nguồn, đồng thời duy trì khả năng truy tìm nguồn và nhận biết các nguồn chưa xuất hiện trong dữ liệu huấn luyện?
+    \item \textbf{Research Question 3 -- Faithful Evidence-grounded Explanation:} Làm thế nào để xây dựng và kiểm chứng quá trình suy luận, lý giải kết quả nhận diện và truy tìm nguồn, bảo đảm rằng các bằng chứng được trình bày có mối liên hệ rõ ràng và thực sự đóng góp vào quyết định của hệ thống?
 \end{itemize}
 
 \section{Mục tiêu nghiên cứu}
 \label{sec:objectives} 
-\subsection{MT1: Phân tích, định vị và hệ thống hóa các yếu tố tạo sinh trong hình ảnh}
-Mục tiêu đầu tiên là xây dựng một hệ thống có khả năng phân tích hình ảnh từ nhiều góc nhìn và xác định các dấu vết nào có liên quan đến quá trình tạo sinh. Mục tiêu này hướng đến kết quả không chỉ là một vector đặc trưng khó hiểu mà là một tập bằng chứng có ý nghĩa cho việc xác định ảnh tạo sinh và nguồn tạo sinh tương ứng. Điều này kế thừa một nhận định quan trọng từ các nghiên cứu trước rằng dấu vết có thể tồn tại ở nhiều mức khác nhau, từ nhiễu và quan hệ điểm ảnh đến hình học và quan hệ ngữ nghĩa. Bên cạnh đó, tập bằng chứng còn cần phải được chỉ ra và định vị rõ ràng trên ảnh, mang lại sự trực quan và tin cậy cho loại bằng chứng tương ứng.
+\subsection{MT1: Phân tích, biểu diễn và định vị các dấu vết tạo sinh trong hình ảnh}
+Mục tiêu đầu tiên là xây dựng phương pháp phân tích hình ảnh từ nhiều góc nhìn nhằm phát hiện, hệ thống hóa và biểu diễn các dấu vết liên quan đến quá trình tạo sinh. Các dấu vết này có thể tồn tại ở nhiều mức độ, từ các đặc trưng cấp thấp như phân bố nhiễu, quan hệ điểm ảnh và miền tần số đến các bất thường cấp cao về kết cấu, hình học, quy luật vật lý và quan hệ ngữ nghĩa. Thay vì chỉ trích xuất các vector đặc trưng phục vụ phân loại, nghiên cứu hướng đến xây dựng một tập bằng chứng có cấu trúc, trong đó mỗi bằng chứng được phân tích về đặc điểm, vai trò và khả năng đóng góp cho hai nhiệm vụ: nhận diện ảnh tạo sinh và truy tìm nguồn tạo sinh.
 
-Bởi lẽ, nếu không biết hệ thống đang dựa trên yếu tố nào thì việc xác định nguồn gốc và tạo sinh lý giải rất khó có cơ sở. Điều này mang lại ý nghĩa về mặt lý luận vì nó đưa bằng chứng trở thành một lớp trung gian rõ ràng giữa dữ liệu quan sát và quyết định cuối cùng.
+Bên cạnh đó, nghiên cứu hướng đến khả năng định vị và biểu diễn trực quan các bằng chứng khi phù hợp, thông qua vùng ảnh, bản đồ đóng góp hoặc các đặc trưng thống kê. Do không phải mọi dấu vết đều có thể ánh xạ đến một vùng ảnh cụ thể, phương pháp cần hỗ trợ các hình thức biểu diễn khác nhau tùy theo bản chất của bằng chứng. Kết quả được đánh giá dựa trên khả năng phát hiện, độ chính xác định vị đối với các bằng chứng có chú thích vị trí và mức độ ổn định của các dấu vết trong những điều kiện ảnh khác nhau. Qua đó, nghiên cứu hướng đến xây dựng một lớp biểu diễn bằng chứng làm cơ sở cho các nhiệm vụ truy tìm nguồn và suy luận, lý giải ở các giai đoạn tiếp theo.
 
-\subsection{MT2: Xác định nguồn tạo sinh dựa trên các yếu tố tạo sinh}
-Mục tiêu thứ hai là sử dụng các yếu tố tạo sinh đã phát hiện để xác định nguồn tạo sinh có khả năng tạo ra hình ảnh. Do không phải yếu tố tạo sinh nào trên ảnh cũng mang lại ý nghĩa để phân loại nguồn tạo sinh, nên đòi hỏi các bước sàng lọc, lựa chọn cho phù hợp với bài toán. Điều này đặt ra vấn đề trong việc tách các yếu tố liên quan trực tiếp đến quá trình tạo sinh khỏi nội dung ngữ nghĩa của ảnh. Khi đó, các yếu tố đó có thể trở thành cơ sở ổn định hơn cho truy tìm nguồn.
+\subsection{MT2: Truy tìm nguồn tạo sinh dựa trên các bằng chứng phân biệt nguồn}
+Mục tiêu thứ hai là phát triển phương pháp xác định nguồn tạo sinh dựa trên các dấu vết và bằng chứng đã được phân tích. Do không phải mọi dấu vết giúp nhận diện ảnh tạo sinh đều có giá trị phân biệt giữa các nguồn sinh, nghiên cứu tập trung đánh giá, lựa chọn và kết hợp những bằng chứng có khả năng đặc trưng cho từng mô hình hoặc nhóm mô hình tạo sinh. Đặc biệt, nghiên cứu ưu tiên khai thác các mô hình tạo sinh mã nguồn mở như một môi trường có kiểm soát để phân tích mối quan hệ giữa kiến trúc mô hình, dữ liệu huấn luyện, quy trình sinh ảnh và các dấu vết quan sát được. Trên cơ sở đó, nghiên cứu hướng đến xác định những đặc trưng thực sự có giá trị phân biệt nguồn, hạn chế sự phụ thuộc vào nội dung, phong cách hoặc các khác biệt không liên quan đến bản chất của quá trình tạo sinh. Hiệu quả được đánh giá thông qua độ chính xác truy tìm nguồn, mức độ đóng góp của từng nhóm bằng chứng và khả năng duy trì kết quả trong các điều kiện dữ liệu khác nhau.
 
-Đặc biệt, nghiên cứu hướng đến một vấn đề ngày càng quan trọng trong truy tìm nguồn gốc ảnh tạo sinh, đó là khả năng xử lý khi hệ thống gặp nguồn tạo sinh mới chưa từng xuất hiện trong dữ liệu huấn luyện. Trong trường hợp này, hệ thống không nên chỉ buộc ảnh phải thuộc về một trong các nguồn đã biết, mà cần có khả năng nhận biết rằng ảnh có thể đến từ một nguồn chưa được quan sát trước đó. Tuy nhiên, việc chỉ trả về nhãn “Unknown” vẫn chưa thực sự giải quyết bài toán. Một hệ thống thực tế cần có khả năng thích nghi và cập nhật nhanh khi xuất hiện nguồn tạo sinh mới, đồng thời hạn chế phải huấn luyện lại toàn bộ mô hình. Vì vậy, nghiên cứu hướng tới việc phát triển cơ chế có thể vừa nhận diện nguồn mới, vừa tận dụng các bằng chứng đã học để hỗ trợ cập nhật và mở rộng hệ thống một cách linh hoạt. 
+Bên cạnh khả năng phân biệt các nguồn đã biết, nghiên cứu còn hướng đến việc nhận biết các nguồn tạo sinh chưa xuất hiện trong dữ liệu huấn luyện. Trong những trường hợp không đủ bằng chứng để xác định nguồn, hệ thống cần có khả năng từ chối gán nhãn thay vì buộc ảnh thuộc về một nguồn đã biết. Đồng thời, nghiên cứu xem xét khả năng thích nghi với nguồn tạo sinh mới khi có thêm dữ liệu tham chiếu, nhằm hỗ trợ mở rộng hệ thống mà không cần huấn luyện lại toàn bộ mô hình.
 
-\subsection{MT3: Suy luận và lý giải kết quả phân loại dựa trên bằng chứng}
-Mục tiêu thứ ba là xây dựng cơ chế suy luận để kết hợp các yếu tố như bằng chứng, vị trí và nội dung hình ảnh tại vùng tương ứng để đưa ra lời giải thích hợp lý và thân thiện với người dùng cuối. Một lời giải thích phù hợp là khi chúng có thể chỉ ra được bằng chứng nào hỗ trợ cho các kết luận trước đó của hệ thống. Tức, thay vì để một MLLM nhìn ảnh và tự sinh một câu trả lời nghe có vẻ hợp lý, hệ thống sẽ phải dựa trên các bằng chứng đã được trích xuất.
+\subsection{MT3: Suy luận và lý giải kết quả nhận diện và truy tìm nguồn dựa trên bằng chứng}
+Mục tiêu thứ ba là xây dựng cơ chế suy luận và lý giải kết quả nhận diện ảnh tạo sinh và truy tìm nguồn dựa trên các bằng chứng đã được phát hiện, phân tích và lựa chọn. Thay vì chỉ sử dụng mô hình ngôn ngữ lớn đa phương thức (MLLM) để sinh lời giải thích trực tiếp từ hình ảnh hoặc kết quả phân loại, nghiên cứu hướng đến việc kết hợp các bằng chứng, thông tin vị trí khi có thể xác định và mức độ đóng góp của chúng để hình thành lời giải thích có cơ sở. Đối với bài toán nhận diện, lời giải thích cần làm rõ những dấu vết nào hỗ trợ kết luận ảnh tạo sinh; trong khi đối với bài toán truy tìm nguồn, cần chỉ ra những bằng chứng nào mang giá trị phân biệt và hỗ trợ việc lựa chọn nguồn sinh tương ứng.
+
+Đặc biệt, nghiên cứu không chỉ hướng đến những lời giải thích hợp lý về mặt ngôn ngữ mà còn chú trọng tính nhất quán và độ trung thực của chúng đối với quyết định của hệ thống. Điều này đòi hỏi cơ chế kiểm chứng mối liên hệ giữa bằng chứng và kết quả dự đoán, chẳng hạn đánh giá sự thay đổi của quyết định khi loại bỏ hoặc làm suy yếu một bằng chứng trong điều kiện kiểm soát. Đồng thời, hệ thống cần hạn chế những giải thích sai lệch, không có cơ sở và thể hiện được mức độ bất định khi bằng chứng chưa đủ để đưa ra kết luận đáng tin cậy. Qua đó, nghiên cứu hướng đến nâng cao tính minh bạch, khả năng kiểm chứng và độ tin cậy của quá trình phân tích nguồn gốc ảnh tạo sinh.
 
 \section{Tổng quan tình hình nghiên cứu}
 \label{sec:literature_review} 
@@ -118,629 +137,331 @@ Hình~\ref{fig:so_sanh_detection} minh họa các hướng tiếp cận trực q
 
 \textbf{Thứ nhất, với hướng tiếp cận phân tích tín hiệu cấp thấp và đặc trưng thống kê.}
 
-Các nghiên cứu đầu tiên xem detection như một bài toán phân loại nhị phân dựa trên các đặc trưng hình ảnh ở mức đơn giản. Các hệ thống ban đầu \cite{wang2020cnn, Ojha_2023_CVPR} sử dụng đặc trưng ảnh được trích xuất từ các mạng CNN làm biểu diễn đặc trưng (feature representation) để phân loại giữa ảnh thật và ảnh tạo sinh. Mặc dù các phương pháp này ban đầu đạt kết quả rất cao (ACC: 85-90\%), nhưng thành công này phần lớn xuất phát từ tính chất lý tưởng của dữ liệu: các mô hình tạo sinh (generator) thế hệ cũ còn đơn giản, dễ để lại các dấu vết khiếm khuyết (artifacts) rõ ràng mà mắt người đôi khi có thể phân biệt được, và tập ảnh thử nghiệm có độ phân giải cao mà chưa qua nén dữ liệu. Tuy nhiên, khi các bộ dữ liệu ngày càng được nâng cấp để phản ánh sát môi trường thực tế, nơi ảnh thường bị giảm chất lượng qua các nền tảng mạng xã hội, và các mô hình sinh liên tục phát triển lên nhiều phiên bản mới, các phương pháp phân loại dựa trên đặc trưng hình ảnh đơn thuần này thường vấp phải thất bại nghiêm trọng trong khả năng tổng quát hóa \cite{corvi2023detection, bammey2024synthbuster, ricker2022towards}. 
+Các nghiên cứu đầu tiên xem detection như một bài toán phân loại nhị phân dựa trên các đặc trưng hình ảnh. Các hệ thống ban đầu \cite{wang2020cnn, Ojha_2023_CVPR} sử dụng đặc trưng trích xuất từ mạng CNN hoặc các mô hình thị giác tiền huấn luyện để phân loại giữa ảnh thật và ảnh tạo sinh. Mặc dù các phương pháp này ban đầu đạt kết quả rất cao (ACC: 85-90\%), nhưng thành công này phần lớn xuất phát từ tính chất lý tưởng của dữ liệu: các mô hình tạo sinh (generator) thế hệ cũ còn đơn giản, dễ để lại các dấu vết khiếm khuyết (artifacts) rõ ràng mà mắt người đôi khi có thể phân biệt được, và tập ảnh thử nghiệm có độ phân giải cao mà chưa qua nén dữ liệu. Tuy nhiên, khi các bộ dữ liệu ngày càng được nâng cấp để phản ánh sát môi trường thực tế, nơi ảnh thường bị giảm chất lượng qua các nền tảng mạng xã hội, và các mô hình sinh liên tục phát triển lên nhiều phiên bản mới, các phương pháp phân loại dựa trên đặc trưng hình ảnh đơn thuần này thường vấp phải thất bại nghiêm trọng trong khả năng tổng quát hóa \cite{corvi2023detection, bammey2024synthbuster, ricker2022towards}. 
 
-Sau đó, các nghiên cứu tập trung trích xuất những dấu vết vi mô ở mức điểm ảnh như phân bố nhiễu, phổ tần số hay tương quan không gian — những yếu tố được chứng minh là vẫn tồn tại dù bức ảnh trông hoàn toàn tự nhiên đối với thị giác con người. Cụ thể, HyperDet \cite{cao2024hyperdet} khai thác nhóm bộ lọc pháp chứng SRM (Spatial Rich Model) — tập hợp các bộ lọc thông cao (high-pass filters) giúp triệt tiêu nội dung ảnh và giữ lại các đường nét ranh giới (edges) trên ảnh, tạo ra nhiều góc nhìn phân tích đa dạng cho các đường nét trong ảnh. Trong khi đó, NPR (Neighboring Pixel Relationships) tập trung phân tích mối quan hệ tương quan giữa các điểm ảnh lân cận nhằm phát hiện các chênh lệch bất thường xuất phát từ cơ chế tăng kích thước ảnh (upsampling) trong các mô hình tạo sinh \cite{tan2024rethinking}. Phương pháp này có khả năng phát hiện hiệu quả trên cả kiến trúc mô hình GAN lẫn Diffusion Models. Nhờ vậy, tín hiệu NPR đã trở thành một đặc trưng rất phổ biến trong lĩnh vực này và được nhiều bài báo sau đó tiếp tục kế thừa để phân loại ảnh tạo sinh. 
+Để cải thiện khả năng nhận diện, nhiều nghiên cứu tập trung khai thác những dấu vết vi mô ở mức điểm ảnh như phân bố nhiễu, phổ tần số và quan hệ không gian giữa các điểm ảnh. Cụ thể, HyperDet \cite{cao2024hyperdet} khai thác nhóm bộ lọc pháp chứng SRM (Spatial Rich Model) — tập hợp các bộ lọc thông cao (high-pass filters) giúp triệt tiêu nội dung ảnh và giữ lại các đường nét ranh giới (edges) trên ảnh, tạo ra nhiều góc nhìn phân tích đa dạng cho các đường nét trong ảnh. Trong khi đó, NPR (Neighboring Pixel Relationships) tập trung phân tích mối quan hệ tương quan giữa các điểm ảnh lân cận nhằm phát hiện các chênh lệch bất thường xuất phát từ cơ chế tăng kích thước ảnh (upsampling) trong các mô hình tạo sinh \cite{tan2024rethinking}. Phương pháp này có khả năng phát hiện hiệu quả trên cả kiến trúc mô hình GAN lẫn Diffusion Models. Nhờ vậy, tín hiệu NPR đã trở thành một đặc trưng rất phổ biến trong lĩnh vực này và được nhiều bài báo sau đó tiếp tục kế thừa để phân loại ảnh tạo sinh. 
 
-Tóm lại, các phương pháp phân tích tín hiệu cấp thấp sở hữu ưu điểm vượt trội khi không phụ thuộc vào khả năng hiểu ngữ nghĩa, và dễ dàng phát hiện các bất thường siêu nhỏ mà mắt người không thể nhận biết, ngay cả trên những bức ảnh hoàn toàn không chứa lỗi trực quan. Dù vậy, hạn chế cốt lõi của hướng tiếp cận này nằm ở việc thiếu tính giải thích. Do dựa trên các tương quan tín hiệu phức tạp, hệ thống rất khó chỉ ra cụ thể bằng chứng nằm ở đâu và mang ý nghĩa gì trên ảnh. Bên cạnh đó, các mô hình này thường dễ bị phụ thuộc vào chất lượng của dữ liệu huấn luyện. Vì vậy, một chỉ số độ chính xác cao trên thực nghiệm chưa thể khẳng định mô hình đã thực sự hiểu đúng bản chất của quá trình tạo sinh, từ đó đặt ra nhu cầu cấp thiết về các hướng nghiên cứu mới có khả năng ràng buộc chặt chẽ giữa quyết định phân loại và bằng chứng suy luận trực quan.
+Ưu điểm của hướng tiếp cận dựa trên tín hiệu cấp thấp là khả năng khai thác các dấu vết thống kê khó nhận biết bằng mắt thường, ngay cả khi hình ảnh không chứa những bất thường trực quan rõ rệt. Tuy nhiên, các đặc trưng này thường khó diễn giải trực tiếp bằng ngôn ngữ tự nhiên và khó xác định ý nghĩa của chúng đối với từng quyết định phân loại. Bên cạnh đó, hiệu quả của các phương pháp còn có thể chịu ảnh hưởng bởi sự thay đổi phân bố dữ liệu và các phép xử lý ảnh. Vì vậy, độ chính xác phân loại cao chưa đủ để khẳng định rằng hệ thống đã xác định được những bằng chứng thực sự phản ánh quá trình tạo sinh, đặt ra nhu cầu nghiên cứu các phương pháp có khả năng phân tích và kiểm chứng vai trò của từng dấu vết trong quyết định nhận diện.
 
 \textbf{Thứ hai, với hướng tiếp cận phân tích bất thường ở mức độ ngữ nghĩa trên ảnh.}
 
-Một hướng đi khác đặt trọng tâm vào những khuyết điểm trực quan (visible artifacts) mà con người có thể quan sát và nhận biết trực tiếp trên bức ảnh. Ở giai đoạn đầu, các nghiên cứu chủ yếu tập trung khai thác những biến dạng bất hợp lý trên ảnh, chẳng hạn như sự biến dạng đồng tử \cite{guo2022eyes}, cho đến sự mất cân đối cấu trúc trên khuôn mặt \cite{yang2019exposing} hoặc các vật thể phụ trợ theo cặp như gọng kính \cite{nirkin2022deepfake}. Ưu điểm lớn nhất của hướng tiếp cận này là tính giải thích cao (high explainability), giúp đưa ra bằng chứng trực quan, dễ hiểu và đầy thuyết phục đối với người dùng. Tuy nhiên, các mô hình tạo sinh đang ngày càng hoàn thiện, kéo theo sự ra đời của nhiều nghiên cứu chủ động phát hiện và triệt tiêu các khiếm khuyết này ngay trong quá trình tạo ảnh \cite{cao2025temporal}. Vì vậy, việc chỉ dựa vào các dấu vết biến dạng bề mặt đơn thuần dần không còn đủ bền vững, đặt ra nhu cầu về các phương pháp suy luận sâu hơn về ngữ nghĩa và quy luật vật lý tổng thể của bức ảnh.
+Một hướng đi khác đặt trọng tâm vào những khuyết điểm trực quan (visible artifacts) mà con người có thể quan sát và nhận biết trực tiếp trên bức ảnh. Trong lĩnh vực phân tích ảnh giả khuôn mặt, các nghiên cứu đã khai thác những dấu hiệu như sự biến dạng đồng tử \cite{guo2022eyes}, bất thường cấu trúc khuôn mặt \cite{yang2019exposing} hoặc sự không nhất quán của các vật thể phụ trợ như gọng kính \cite{nirkin2022deepfake}. Những dấu hiệu này có ưu điểm là dễ quan sát và có thể liên hệ trực tiếp với các bất thường trong hình ảnh. Tuy nhiên, khi các mô hình tạo sinh ngày càng hoàn thiện, những khiếm khuyết trực quan đơn giản có thể trở nên ít rõ ràng hơn, khiến việc chỉ dựa vào một số loại bất thường riêng lẻ khó bảo đảm khả năng nhận diện ổn định.
 
-Để giải quyết hạn chế này, các nghiên cứu gần đây đã dịch chuyển từ việc phát hiện các lỗi hình dáng cục bộ sang khai thác các quy luật vật lý và hình học không gian toàn cục. Nghiên cứu của Sarkar \cite{sarkar2024shadows} chỉ ra rằng các mô hình tạo sinh có thể tạo ra hình ảnh nhìn hợp lý ở mức tổng thể nhưng vi phạm các quy luật về hình học, đường thẳng, bóng và quan hệ giữa vật thể với bóng. Công trình này đưa các nguyên lý hình học của thế giới thực vào bài toán phát hiện ảnh tạo sinh. Đây là một hướng tiếp cận khá thú vị khi khai thác một góc nhìn trực quan trong ảnh, kiểm tra toàn bộ quan hệ không gian trong ảnh. AnomReason \cite{tan2026semantic} đã phát triển mạnh hơn theo hướng này bằng cách xây dựng benchmark cho việc phát hiện và suy luận bất thường thị giác giữa các vật thể trong ảnh. Họ cố gắng xây dựng bộ dữ liệu liệt kê toàn bộ các bất thường dưới dạng có cấu trúc. Ví dụ, một bất thường được bài báo định nghĩa dưới 4 trường thông tin chính (minh họa ở Hình~\ref{fig:exampleAnom}), bao gồm: tên (name), hiện tượng quan sát (phenomenon), lý do suy luận (reasoning) và mức độ nghiêm trọng (severity). Phương pháp này đáng chú ý với cách biểu diễn cấu trúc các thành phần một cách rõ ràng, giúp phân tích chi tiết nguyên nhân bất hợp lý, tạo cơ sở để kiểm định kết quả phân loại.
+Để giải quyết hạn chế này, các nghiên cứu gần đây đã dịch chuyển từ việc phát hiện các lỗi hình dáng cục bộ sang khai thác các quy luật vật lý và hình học không gian toàn cục. Nghiên cứu của Sarkar và cộng sự \cite{sarkar2024shadows} khai thác các dấu hiệu không nhất quán về hình học, đường thẳng, bóng và quan hệ vật thể--bóng để nhận diện ảnh tạo sinh. Công trình này đưa các nguyên lý hình học của thế giới thực vào bài toán phát hiện ảnh tạo sinh. Đây là một hướng tiếp cận khá thú vị khi khai thác một góc nhìn trực quan trong ảnh và kiểm tra toàn bộ quan hệ không gian trong ảnh. Theo hướng phân tích ngữ nghĩa, AnomReason \cite{tan2026semantic} được phát triển như một benchmark dành cho bài toán phát hiện và suy luận các bất thường ngữ nghĩa trong ảnh tạo sinh. Họ cố gắng xây dựng bộ dữ liệu liệt kê toàn bộ các bất thường dưới dạng có cấu trúc. Ví dụ, một bất thường được bài báo định nghĩa dưới 4 trường thông tin chính (minh họa ở Hình~\ref{fig:exampleAnom}), bao gồm: tên (name), hiện tượng quan sát (phenomenon), lý do suy luận (reasoning) và mức độ nghiêm trọng (severity). Phương pháp này đáng chú ý với cách biểu diễn cấu trúc các thành phần một cách rõ ràng, giúp phân tích chi tiết nguyên nhân bất hợp lý, tạo cơ sở để kiểm định kết quả phân loại.
 
 Ưu điểm nổi bật của hướng tiếp cận dựa trên các bất thường trực quan là mang lại khả năng giải thích cao, giúp con người dễ dàng quan sát và đối chiếu bằng chứng. Tuy nhiên, nhược điểm lớn nằm ở chỗ các bất thường ngữ nghĩa không phải lúc nào cũng là đặc trưng duy nhất để xác định ảnh tạo sinh. Một bức ảnh thật vẫn có thể chứa những điểm kỳ lạ do ý đồ nghệ thuật của nhiếp ảnh gia; ngược lại, không phải mọi ảnh tạo sinh đều xuất hiện lỗi trực quan rõ rệt. Để khắc phục các hạn chế đơn lẻ, xu hướng nghiên cứu hiện nay đang hướng tới việc kết hợp cả đặc trưng cấp thấp (như chênh lệch điểm ảnh,...) và đặc trưng cấp cao (như cấu trúc ngữ nghĩa của các đối tượng) vào cùng một hệ thống phân loại \cite{shi2026exact, cao2025reveal}. Dù vậy, mặc dù việc tích hợp đa cấp độ này mang lại độ chính xác cao cho bài toán phân loại nhị phân, hệ thống vẫn tồn tại nhiều bất cập nghiêm trọng trong việc suy luận, giải thích bản chất và định vị chính xác vùng bằng chứng mà mô hình đã dựa vào để đưa ra quyết định. 
 
-\textbf{Thứ ba, với việc tích hợp định vị và lý giải cho quyết định phân loại.}
+\textbf{Thứ ba, các phương pháp tích hợp định vị và lý giải kết quả nhận diện dựa trên bằng chứng.}
 
-Gần đây, việc ứng dụng các mô hình đa phương thức lớn (MLLM) đã mở ra xu hướng mới trong việc kết hợp khả năng phân loại với sinh giải thích bằng ngôn ngữ tự nhiên và định vị vùng bất thường trên ảnh. Điển hình, AIGI-Holmes \cite{zhou2025aigi} xây dựng tập dữ liệu Holmes-Set chứa các nhãn phân loại cùng lời giải thích chi tiết, đồng thời áp dụng quy trình huấn luyện nhiều giai đoạn nhằm nâng cao khả năng giải thích dựa trên tín hiệu thị giác. Tuy mô hình đạt độ chính xác cao trên tập dữ liệu thử nghiệm, hệ thống vẫn bộc lộ nhiều hạn chế khi gặp phải những kịch bản ảnh phức tạp. Minh họa trong Hình~\ref{fig:exampleAnom} cho thấy kết quả của AIGI-Agent khi xử lý bức ảnh chứa nhiều vật thể nhập nhằng: mặc dù phân loại ảnh tạo sinh chính xác, lời giải thích mà hệ thống đưa ra lại hoàn toàn sai lệch. Điều này chứng minh rằng hệ thống vẫn đang cố gắng hợp lý hóa lời giải thích dựa trên kết quả phân loại có sẵn, chứ chưa thực sự suy luận dựa trên bằng chứng thuyết phục.
+Gần đây, việc ứng dụng các mô hình đa phương thức lớn (MLLM) đã mở ra xu hướng mới trong việc kết hợp khả năng phân loại với sinh giải thích bằng ngôn ngữ tự nhiên và định vị vùng bất thường trên ảnh. Điển hình, AIGI-Holmes \cite{zhou2025aigi} xây dựng tập dữ liệu Holmes-Set chứa các nhãn phân loại cùng lời giải thích chi tiết, đồng thời áp dụng quy trình huấn luyện nhiều giai đoạn nhằm nâng cao khả năng giải thích dựa trên tín hiệu thị giác. Trong khi đó, SIDA \cite{huang2025sida} mở rộng quy mô với tập dữ liệu SID-Set (~300.000 ảnh) và đề xuất hệ thống dựa trên MLLM, cho phép thực hiện đồng thời ba tác vụ: phân loại ảnh, định vị vùng ảnh tạo sinh bằng mặt nạ phân đoạn (segmentation mask), và sinh văn bản giải thích. Mặc dù đạt được những tiến bộ đáng ghi nhận, các tiếp cận này vẫn tồn tại một hạn chế cốt lõi: lời giải thích và kết quả định vị vùng bất thường được sinh ra đồng thời nhờ vào một mô hình LISA \cite{lai2024lisa}, một MLLM có khả năng phân đoạn vật thể trên ảnh. Nói cách khác, hệ thống vẫn có thể đưa ra một lời giải thích nghe rất hợp lý nhưng không thực sự dựa trên bằng chứng thị giác mà nó đã khoanh vùng.
 
-Trong khi đó, SIDA \cite{huang2025sida} mở rộng quy mô với tập dữ liệu SID-Set (~300.000 ảnh) và đề xuất hệ thống dựa trên MLLM, cho phép thực hiện đồng thời ba tác vụ: phân loại ảnh, định vị vùng ảnh tạo sinh bằng mặt nạ phân đoạn (segmentation mask), và sinh văn bản giải thích. Mặc dù đạt được những tiến bộ đáng ghi nhận, các tiếp cận này vẫn tồn tại một hạn chế cốt lõi: lời giải thích và kết quả định vị vùng bất thường được sinh ra đồng thời nhờ vào một mô hình LISA \cite{lai2024lisa}, một MLLM có khả năng phân đoạn vật thể trên ảnh. Nói cách khác, hệ thống vẫn có thể đưa ra một lời giải thích nghe rất hợp lý nhưng không thực sự dựa trên bằng chứng thị giác mà nó đã khoanh vùng.
+Gần đây, FakeXplain \cite{ji2026fakexplain} tiếp tục phát triển hướng tiếp cận giải thích gắn với bằng chứng thị giác. Công trình xây dựng bộ dữ liệu FakeXplained, trong đó các bất thường tạo sinh được chú thích bằng bounding box và mô tả ngôn ngữ tương ứng, sau đó sử dụng dữ liệu này để huấn luyện FakeXplainer thực hiện đồng thời nhận diện ảnh tạo sinh, định vị dấu vết và sinh lời giải thích. Bên cạnh đó, X-AIGD \cite{xiao2026xaigd} đề xuất một benchmark với các chú thích bất thường ở mức chi tiết nhằm đánh giá khả năng diễn giải của những bộ phát hiện ảnh tạo sinh. Kết quả phân tích của X-AIGD cho thấy các bộ phát hiện hiện có có thể vẫn phụ thuộc đáng kể vào những đặc trưng khó diễn giải, ngay cả khi được huấn luyện để nhận biết các bất thường trực quan. Những kết quả này cho thấy tầm quan trọng của việc đánh giá không chỉ độ chính xác phân loại mà còn cả sự liên hệ giữa bằng chứng và quyết định của mô hình.
 
-Để giải quyết triệt để vấn đề này, nghiên cứu đề xuất một hướng tiếp cận mới: lời giải thích phải được suy luận trực tiếp từ tập bằng chứng (evidence-grounded reasoning) đã được phát hiện và định vị, thay vì chỉ là một thành phần đầu ra được sinh ra đồng thời cùng với kết quả dự đoán.
+Tuy nhiên, khả năng sinh lời giải thích và định vị vùng ảnh tương ứng chưa đồng nghĩa với việc các bằng chứng được trình bày thực sự đóng góp vào quyết định phân loại. Chẳng hạn, các trường hợp minh họa trong Hình~\ref{fig:exampleAnom}, được phân tích từ kết quả chú thích của AnomAgent \cite{tan2026semantic}, cho thấy một số mô tả bất thường có thể chưa chính xác, đề cập đối tượng một cách mơ hồ hoặc khó ánh xạ đến vùng ảnh cụ thể. Những trường hợp này phản ánh nguy cơ thiếu nhất quán giữa lời giải thích và bằng chứng thị giác, nhưng chưa đủ để kết luận rằng toàn bộ quá trình suy luận của mô hình chỉ mang tính hợp lý hóa sau dự đoán (post-hoc rationalization). Tương tự, ngay cả khi lời giải thích được liên kết với một vùng ảnh xác định, vẫn cần kiểm chứng liệu vùng đó có thực sự ảnh hưởng đến kết quả phân loại hay không.
+
+Nhìn chung, các nghiên cứu gần đây đã đạt nhiều tiến bộ trong việc kết hợp nhận diện, định vị và giải thích ảnh tạo sinh. Tuy nhiên, một vấn đề cần tiếp tục nghiên cứu là đánh giá tính nhất quán và độ trung thực (faithfulness) của lời giải thích đối với những bằng chứng mà hệ thống thực sự sử dụng. Vì vậy, hướng nghiên cứu này không chỉ tập trung phát hiện và biểu diễn các dấu vết tạo sinh mà còn hướng đến phân tích vai trò, mức độ đóng góp của từng bằng chứng và xây dựng cơ chế suy luận, lý giải có thể kiểm chứng. Đây là cơ sở để mở rộng việc phân tích bằng chứng từ nhận diện ảnh tạo sinh sang truy tìm nguồn gốc, trong đó các dấu vết cần được đánh giá thêm về khả năng phân biệt giữa những nguồn tạo sinh khác nhau.
 
 \subsection{Bài toán truy tìm nguồn gốc tạo sinh ảnh}
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.9\textwidth]{figures/pp_source_attribution.pdf}
-    \caption{Minh họa các phương pháp trích xuất đặc trưng dấu vân tay (fingerprint) của các nghiên cứu hiện nay cho bài toán truy tìm nguồn gốc tạo sinh ảnh.}
+    \caption{Minh họa hai hướng khai thác đặc trưng cấp cao và dấu vết pháp chứng cấp thấp cho bài toán truy tìm nguồn tạo sinh ảnh.}
     \label{fig:so_sanh_attribution}
 \end{figure}
 
-Nếu bài toán phân loại chỉ đưa ra quyết định nhị phân giữa ảnh thật và ảnh tạo sinh, thì bài toán truy tìm nguồn gốc (source attribution) giải quyết một khía cạnh sâu hơn: định danh chính xác mô hình AI nào đã tạo ra bức ảnh đó. So với bài toán phân loại thì bài toán truy tìm nguồn gốc tạo sinh ảnh hiện vẫn còn nhiều khoảng trống chưa được nghiên cứu và khai thác. Thách thức cốt lõi của bài toán này nằm ở việc trích xuất được đặc trưng dấu vân tay (model fingerprint) mang tính đặc trưng riêng biệt của từng thuật toán sinh ảnh. Hình~\ref{fig:so_sanh_attribution} minh họa một số hướng tiếp cận cho bài toán này. Theo đó, trước đây, các nghiên cứu tập trung khai thác đặc trưng cấp cao để giải quyết bài toán. Tuy nhiên, hiện nay các nghiên cứu lại có xu hướng chuyển dần sang hướng tiếp cận khai thác đặc trưng cấp thấp (low-level forensic features) cho bài toán này.
+Khác với bài toán nhận diện ảnh tạo sinh nhằm phân biệt ảnh thật và ảnh do AI tạo ra, bài toán truy tìm nguồn gốc (source attribution) hướng đến xác định mô hình hoặc hệ thống có khả năng đã tạo ra một hình ảnh. Thách thức quan trọng của bài toán này là khai thác những đặc trưng mang thông tin phân biệt giữa các nguồn tạo sinh, thường được gọi là dấu vân tay mô hình (model fingerprints). Hình~\ref{fig:so_sanh_attribution} minh họa hai hướng khai thác đặc trưng phổ biến: đặc trưng cấp cao từ các mô hình thị giác và dấu vết pháp chứng cấp thấp. Bên cạnh việc trích xuất đặc trưng, các nghiên cứu gần đây còn mở rộng sang khả năng truy tìm nguồn chưa biết, kết hợp nhiều loại bằng chứng và lý giải kết quả. Có thể tổng hợp các hướng nghiên cứu chính như sau:
 
-Ở hướng tiếp cận đặc trưng cấp cao, tiêu biểu là nghiên cứu "Are CLIP Features All You Need for Universal Synthetic Image Origin Attribution?" \cite{cioni2024clip}, các tác giả đề xuất sử dụng không gian đặc trưng ngữ nghĩa của các mô hình đã được huấn luyện trước đó như CLIP để phân biệt nguồn gốc ảnh. Tuy phương pháp này đơn giản và tận dụng khả năng biểu diễn ngữ nghĩa của các mô hình tiền huấn luyện (pre-train models) nhưng mô hình dễ bị phụ thuộc vào phong cách và ngữ nghĩa riêng của từng mô hình tạo sinh. Điều này có nghĩa là hệ thống phân loại thực chất chỉ đang dựa vào phong cách hiển thị bề mặt (rendering style) riêng của từng mô hình, chứ chưa trích xuất được dấu vết từ kiến trúc mô hình. Do đó, trong trường hợp hai mô hình tạo sinh khác nhau cùng tạo ra bức ảnh có nội dung và phong cách hoàn toàn tương đồng (như khi sử dụng chung một câu lệnh tả thực khắt khe), không gian đặc trưng ngữ nghĩa của CLIP sẽ bị nhầm lẫn. Kết quả là mô hình dễ đưa ra quyết định sai lệch.
+\medskip
+\noindent\textbf{Thứ nhất, các phương pháp truy tìm nguồn dựa trên đặc trưng học sâu (feature-based attribution).}
 
-Chính vì hạn chế trên, đại đa số các nghiên cứu trong bài toán source attribution sau này dần chuyển sang hướng tiếp cận đặc trưng cấp thấp (low-level features). Lý do là vì thông tin ngữ nghĩa cấp cao có thể giống nhau giữa các mô hình sinh, nhưng các dấu vết vi mô ở cấp độ điểm ảnh lại mang đặc tính riêng biệt. Các công trình gần đây như \cite{Nguyen_2025_CVPR, xu2025causal} đã thể hiện rõ xu hướng này khi tập trung khai thác các thông tin tín hiệu từ các mối quan hệ giữa các điểm ảnh. Đặc trưng “causal fingerprints” \cite{xu2025causal} đã đề xuất tách phần thông tin nội dung (content) và phong cách (style) ra khỏi bức ảnh, từ đó chỉ giữ lại dải tín hiệu đặc trưng để phân biệt nguồn tạo sinh trên ảnh. Phương pháp này triệt tiêu được sự ảnh hưởng của ngữ nghĩa, giúp hệ thống tập trung hoàn toàn vào các bằng chứng thị giác vi mô. Tuy nhiên, do quá tập trung vào các dải tín hiệu nhiễu trên ảnh nên các phương pháp này dễ bị thất bại trước những kịch bản ảnh thực tế như bị mờ hoặc bị nén ảnh khiến cho các dấu vết nhiễu bị phá hủy.
+Hướng tiếp cận này khai thác khả năng biểu diễn hình ảnh của các mô hình thị giác được huấn luyện trước, chẳng hạn CNN hoặc CLIP, để phân biệt các nguồn tạo sinh. Tiêu biểu, Cioni và cộng sự \cite{cioni2024clip} đề xuất sử dụng đặc trưng từ các mô hình thị giác nền tảng để thực hiện truy tìm nguồn trong điều kiện open-set, đồng thời cho thấy hiệu quả tốt hơn một số phương pháp dựa trên đặc trưng tần số trong các thiết lập thử nghiệm của họ. Ưu điểm của hướng tiếp cận này là tận dụng được các biểu diễn thị giác có khả năng tổng quát hóa, kể cả khi dữ liệu huấn luyện cho từng nguồn sinh còn hạn chế. Tuy nhiên, do các đặc trưng học sâu có thể chứa thông tin về nội dung, phong cách và phân bố dữ liệu, mô hình có nguy cơ khai thác những tương quan không trực tiếp phản ánh bản chất của nguồn tạo sinh. Vì vậy, độ chính xác phân loại cao chưa đủ để khẳng định các đặc trưng được sử dụng thực sự mang dấu vết đặc trưng của quá trình sinh ảnh.
 
-Một khoảng trống nghiên cứu lớn khác trong bài toán truy tìm nguồn gốc tạo sinh (source attribution) là sự thiếu hụt hoàn toàn các hướng tiếp cận về định vị (localization) và lý giải (explanation/reasoning). Trong khi bài toán phát hiện ảnh giả nhị phân đã có những bước tiến mạnh mẽ hướng tới việc khoanh vùng chi tiết tạo sinh (visual grounding) và sinh lời giải thích bằng ngôn ngữ tự nhiên, các phương pháp truy tìm nguồn gốc tạo sinh hiện nay vẫn hầu như chỉ dừng lại ở việc gán nhãn phân loại. Hệ thống chỉ đưa ra tên mô hình tạo sinh (như Midjourney, SDXL hay DALL-E) dưới dạng hộp đen (blackbox), mà không thể chỉ ra cụ thể vùng không gian nào trên bức ảnh đang chứa dấu vết đặc trưng, cũng như không thể lý giải bằng ngôn ngữ nguyên nhân dẫn đến quyết định phân loại đó. Điều này cũng hoàn toàn dễ hiểu do các mô hình hiện nay chỉ sử dụng đặc trưng cấp thấp, dẫn đến khó trong việc tạo ra giải thích dễ hiểu cho người dùng cuối. Tuy nhiên việc thiếu hụt khả năng định vị vùng bằng chứng và giải thích cơ chế suy luận này làm giảm đi đáng kể tính minh bạch, đồng thời tạo ra rào cản lớn khi đưa bài toán source attribution vào các kịch bản giám định đòi hỏi sự minh bạch cao.
+\medskip
+\noindent\textbf{Thứ hai, các phương pháp khai thác dấu vân tay pháp chứng (forensic fingerprinting).}
+
+Khác với việc sử dụng các biểu diễn thị giác tổng quát, hướng tiếp cận này tập trung khai thác những dấu vết thống kê và cấu trúc tín hiệu mà quá trình tạo sinh có thể để lại trên ảnh, chẳng hạn phân bố nhiễu, tương quan điểm ảnh, đặc trưng miền tần số và sai khác tái tạo (reconstruction residuals). Các nghiên cứu như ManiFPT \cite{song2024manifpt} đã đề xuất cách định nghĩa và phân tích dấu vân tay mô hình, đồng thời khảo sát mối liên hệ giữa cấu trúc dấu vân tay và những lựa chọn thiết kế trong quá trình tạo sinh. Gần đây nghiên cứu Causal Fingerprints \cite{xu2025causal} hướng đến việc tách dấu vết nguồn khỏi thông tin nội dung (content) và phong cách (style) thông qua không gian biểu diễn ít phụ thuộc ngữ nghĩa được xây dựng từ sai khác tái tạo của mô hình khuếch tán. Các tác giả đồng thời sử dụng những thí nghiệm phản thực (counterfactual) để đánh giá tính chất của dấu vân tay được trích xuất.
+
+Những nghiên cứu này cho thấy tiềm năng của việc khai thác các dấu vết liên quan đến quá trình tạo sinh thay vì chỉ dựa trên biểu diễn nội dung ảnh. Tuy nhiên, các dấu vết pháp chứng thường khó diễn giải trực quan và có thể chịu ảnh hưởng bởi các phép xử lý hậu kỳ như nén, làm mờ hoặc thay đổi kích thước ảnh. Bên cạnh đó, mặc dù Causal Fingerprints đã nghiên cứu khả năng tách thông tin nguồn khỏi nội dung và phong cách, kết quả thực nghiệm trong những thiết lập cụ thể chưa đồng nghĩa với việc đã xác định đầy đủ nguyên nhân hình thành dấu vết đối với mọi kiến trúc mô hình. Việc phân tích ảnh hưởng riêng của kiến trúc, dữ liệu huấn luyện, quá trình tối ưu và cơ chế sinh ảnh đến các dấu vết quan sát được vẫn là một hướng cần tiếp tục nghiên cứu.
+
+\medskip
+\noindent\textbf{Thứ ba, các phương pháp truy tìm nguồn trong môi trường mở (open-set source attribution).}
+
+Một thách thức quan trọng của bài toán truy tìm nguồn là khả năng xử lý hình ảnh đến từ những mô hình chưa xuất hiện trong dữ liệu huấn luyện. Khác với thiết lập closed-set, trong đó mọi ảnh tạo sinh được giả định thuộc một tập nguồn đã biết, thiết lập open-set yêu cầu hệ thống có khả năng nhận biết và từ chối gán nhãn khi ảnh không phù hợp với các nguồn đã quan sát. Tiêu biểu, POSE \cite{yang2023progressive} đề xuất cơ chế mở rộng không gian nguồn chưa biết thông qua việc mô phỏng các dấu vết khác biệt trong khi duy trì nội dung ngữ nghĩa. Gần đây, đặc trưng Forensic Self-Descriptions \cite{Nguyen_2025_CVPR} đã khai thác các cấu trúc pháp chứng vi mô thông qua các bộ lọc dự đoán và biểu diễn sai khác ở nhiều mức độ. Phương pháp này hỗ trợ nhận diện ảnh tạo sinh không cần mẫu huấn luyện từ nguồn sinh, truy tìm nguồn trong môi trường mở và phân cụm ảnh theo nguồn tạo sinh.
+
+Các nghiên cứu trên đã mở rộng khả năng truy tìm nguồn vượt ra ngoài tập mô hình được sử dụng trong huấn luyện. Tuy nhiên, cần phân biệt giữa việc nhận biết một nguồn chưa biết, phân nhóm các ảnh có khả năng thuộc cùng nguồn và xác định danh tính cụ thể của nguồn đó. Khi chưa có thông tin tham chiếu, hệ thống có thể phát hiện hoặc phân cụm các nguồn mới nhưng khó xác định chính xác tên mô hình đã tạo ra ảnh. Do đó, một vấn đề cần tiếp tục nghiên cứu là đánh giá mức độ phù hợp của các bằng chứng phân biệt nguồn để hỗ trợ quyết định từ chối gán nhãn, đồng thời xem xét khả năng thích nghi khi xuất hiện dữ liệu tham chiếu từ nguồn mới.
+
+\medskip
+\noindent\textbf{Thứ tư, các phương pháp truy tìm nguồn kết hợp bằng chứng và giải thích (evidence-aware attribution).}
+
+Bên cạnh việc nâng cao độ chính xác truy tìm nguồn, các nghiên cứu gần đây bắt đầu quan tâm đến khả năng kết hợp nhiều loại đặc trưng và cung cấp thông tin hỗ trợ lý giải kết quả. Tiêu biểu, EXACT \cite{shi2026exact} đề xuất hệ thống kết hợp hai nhánh biểu diễn: nhánh ngữ nghĩa dựa trên CLIP và nhánh dấu vết cấp thấp sử dụng các thành phần wavelet kết hợp Transformer. Phương pháp sử dụng cơ chế kết hợp đặc trưng thích nghi, đồng thời hỗ trợ nhận diện ảnh tạo sinh, truy tìm nguồn và định vị ở mức điểm ảnh. Ngoài ra, EXACT tích hợp mô hình đa phương thức lớn để tạo báo cáo pháp chứng bằng ngôn ngữ tự nhiên từ các kết quả phân tích. Đây là một bước tiến đáng chú ý trong việc kết hợp nhiều nguồn thông tin và mở rộng khả năng diễn giải của hệ thống.
+
+Tuy nhiên, việc kết hợp các đặc trưng, định vị vùng ảnh và sinh báo cáo giải thích chưa đủ để khẳng định rằng các bằng chứng được trình bày thực sự mang tính đặc trưng cho nguồn sinh hoặc có đóng góp trực tiếp vào quyết định truy tìm nguồn. Đặc biệt, cần phân biệt giữa những dấu vết giúp xác định ảnh có nguồn gốc tạo sinh và những dấu vết có khả năng phân biệt giữa các mô hình tạo sinh khác nhau. Một bất thường hình học hoặc ngữ nghĩa có thể hỗ trợ nhận diện ảnh tạo sinh nhưng không nhất thiết đủ để xác định nguồn sinh cụ thể. Ngược lại, các dấu vân tay cấp thấp có thể mang giá trị phân biệt nguồn nhưng khó được biểu diễn và giải thích trực quan. Do đó, khả năng lý giải trong source attribution cần được xây dựng dựa trên việc phân tích vai trò, giá trị phân biệt và mức độ đóng góp của từng bằng chứng, thay vì chỉ dựa trên kết quả phân loại và các mô tả được sinh ra sau đó.
+
+Nhìn chung, các nghiên cứu về truy tìm nguồn tạo sinh đã đạt nhiều tiến bộ trong khai thác đặc trưng, phân tích dấu vân tay, xử lý nguồn chưa biết và kết hợp nhiều nhiệm vụ pháp chứng. Tuy nhiên, việc làm rõ mối quan hệ giữa cơ chế tạo sinh, dấu vết quan sát được và quyết định truy tìm nguồn vẫn cần được nghiên cứu sâu hơn. Đặc biệt, các hệ thống tạo sinh mã nguồn đóng thường không công khai đầy đủ kiến trúc, trọng số và quy trình sinh ảnh, gây khó khăn cho việc phân tích nguyên nhân hình thành dấu vết. Vì vậy, hướng nghiên cứu này ưu tiên khai thác các mô hình tạo sinh mở như một môi trường có kiểm soát để khảo sát ảnh hưởng của kiến trúc, dữ liệu huấn luyện và quy trình sinh ảnh đến những dấu vết đặc trưng. Trên cơ sở đó, nghiên cứu hướng đến xác định và lựa chọn các bằng chứng có giá trị phân biệt nguồn, kiểm chứng mức độ đóng góp của chúng vào quyết định và xây dựng lời giải thích đáng tin cậy, đồng thời hỗ trợ nhận biết những nguồn tạo sinh chưa xuất hiện trong dữ liệu huấn luyện.
+
 
 \subsection{Benchmark và dataset}
-Một vấn đề quan trọng là bộ dữ liệu, điều ảnh hưởng rất lớn việc một detector hay attribution system thực sự đang học điều gì. Các benchmark và dataset được tổng hợp trong bảng \ref{tab:datasets}.
 
-% \begin{table*}[t]
-% \centering
-% \caption{Tóm tắt một số bộ dữ liệu cho nhóm bài toán nhận diện ảnh tạo sinh, truy tìm nguồn gốc trên ảnh.}
-% \label{tab:datasets}
-% \resizebox{\textwidth}{!}{%
-% \begin{tabular}{l c c c p{6.5cm} c c c c c}
-% \hline
-% \textbf{Dataset / Benchmark} &
-% \textbf{Conference / Year} &
-% \textbf{Samples} &
-% \textbf{\# Sources} &
-% \textbf{Generation Sources} &
-% \textbf{Closed Source} &
-% \textbf{Detection} &
-% \textbf{Attribution} &
-% \textbf{Localization} &
-% \textbf{Explanation} \\
-% \hline
+Bộ dữ liệu đóng vai trò quan trọng trong việc xác định những đặc trưng mà hệ thống nhận diện và truy tìm nguồn tạo sinh có thể học được, đồng thời ảnh hưởng trực tiếp đến khả năng tổng quát hóa và kiểm chứng kết quả. Bảng~\ref{tab:datasets} tổng hợp một số bộ dữ liệu và benchmark tiêu biểu, bao gồm các tập dữ liệu phục vụ nhận diện ảnh tạo sinh, truy tìm nguồn và phân tích bằng chứng. Các bộ dữ liệu này khác nhau về quy mô, loại mô hình tạo sinh, mức độ chi tiết của nhãn và mục tiêu đánh giá.
 
-% CIFAKE &
-% IEEE Access, 2024 &
-% 120K = 60K real + 60K fake &
-% 1 &
-% Stable Diffusion 1.4 &
-% None &
-% $\checkmark$ &
-% $\times$ &
-% $\times$ &
-% $\times$ \\
-
-% WildFake &
-% AAAI 2025 &
-% 3.69M = $\approx$1.01M real + $\approx$2.68M fake &
-% 23 &
-% BigGAN; StyleGAN; StarGAN; DF-GAN; GALIP; GigaGAN; ADM; DDPM; DDIM; Imagen; VQDM; DALL-E 2; DALL-E 3; Midjourney v4; Midjourney v5; SDXL; OriginalSD; ControlNet; LoRA-based SD models; LyCORIS-based models; personalized SD models; MAGE; VQGAN; VQVAE; MAE &
-% Imagen; DALL-E 2; DALL-E 3; Midjourney v4; Midjourney v5 &
-% $\checkmark$ &
-% $\times$ &
-% $\times$ &
-% $\times$ \\
-
-% AIGIBench &
-% NeurIPS 2025 Datasets \& Benchmarks &
-% 144K &
-% Multiple &
-% ProGAN; R3GAN; StyleGAN-XL; Stable Diffusion 1.4; Stable Diffusion 3; FLUX.1-dev; Midjourney V6; Imagen; DALL-E 3; InstantID; Infinite-ID; BLIP; FaceSwap; InSwap; BlendFace; WFIR; CommunityAI; SocialRF; open-source/community generators &
-% Midjourney V6; DALL-E 3; Imagen; Stable Diffusion 3; FLUX.1-dev &
-% $\checkmark$ &
-% $\times$ &
-% $\times$ &
-% $\times$ \\
-
-% SID-Set &
-% CVPR 2025 &
-% $\approx$300K &
-% Multiple &
-% FLUX; Kandinsky 3.0; SDXL; AbsoluteReality &
-% None &
-% $\checkmark$ &
-% $\times$ &
-% $\checkmark$ &
-% $\checkmark$ \\
-
-% Synthbuster &
-% IEEE Open Journal of Signal Processing, 2023 &
-% 10K fake + 1K real &
-% 9 &
-% DALL-E 2; DALL-E 3; Adobe Firefly; Midjourney v5; Stable Diffusion 1.3; Stable Diffusion 1.4; Stable Diffusion 2; Stable Diffusion XL; GLIDE &
-% DALL-E 2; DALL-E 3; Adobe Firefly; Midjourney v5 &
-% $\checkmark$ &
-% $\checkmark$ &
-% $\times$ &
-% $\times$ \\
-
-% GenImage &
-% 2024 &
-% $\approx$2.68M = $\approx$1.33M real + $\approx$1.35M fake &
-% 8 &
-% ADM; BigGAN; GLIDE; Midjourney; Stable Diffusion 1.4; Stable Diffusion 1.5; VQDM; Wukong &
-% Midjourney &
-% $\checkmark$ &
-% $\checkmark$ &
-% $\times$ &
-% $\times$ \\
-
-% DRAGON &
-% 2025 &
-% 2.6M &
-% 24 diffusion models &
-% SD 1.5; SD 2.1; SDXL; SDXL Turbo; SDXL Lightning; LCM-SDXL; Flash-SDXL; SDXL derivatives; SD 3; Flash-SD3; Flux.1; IF; Kandinsky; Lumina; PixArt-Alpha; PixArt-Sigma; Flash-PixArt; SSD-1B; LCM-SSD-1B; SD Cascade; Kolors; JuggernautXL; Realistic Stock Photo; Mobius; Hyper-SD &
-% None &
-% $\checkmark$ &
-% $\checkmark$ &
-% $\times$ &
-% $\times$ \\
-
-% AnomReason &
-% ICLR 2026 &
-% 21,539 images &
-% 3 &
-% Midjourney; SD3.5; Flux &
-% Midjourney; Flux &
-% $\checkmark$ &
-% $\times$ &
-% $\times$ &
-% $\checkmark$ \\
-
-% \hline
-% \end{tabular}%
-% }
-% \end{table*}
-
-\begin{table*}[t]
+\begin{table*}[htbp]
 \centering
-\small
-\renewcommand{\arraystretch}{1.15}
-
-\caption{Tóm tắt một số bộ dữ liệu cho nhóm bài toán nhận diện ảnh tạo sinh, truy tìm nguồn gốc trên ảnh.}
+\scriptsize
+\renewcommand{\arraystretch}{1.25}
+\caption{Tổng hợp các bộ dữ liệu và benchmark liên quan đến nhận diện và truy tìm nguồn tạo sinh ảnh.}
 \label{tab:datasets}
 
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{
-|L{2.5cm}
-|C{3.2cm}
-|C{3.5cm}
-|C{2.5cm}
-|C{4.5cm}
-|C{3.5cm}
-|C{1.2cm}
-|C{1.2cm}
-|C{1.2cm}
-|C{1.2cm}|
-}
+\begin{tabular}{|p{2.6cm}|p{2.5cm}|p{3.4cm}|p{4.5cm}|p{4.4cm}|}
 \hline
-
 \textbf{Dataset / Benchmark} &
 \textbf{Conference / Year} &
 \textbf{Number of Samples} &
-\textbf{Number of Generative Sources} &
 \textbf{Generative Sources} &
-\textbf{Closed Source} &
-\textbf{Detection} &
-\textbf{Attribution} &
-\textbf{Localization} &
-\textbf{Explanation}
-\\
+\textbf{Primary Tasks} \\
+\hline
+
+CIFAKE \cite{bird2024cifake} &
+IEEE Access 2024 &
+120K (60K real + 60K fake) &
+Stable Diffusion 1.4 &
+Binary detection \\
+\hline
+
+WildFake \cite{hong2025wildfake} &
+AAAI 2025 &
+$\approx$3.69M (1.01M real + 2.68M fake) &
+GAN, Diffusion, personalized models, commercial generators &
+Detection, cross-source generalization \\
+\hline
+
+AIGIBench \cite{li2025artificial} &
+NeurIPS 2025 &
+144K per training setting; multiple test subsets &
+GAN, Stable Diffusion, FLUX, Midjourney, DALL-E, Imagen, etc. &
+Detection robustness and generalization \\
+\hline
+
+SID-Set \cite{huang2025sida} &
+CVPR 2025 &
+300K (100K real + 100K synthetic + 100K tampered) &
+FLUX, Kandinsky, SDXL, etc. &
+Detection, tampering localization, explanation \\
+\hline
+
+Synthbuster \cite{bammey2024synthbuster} &
+IEEE OJSP 2023 &
+9K fake (9 generators); RAISE-1k as external real reference &
+DALL-E 2/3, Firefly, Midjourney v5, SD variants, GLIDE &
+Detection; generator-labeled evaluation data \\
+\hline
+
+GenImage \cite{zhu2023genimage} &
+NeurIPS 2023 &
+$\approx$2.68M (1.33M real + 1.35M fake) &
+8 generators: BigGAN, GLIDE, ADM, SD, Midjourney, etc. &
+Detection, cross-generator and degradation evaluation \\
+\hline
+
+DRAGON \cite{bertazzini2025dragon} &
+arXiv 2025 &
+2.6M (2.5M train + 100K test) &
+25 diffusion models: SD, FLUX, PixArt, Kandinsky, etc. &
+Detection, source attribution \\
+\hline
+
+AnomReason \cite{tan2026semantic} &
+ICLR 2026 &
+21,539 synthetic images &
+Midjourney, SD3.5, FLUX &
+Semantic anomaly detection and reasoning \\
+\hline
+
+FakeXplained \cite{ji2026fakexplain} &
+ICLR 2026 &
+8K+ annotated synthetic images &
+28 generators across multiple architectural families &
+Detection, artifact localization, explanation \\
+\hline
+\end{tabular}%
+}
+\end{table*}
+
+Bên cạnh quy mô và tính đa dạng, khả năng hỗ trợ nghiên cứu còn phụ thuộc vào mức độ chi tiết của nhãn và các loại bằng chứng được chú thích. Bảng~\ref{tab:dataset_annotations} so sánh các thông tin này, đặc biệt là khả năng đánh giá nguồn chưa biết, bằng chứng trực quan và lời giải thích phục vụ truy tìm nguồn.
+
+\begin{table*}[htbp]
+\centering
+\scriptsize
+\renewcommand{\arraystretch}{1.25}
+\caption{So sánh nhãn nguồn, giao thức đánh giá và các dạng chú thích bằng chứng của những bộ dữ liệu tiêu biểu.}
+\label{tab:dataset_annotations}
+
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|p{2.5cm}|p{4.2cm}|p{4.7cm}|p{4.7cm}|p{2.1cm}|}
+\hline
+\textbf{Dataset} &
+\textbf{Source Label Granularity} &
+\textbf{Known / Unknown Evaluation} &
+\textbf{Evidence Annotations} &
+\textbf{Source-specific Explanation} \\
 \hline
 
 CIFAKE &
-IEEE Access, 2024 &
-120K = 60K real + 60K fake &
-1 &
-Stable Diffusion 1.4 &
-None &
-$\checkmark$ &
-$\times$ &
-$\times$ &
-$\times$
-\\
+Real/Fake; single synthetic generator &
+Binary detection; no multi-source attribution protocol &
+Not reported &
+Not reported \\
 \hline
 
 WildFake &
-AAAI 2025 &
-3.69M = $\approx$1.01M real + $\approx$2.68M fake &
-23 &
-GAN; Imagen; DALL-E; Midjourney; Stable Diffusion; ControlNet; LyCORIS-based models; \ldots &
-Imagen; DALL-E; Midjourney &
-$\checkmark$ &
-$\times$ &
-$\times$ &
-$\times$
-\\
+Generator family, model and hierarchical source metadata &
+Cross-source detection generalization; open-set attribution not established &
+Not reported &
+Not reported \\
 \hline
 
 AIGIBench &
-NeurIPS 2025 Datasets \& Benchmarks &
-144K &
-Multiple sources &
-GAN; Stable Diffusion; FLUX; Midjourney; Imagen; DALL-E; FaceSwap; BlendFace; \ldots &
-Midjourney; DALL-E; Imagen; Stable Diffusion 3; FLUX.1-dev &
-$\checkmark$ &
-$\times$ &
-$\times$ &
-$\times$
-\\
+Real/Fake; generator-specific evaluation subsets &
+Unseen-generator detection; not open-set source attribution &
+Not reported &
+Not reported \\
 \hline
 
 SID-Set &
-CVPR 2025 &
-$\approx$300K &
-Multiple sources &
-FLUX; Kandinsky 3.0; SDXL; AbsoluteReality &
-None &
-$\checkmark$ &
-$\times$ &
-$\checkmark$ &
-$\checkmark$
-\\
+Real, fully synthetic and tampered categories &
+Detection and manipulation evaluation &
+Tampering masks and textual explanations &
+Not reported \\
 \hline
 
 Synthbuster &
-IEEE Open Journal of Signal Processing, 2023 &
-10K fake + 1K real &
-9 &
-DALL-E; Adobe Firefly; Midjourney; Stable Diffusion; GLIDE &
-DALL-E; Adobe Firefly; Midjourney v5 &
-$\checkmark$ &
-$\checkmark$ &
-$\times$ &
-$\times$
-\\
+Generator identity (9 models) &
+Multi-generator detection evaluation; attribution possible with a separate protocol &
+Not reported &
+Not reported \\
 \hline
 
 GenImage &
-2024 &
-$\approx$2.68M = $\approx$1.33M real + $\approx$1.35M fake &
-8 &
-BigGAN; GLIDE; Midjourney; Stable Diffusion; VQDM; Wukong &
-Midjourney &
-$\checkmark$ &
-$\checkmark$ &
-$\times$ &
-$\times$
-\\
+Generator identity (8 models) &
+Cross-generator detection; not open-set attribution &
+Not reported &
+Not reported \\
 \hline
 
 DRAGON &
-2025 &
-2.6M &
-24 diffusion models &
-Stable Diffusion; Flux; Kandinsky; Lumina; PixArt; Kolors; JuggernautXL; Realistic Stock Photo; Mobius &
-None &
-$\checkmark$ &
-$\checkmark$ &
-$\times$ &
-$\times$
-\\
+Generator identity (25 models), generation prompts &
+Dedicated test set for detection and attribution; unknown-source protocol not established &
+Not reported &
+Not reported \\
 \hline
 
 AnomReason &
-ICLR 2026 &
-21,539 images &
-3 &
-Midjourney; SD3.5; Flux &
-Midjourney; Flux &
-$\checkmark$ &
-$\times$ &
-$\times$ &
-$\checkmark$
-\\
+Generator provenance (3 sources) &
+Semantic anomaly evaluation; not source attribution &
+Structured anomaly descriptions: Name, Phenomenon, Reasoning, Severity &
+Not reported \\
+\hline
+
+FakeXplained &
+Multiple generator identities and architecture families &
+Detection and artifact localization; not source attribution &
+Bounding boxes, artifact descriptions and image-level tags &
+Not reported \\
 \hline
 
 \end{tabular}%
 }
-
 \end{table*}
 
-% \begin{sidewaystable*}[t]
-% \centering
-% \caption{Comparison of representative datasets and benchmarks for
-% AI-generated image detection and forensic analysis.}
-% \label{tab:datasets_comparison}
+\noindent\textit{Lưu ý:} ``Not reported'' cho biết dạng chú thích hoặc giao thức đánh giá tương ứng chưa được xác nhận trong công bố gốc được khảo sát, không đồng nghĩa với việc không thể xây dựng đánh giá bổ sung từ bộ dữ liệu.
 
-% \small
-% \setlength{\tabcolsep}{3pt}
-% \renewcommand{\arraystretch}{1.25}
+Nhìn chung, các bộ dữ liệu và benchmark hiện nay ngày càng đa dạng về kiến trúc, phiên bản mô hình, nội dung ảnh và điều kiện đánh giá. Các bộ dữ liệu như WildFake, AIGIBench và GenImage chủ yếu phục vụ nghiên cứu khả năng nhận diện và tổng quát hóa trên nhiều nguồn sinh, trong khi Synthbuster và DRAGON cung cấp thông tin về mô hình tạo sinh, tạo điều kiện cho việc xây dựng các thí nghiệm truy tìm nguồn. Tuy nhiên, việc có nhãn nguồn không đồng nghĩa với việc bộ dữ liệu đã có giao thức đánh giá truy tìm nguồn trong môi trường mở. Đặc biệt, khả năng phát hiện ảnh từ một mô hình chưa xuất hiện trong tập huấn luyện cần được phân biệt với khả năng xác định hoặc từ chối gán danh tính nguồn tạo sinh đó.
 
-% \begin{tabularx}{\textwidth}{
-%     L{2.0cm}
-%     L{2.3cm}
-%     C{2.0cm}
-%     C{1.0cm}
-%     Y
-%     Y
-%     C{0.7cm}
-%     C{0.7cm}
-%     C{0.7cm}
-%     C{0.7cm}
-% }
-% \toprule
+Bên cạnh đó, các bộ dữ liệu gần đây như SID-Set, AnomReason và FakeXplained đã bổ sung những dạng chú thích phong phú hơn, bao gồm vùng ảnh bị chỉnh sửa, mô tả bất thường ngữ nghĩa và giải thích bằng ngôn ngữ tự nhiên. Tuy nhiên, các chú thích này chủ yếu phục vụ nhận diện ảnh tạo sinh, định vị vùng can thiệp hoặc lý giải những bất thường trực quan. Chúng không nhất thiết phản ánh các dấu vết có giá trị phân biệt giữa những nguồn tạo sinh khác nhau. Đặc biệt, định vị vùng ảnh bị chỉnh sửa không đồng nghĩa với định vị bằng chứng đặc trưng của một mô hình sinh cụ thể.
 
-% \makecell[l]{Dataset /\\Benchmark}
-% &
-% \makecell[l]{Conference /\\Year}
-% &
-% \makecell[c]{Number of\\Samples}
-% &
-% \makecell[c]{\#\\Sources}
-% &
-% \makecell[l]{Generative Sources}
-% &
-% \makecell[l]{Closed Sources}
-% &
-% \makecell[c]{Det.}
-% &
-% \makecell[c]{Attr.}
-% &
-% \makecell[c]{Loc.}
-% &
-% \makecell[c]{Expl.}
-% \\
-
-% \midrule
-
-% CIFAKE
-% &
-% IEEE Access, 2024
-% &
-% 120K = 60K real + 60K fake
-% &
-% 1
-% &
-% Stable Diffusion 1.4
-% &
-% None
-% &
-% $\checkmark$
-% &
-% $\times$
-% &
-% $\times$
-% &
-% $\times$
-% \\
-
-% WildFake
-% &
-% AAAI 2025
-% &
-% 3.69M = $\approx$1.01M real + $\approx$2.68M fake
-% &
-% 23
-% &
-% BigGAN; StyleGAN; StarGAN; DF-GAN; GALIP;
-% GigaGAN; ADM; DDPM; DDIM; Imagen; VQDM;
-% DALL-E 2; DALL-E 3; Midjourney v4; Midjourney v5;
-% SDXL; OriginalSD; ControlNet; LoRA-based SD models;
-% LyCORIS-based models; personalized SD models;
-% MAGE; VQGAN; VQVAE; MAE
-% &
-% Imagen; DALL-E 2; DALL-E 3;
-% Midjourney v4; Midjourney v5
-% &
-% $\checkmark$
-% &
-% $\times$
-% &
-% $\times$
-% &
-% $\times$
-% \\
-
-% AIGIBench
-% &
-% NeurIPS 2025
-% Datasets \& Benchmarks
-% &
-% 144K
-% &
-% Multiple
-% &
-% ProGAN; R3GAN; StyleGAN-XL; Stable Diffusion 1.4;
-% Stable Diffusion 3; FLUX.1-dev; Midjourney V6;
-% Imagen; DALL-E 3; InstantID; Infinite-ID; BLIP;
-% FaceSwap; InSwap; BlendFace; WFIR; CommunityAI;
-% SocialRF; Open-source/community generators
-% &
-% Midjourney V6; DALL-E 3; Imagen;
-% Stable Diffusion 3; FLUX.1-dev
-% &
-% $\checkmark$
-% &
-% $\times$
-% &
-% $\times$
-% &
-% $\times$
-% \\
-
-% SID-Set
-% &
-% CVPR 2025
-% &
-% $\approx$300K
-% &
-% Multiple
-% &
-% FLUX; Kandinsky 3.0; SDXL; AbsoluteReality
-% &
-% None
-% &
-% $\checkmark$
-% &
-% $\times$
-% &
-% $\checkmark$
-% &
-% $\checkmark$
-% \\
-
-% Synthbuster
-% &
-% IEEE Open Journal
-% of Signal Processing, 2023
-% &
-% 10K fake + 1K real
-% &
-% 9
-% &
-% DALL-E 2; DALL-E 3; Adobe Firefly;
-% Midjourney v5; Stable Diffusion 1.3;
-% Stable Diffusion 1.4; Stable Diffusion 2;
-% Stable Diffusion XL; GLIDE
-% &
-% DALL-E 2; DALL-E 3; Adobe Firefly;
-% Midjourney v5
-% &
-% $\checkmark$
-% &
-% $\checkmark$
-% &
-% $\times$
-% &
-% $\times$
-% \\
-
-% GenImage
-% &
-% 2024
-% &
-% $\approx$2.68M =
-% $\approx$1.33M real + $\approx$1.35M fake
-% &
-% 8
-% &
-% ADM; BigGAN; GLIDE; Midjourney;
-% Stable Diffusion 1.4; Stable Diffusion 1.5;
-% VQDM; Wukong
-% &
-% Midjourney
-% &
-% $\checkmark$
-% &
-% $\checkmark$
-% &
-% $\times$
-% &
-% $\times$
-% \\
-
-% DRAGON
-% &
-% 2025
-% &
-% 2.6M
-% &
-% 24
-% &
-% SD 1.5; SD 2.1; SDXL; SDXL Turbo;
-% SDXL Lightning; LCM-SDXL; Flash-SDXL;
-% SDXL derivatives; SD 3; Flash-SD3; Flux.1;
-% IF; Kandinsky; Lumina; PixArt-Alpha; PixArt-Sigma;
-% Flash-PixArt; SSD-1B; LCM-SSD-1B; SD Cascade;
-% Kolors; JuggernautXL; Realistic Stock Photo;
-% Mobius; Hyper-SD
-% &
-% None
-% &
-% $\checkmark$
-% &
-% $\checkmark$
-% &
-% $\times$
-% &
-% $\times$
-% \\
-
-% AnomReason
-% &
-% ICLR 2026
-% &
-% 21,539
-% &
-% 3
-% &
-% Midjourney; SD3.5; Flux
-% &
-% Midjourney; Flux
-% &
-% $\checkmark$
-% &
-% $\times$
-% &
-% $\times$
-% &
-% $\checkmark$
-% \\
-
-% \bottomrule
-% \end{tabularx}
-
-% \vspace{2mm}
-
-% \begin{flushleft}
-% \footnotesize
-% \textbf{Det.}: Detection; 
-% \textbf{Attr.}: Attribution;
-% \textbf{Loc.}: Localization;
-% \textbf{Expl.}: Explanation.
-% \end{flushleft}
-
-% \end{sidewaystable*}
-
-Nhìn chung, các bộ dữ liệu hiện nay cho thấy mức độ đa dạng ngày càng tăng, không chỉ về loại mô hình sinh ảnh mà còn về miền dữ liệu, prompt và mức độ chân thực của ảnh. Một số benchmark gần đây đã bắt đầu mở rộng sang các generator thương mại/closed-source như Midjourney, DALL·E hay các nền tảng sinh ảnh thương mại, qua đó phản ánh tốt hơn sự đa dạng của ảnh AIGC trong thực tế. Tuy nhiên, các bộ dữ liệu có chứa các bằng chứng, định vị vùng bất thường và giải thích nguyên nhân vẫn còn tương đối hạn chế và thường chỉ tập trung vào một khía cạnh riêng lẻ. Điều này cho thấy vẫn còn khoảng trống trong việc xây dựng một benchmark thống nhất có khả năng đánh giá toàn diện.
+Do đó, vẫn cần nghiên cứu các bộ dữ liệu và giao thức đánh giá có khả năng phân biệt vai trò của bằng chứng phục vụ nhận diện ảnh tạo sinh và bằng chứng phục vụ truy tìm nguồn. Đối với hướng nghiên cứu được đề xuất, việc khai thác các mô hình tạo sinh mở trong môi trường có kiểm soát sẽ tạo điều kiện khảo sát mối liên hệ giữa kiến trúc, dữ liệu huấn luyện, quy trình sinh ảnh và các dấu vết quan sát được. Trên cơ sở đó, nghiên cứu hướng đến xây dựng các tiêu chí và chú thích phù hợp để đánh giá giá trị phân biệt nguồn, mức độ đóng góp của bằng chứng, khả năng xử lý nguồn chưa biết và tính trung thực của lời giải thích. Đây là những khía cạnh cần thiết để kiểm chứng toàn diện các mục tiêu nghiên cứu đã đề ra.
 
 \section{Nội dung nghiên cứu}
 \label{sec:research_content} 
-\subsection{Nội dung 1: Phân tích và định vị các yếu tố tạo sinh trong hình ảnh}
-Nội dung đầu tiên tập trung xây dựng phương pháp xác định: Ảnh chứa những yếu tố tạo sinh nào và các yếu tố đó nằm ở đâu? Điều này có nghĩa là hệ thống không chỉ đưa ra quyết định phân loại mà đang hướng đến việc cung cấp các bằng chứng một cách cụ thể.
+\subsection{Nội dung 1: Phân tích, biểu diễn và định vị các dấu vết tạo sinh trong hình ảnh}
+Nội dung đầu tiên tập trung nghiên cứu các phương pháp phát hiện, phân tích và biểu diễn những dấu vết liên quan đến quá trình tạo sinh ảnh. Nghiên cứu dự kiến khai thác các dấu vết ở nhiều mức độ, bao gồm đặc trưng cấp thấp cùng các đặc trưng cấp cao. Trên cơ sở đó, nghiên cứu hướng đến xây dựng một tập bằng chứng có cấu trúc, trong đó các dấu vết được phân tích theo đặc điểm, khả năng biểu diễn và vai trò đối với từng nhiệm vụ. Đối với các bất thường trực quan, bằng chứng có thể được định vị thông qua vùng ảnh hoặc mặt nạ phân đoạn; trong khi những dấu vết thống kê có thể được biểu diễn dưới dạng bản đồ đặc trưng hoặc thông tin toàn cục.
 
-Nếu không xác định được bằng chứng, thì bài toán phân loại hay xác định nguồn gốc ảnh dễ trở thành một bài toán phân loại hộp đen. Khi đó hệ thống có thể nói: “Nguồn là Model A” nhưng không biết tại sao. Ngược lại, nếu khai thác được các bằng chứng chỉ ra yếu tố hoặc dấu vết tạo sinh trên ảnh, chúng sẽ là cầu nối quan trọng để đưa ra các giải thích hợp lý và trực quan.
+Một vấn đề quan trọng là đánh giá giá trị của từng loại bằng chứng đối với bài toán nhận diện ảnh tạo sinh và truy tìm nguồn tạo sinh. Nghiên cứu dự kiến xây dựng các thí nghiệm so sánh giữa việc sử dụng riêng đặc trưng cấp thấp, đặc trưng cấp cao, kết hợp hai nhóm đặc trưng và lựa chọn bằng chứng theo từng nhiệm vụ. Thông qua các thí nghiệm này, nghiên cứu phân tích mức độ đóng góp và tính bổ sung giữa các nhóm dấu vết, đồng thời xác định những bằng chứng có khả năng hỗ trợ nhận diện ảnh tạo sinh nhưng chưa đủ thông tin để phân biệt nguồn sinh. Kết quả được đánh giá thông qua các chỉ số nhận diện như Accuracy, F1-score và AUROC, cùng độ chính xác định vị như IoU hoặc mAP đối với những bằng chứng có chú thích vị trí phù hợp. Bên cạnh đó, nghiên cứu xem xét tính ổn định của các dấu vết trong những điều kiện dữ liệu khác nhau, làm cơ sở cho việc lựa chọn và khai thác bằng chứng.
 
-Nghiên cứu dự kiến tổ chức các bộ phân tích theo nhiều cấp độ, từ các tín hiệu cấp thấp (như phân tích nhiễu, tần suất, quan hệ giữa các điểm ảnh,...) đến các tín hiệu cấp cao (như phân tích quan hệ ngữ nghĩa, tính chất vật lý giữa các vật thể trong ảnh, …).  Mỗi bộ phân tích sẽ không nhất thiết đưa ra nhãn phân loại riêng biệt mà sẽ là một mắt xích bằng chứng quan trọng dẫn đến kết luận cuối cùng và là ánh xạ cho các giải thích ngôn ngữ với người dùng cuối.
+\subsection{Nội dung 2: Truy tìm nguồn tạo sinh dựa trên các bằng chứng phân biệt nguồn}
 
-\subsection{Nội dung 2: Xác định nguồn tạo sinh dựa trên các yếu tố tạo sinh}
-Mục tiêu của nội dung này là từ tập bằng chứng được trích xuất từ ảnh tạo sinh hệ thống cần xác định nguồn tạo sinh tương ứng. Mục tiêu không dừng lại ở mô hình đã biết mà hướng tới cả những nguồn tạo sinh mà mô hình chưa từng được huấn luyện trước đó. Điều này giúp mô hình không cố ép các ảnh chưa biết nguồn tạo sinh vào các mô hình đã biết, dẫn đến sự sai lệch nghiêm trọng.
+Nội dung thứ hai tập trung nghiên cứu phương pháp xác định nguồn tạo sinh dựa trên các dấu vết đã được phân tích trước đó. Do không phải mọi bằng chứng giúp nhận diện ảnh tạo sinh đều mang giá trị phân biệt nguồn, nghiên cứu dự kiến xây dựng cơ chế đánh giá, lựa chọn và kết hợp các bằng chứng phù hợp với bài toán source attribution. Đặc biệt, nghiên cứu ưu tiên khai thác các mô hình tạo sinh mở như một môi trường có kiểm soát nhằm tìm hiểu mối quan hệ giữa kiến trúc mô hình, dữ liệu huấn luyện, quy trình sinh ảnh và các dấu vết quan sát được. Thông qua việc đối chiếu các mô hình có sự tương đồng hoặc khác biệt về những yếu tố này, nghiên cứu hướng đến xác định những đặc trưng phản ánh nguồn tạo sinh, đồng thời hạn chế sự phụ thuộc vào nội dung và phong cách hình ảnh.
 
-Về bản chất, bài toán nhận diện và truy tìm nguồn tạo sinh ảnh cần phân tích những tính chất khác nhau trên ảnh. Điều này có nghĩa là một loại bằng chứng tạo sinh có thể đồng thời xuất hiện ở nhiều mô hình tạo sinh khác nhau. Vì vậy, tuy nó có thể dùng để nhận diện ảnh tạo sinh nhưng lại không đủ sức thuyết phục để phân biệt giữa các nguồn tạo sinh. Tuy nhiên, một đặc trưng rất riêng của mô hình tạo sinh bất kỳ có thể giúp phân định nguồn gốc ảnh nhưng lại có thể không ổn định nếu ảnh bị thay đổi định dạng hoặc bị giảm chất lượng. Do đó, cần phân tích rõ ràng vai trò của mỗi bằng chứng để xác định chính xác tầm quan trọng và sự đóng góp của mỗi bằng chứng trong việc phân loại nguồn tạo sinh. Đây cũng chính là lý do không nên bắt đầu từ các bộ phân loại đơn giản hay phụ thuộc vào một đặc trưng riêng lẻ nào cho bài toán truy tìm nguồn gốc ảnh tạo sinh, mà nên bắt đầu từ việc khai phá các dấu vết và bằng chứng tạo sinh một cách tổng quát.
+Để kiểm chứng giá trị phân biệt nguồn, nghiên cứu dự kiến thực hiện các thí nghiệm đối chứng, trong đó nội dung và câu lệnh tạo ảnh được kiểm soát giữa các mô hình sinh nhằm kiểm chứng tác động của từng yếu tố như dữ liệu, kiến trúc, cơ chế sinh ảnh lên các dấu vết tạo sinh. Bên cạnh đó, các thí nghiệm loại bỏ từng nhóm đặc trưng (ablation study) và phân tích sự thay đổi kết quả dự đoán được sử dụng để đánh giá mức độ đóng góp của từng loại bằng chứng. Nghiên cứu cũng khảo sát tính ổn định của các dấu vết khi hình ảnh trải qua những phép xử lý như nén JPEG, thay đổi kích thước hoặc làm mờ. Hiệu quả truy tìm nguồn được đánh giá thông qua các chỉ số như Top-1 Accuracy và Macro-F1, kết hợp với các phân tích về khả năng phân biệt nguồn và độ bền vững của bằng chứng trong những điều kiện thử nghiệm khác nhau.
 
-Bên cạnh đó, nghiên cứu cũng hướng đến một hệ thống thực tế phải có khả năng nói: “Ảnh chắc chắn là ảnh tạo sinh, nhưng chưa có đủ bằng chứng để gán cho các nguồn đã biết.” thay vì buộc chúng phải gán nguồn đã biết. Nghiên cứu vì vậy hướng đến cơ chế reject option (từ chối gán nguồn).
+Bên cạnh các nguồn đã biết, nghiên cứu còn xem xét bài toán truy tìm nguồn trong môi trường mở (open-set source attribution). Theo đó, một số mô hình tạo sinh được giữ lại làm nguồn chưa biết trong quá trình đánh giá nhằm kiểm tra khả năng phát hiện và từ chối gán nhãn khi không đủ bằng chứng để xác định nguồn. Đồng thời, nghiên cứu xem xét khả năng thích nghi với các nguồn mới khi có thêm dữ liệu tham chiếu, hướng đến việc mở rộng hệ thống mà không cần huấn luyện lại toàn bộ mô hình.
 
 \subsection{Nội dung 3: Suy luận và lý giải kết quả dựa trên bằng chứng}
-Từ các bằng chứng và vị trí được định vị trên ảnh, nghiên cứu kỳ vọng sẽ xây dựng một lời giải thích bằng ngôn ngữ tự nhiên một cách dễ hiểu và thân thiện với người dùng cuối. Bởi lẽ, một hệ thống xác định nguồn sinh ảnh có độ chính xác cao nhưng không giải thích được vẫn còn hạn chế trong các môi trường cần kiểm chứng.
 
-Trong nghiên cứu này, MLLM có thể được sử dụng như một reasoning engine (bộ suy luận), nhưng không nên là nguồn duy nhất tạo ra bằng chứng. Mô hình có thể nhận ảnh toàn cảnh kèm với vị trí dấu vết và loại bằng chứng tương ứng và sinh ra các suy luận dựa trên các thông tin đó. Đây là khác biệt quan trọng về kiến trúc so với các hệ thống trước đây, thường chỉ cố sinh ra các giải thích có vẻ hợp lý cho quyết định trước đó.
+Nội dung thứ ba tập trung xây dựng cơ chế suy luận và lý giải kết quả nhận diện ảnh tạo sinh và truy tìm nguồn dựa trên các bằng chứng đã được phát hiện và lựa chọn. Nghiên cứu dự kiến khai thác khả năng của mô hình ngôn ngữ lớn đa phương thức (MLLM) trong việc kết hợp thông tin hình ảnh với các bằng chứng có cấu trúc, bao gồm loại dấu vết, vị trí khi có thể xác định và mức độ đóng góp đối với từng quyết định. Thay vì để MLLM trực tiếp tạo ra lời giải thích chỉ từ ảnh đầu vào và nhãn dự đoán, nghiên cứu hướng đến việc sử dụng tập bằng chứng đã được phân tích làm cơ sở cho quá trình suy luận. Đối với bài toán nhận diện, lời giải thích cần làm rõ những dấu vết hỗ trợ kết luận ảnh tạo sinh; trong khi với bài toán truy tìm nguồn, lời giải thích cần chỉ ra những bằng chứng có giá trị phân biệt và mức độ hỗ trợ của chúng đối với nguồn sinh được dự đoán.
+
+Một vấn đề trọng tâm là kiểm chứng tính nhất quán và độ trung thực (faithfulness) của lời giải thích đối với quyết định của hệ thống. Nghiên cứu dự kiến đánh giá hai khía cạnh: mức độ liên kết giữa lời giải thích và bằng chứng được xác định (evidence grounding), và mức độ ảnh hưởng thực sự của bằng chứng đến kết quả dự đoán (evidence faithfulness). Đối với grounding, các mô tả được đối chiếu với bằng chứng và vị trí tương ứng thông qua chú thích tham chiếu hoặc đánh giá của con người. Đối với faithfulness, nghiên cứu xem xét các thí nghiệm loại bỏ hoặc làm suy yếu từng nhóm bằng chứng trong điều kiện kiểm soát, từ đó phân tích sự thay đổi của kết quả dự đoán.
+
+Bên cạnh đó, nghiên cứu hướng đến hạn chế những lời giải thích không có cơ sở, không nhất quán với bằng chứng hoặc khẳng định quá mức so với thông tin quan sát được. Đối với những trường hợp bằng chứng chưa đủ để xác định nguồn sinh, hệ thống cần thể hiện mức độ bất định và giải thích cơ sở của quyết định từ chối gán nguồn. Kết quả nghiên cứu được đánh giá thông qua khả năng liên kết lời giải thích với bằng chứng, mức độ trung thực đối với quyết định và khả năng phản ánh sự không chắc chắn của hệ thống. Qua đó, nghiên cứu hướng đến xây dựng quá trình suy luận và lý giải có thể kiểm chứng, thay vì chỉ tạo ra những mô tả hợp lý về mặt ngôn ngữ.
 
 \section{Kế hoạch nghiên cứu}
-\label{sec:plan} 
-\subsection{Năm 1: Tổng hợp và hệ thống hóa các yếu tố tạo sinh}
-Trong năm đầu tiên, nghiên cứu tập trung khảo sát và hệ thống hóa các dạng dấu vết và yếu tố có thể được sử dụng để nhận diện ảnh được tạo sinh bởi trí tuệ nhân tạo. Việc khảo sát được thực hiện từ nhiều hướng nghiên cứu liên quan, bao gồm pháp chứng ảnh (image forensics), phân tích miền tần số (frequency analysis), pháp chứng ảnh sinh bởi mô hình khuếch tán (diffusion forensics), phát hiện bất thường ngữ nghĩa (semantic anomaly detection) và nhận dạng dấu vân tay của mô hình sinh (model fingerprinting).
+\label{sec:plan}
 
-Trên cơ sở khảo sát, nghiên cứu xây dựng một hệ thống phân loại các yếu tố tạo sinh theo nhiều mức độ, từ các dấu vết cấp thấp trong tín hiệu ảnh đến các bất thường về cấu trúc, hình học, vật lý và ngữ nghĩa. Đồng thời, nghiên cứu xác định các tiêu chí để một yếu tố có thể được xem là bằng chứng (evidence) cho quá trình xác định nguồn gốc của ảnh.
+\subsection{Năm 1: Khảo sát và hệ thống hóa các dấu vết tạo sinh}
 
-\textbf{Kết quả dự kiến:}
-\begin{itemize}
-    \item Xây dựng hệ thống phân loại các yếu tố tạo sinh (taxonomy);
-    \item Tổng hợp các chuẩn thử nghiệm (benchmark) và bộ dữ liệu (dataset) trên các loại yếu tố tạo sinh;
-\end{itemize}
+Trong năm đầu tiên, nghiên cứu tập trung khảo sát và hệ thống hóa các dấu vết liên quan đến quá trình tạo sinh ảnh từ nhiều hướng tiếp cận, bao gồm pháp chứng ảnh (image forensics), phân tích tín hiệu thống kê và miền tần số, phát hiện bất thường hình học và ngữ nghĩa, cũng như nhận dạng dấu vân tay mô hình (model fingerprinting).
 
-\subsection{Năm 2: Xây dựng hệ thống phân loại ảnh và định vị yếu tố tạo sinh}
-Trong năm thứ hai, nghiên cứu tập trung phát triển các phương pháp tự động phát hiện và phân loại các yếu tố tạo sinh trên ảnh. Hệ thống được xây dựng theo hướng kết hợp nhiều nhóm dấu vết khác nhau, bao gồm tín hiệu cấp thấp, đặc trưng miền tần số, kết cấu (texture), hình học, các quy luật vật lý và các bất thường ngữ nghĩa.
-
-Trên cơ sở các yếu tố được xác định trong năm thứ nhất, nghiên cứu xây dựng các bộ phân tích chuyên biệt cho từng nhóm bằng chứng và nghiên cứu cơ chế kết hợp các bằng chứng để xác định trạng thái của ảnh, chẳng hạn ảnh thật hoặc ảnh được tạo sinh bởi trí tuệ nhân tạo. Bên cạnh khả năng phân loại, nghiên cứu tập trung vào bài toán định vị bằng chứng (evidence localization), nhằm xác định vị trí xuất hiện của các yếu tố bất thường trên ảnh. Tùy thuộc vào đặc điểm của từng loại bằng chứng, các phương thức biểu diễn như hộp giới hạn (bounding box), mặt nạ (mask) hoặc vùng ảnh có liên quan sẽ được nghiên cứu.
+Trên cơ sở khảo sát, nghiên cứu xây dựng hệ thống phân loại (taxonomy) các dấu vết tạo sinh theo đặc điểm, mức độ biểu diễn và vai trò đối với hai nhiệm vụ: nhận diện ảnh tạo sinh và truy tìm nguồn tạo sinh. Đồng thời, nghiên cứu xác định các tiêu chí để một dấu vết có thể được xem là bằng chứng, phân biệt bằng chứng phục vụ nhận diện ảnh tạo sinh và bằng chứng có giá trị phân biệt nguồn. Bên cạnh đó, nghiên cứu tổng hợp các bộ dữ liệu, benchmark và đề xuất giao thức đánh giá phù hợp, bước đầu xây dựng tập dữ liệu thử nghiệm có kiểm soát từ các mô hình tạo sinh mở để phục vụ các giai đoạn tiếp theo.
 
 \textbf{Kết quả dự kiến:}
 \begin{itemize}
-    \item Hệ thống nhận diện ảnh tạo sinh trên cơ sở bằng chứng;
-    \item Các phương pháp định vị bằng chứng trên ảnh bằng hộp giới hạn, mặt nạ hoặc vùng ảnh;
+    \item Hệ thống phân loại (taxonomy) các dấu vết tạo sinh và tiêu chí đánh giá vai trò của từng loại bằng chứng;
+    \item Định nghĩa bài toán, giao thức đánh giá và tập dữ liệu thử nghiệm ban đầu có kiểm soát phục vụ nghiên cứu.
 \end{itemize}
 
-\subsection{Năm 3: Tích hợp khả năng truy tìm nguồn tạo sinh}
-Trong năm thứ ba, nghiên cứu mở rộng từ việc xác định ảnh có phải ảnh được tạo sinh hay không sang bài toán truy tìm nguồn tạo sinh (source attribution), tức xác định mô hình hoặc nhóm mô hình có khả năng đã tạo ra ảnh.
+\subsection{Năm 2: Phát triển phương pháp phát hiện, biểu diễn và định vị bằng chứng}
 
-Phương pháp truy tìm nguồn được xây dựng dựa trên các bằng chứng đã được phát hiện và định vị ở giai đoạn trước. Thay vì chỉ dựa trên đặc trưng toàn cục của ảnh, nghiên cứu tập trung khai thác mối quan hệ giữa các bằng chứng quan sát được và đặc điểm của từng nguồn tạo sinh. Nghiên cứu đặc biệt quan tâm đến các trường hợp trong đó nguồn tạo sinh không được cung cấp trực tiếp trong quá trình huấn luyện hoặc không thể truy cập vào mô hình sinh. Các hướng nghiên cứu bao gồm mô hình sinh dạng hộp đen (black-box), mô hình có nguồn đóng (closed-source), khả năng tổng quát giữa các mô hình sinh khác nhau (cross-generator generalization), nhận dạng nguồn chưa từng quan sát (open-set recognition) và thích nghi với số lượng mẫu nhỏ (few-shot adaptation).
+Trong năm thứ hai, nghiên cứu tập trung phát triển các phương pháp tự động phát hiện và biểu diễn những dấu vết tạo sinh đã được hệ thống hóa ở giai đoạn trước. Hướng tiếp cận dự kiến kết hợp nhiều nhóm đặc trưng, từ tín hiệu cấp thấp như nhiễu, quan hệ điểm ảnh và miền tần số đến các bất thường cấp cao về kết cấu, hình học, quy luật vật lý và ngữ nghĩa. Tùy theo bản chất của từng loại dấu vết, bằng chứng có thể được biểu diễn thông qua vùng ảnh, mặt nạ phân đoạn, bản đồ đặc trưng hoặc thông tin thống kê toàn cục.
+
+Bên cạnh xây dựng phương pháp nhận diện ảnh tạo sinh dựa trên bằng chứng, nghiên cứu thực hiện các thí nghiệm so sánh việc sử dụng riêng từng nhóm đặc trưng, kết hợp nhiều nhóm đặc trưng và lựa chọn bằng chứng theo nhiệm vụ. Qua đó, nghiên cứu đánh giá giá trị và tính bổ sung của từng loại dấu vết đối với nhận diện ảnh tạo sinh và khả năng cung cấp thông tin phân biệt nguồn. Hiệu quả được kiểm chứng thông qua độ chính xác nhận diện, độ chính xác định vị đối với các bằng chứng có chú thích phù hợp và tính ổn định trong những điều kiện dữ liệu khác nhau.
 
 \textbf{Kết quả dự kiến:}
 \begin{itemize}
-    \item Hệ thống nhận diện và phân biệt nhiều nguồn tạo sinh dựa trên bằng chứng;
-    \item Bộ kiểm chuẩn đánh giá khả năng truy tìm nguồn trong điều kiện nguồn phức tạp;
+    \item Phương pháp phát hiện, biểu diễn và định vị các dấu vết tạo sinh ở nhiều mức độ;
+    \item Kết quả thực nghiệm đánh giá khả năng nhận diện ảnh tạo sinh và vai trò của từng nhóm bằng chứng, làm cơ sở cho bài toán truy tìm nguồn.
 \end{itemize}
 
-\subsection{Năm 4: Xây dựng khả năng suy luận, lý giải và hoàn thiện hệ thống}
-Trong năm cuối, nghiên cứu tích hợp các thành phần phát hiện, định vị và truy tìm nguồn thành một hệ thống thống nhất có khả năng suy luận và đưa ra giải thích dựa trên bằng chứng quan sát được.
+\subsection{Năm 3: Phát triển phương pháp truy tìm nguồn tạo sinh dựa trên bằng chứng}
 
-Hệ thống không chỉ đưa ra kết luận về trạng thái và nguồn tạo sinh của ảnh mà còn xây dựng chuỗi suy luận từ bằng chứng đến kết luận. Với mỗi kết luận, hệ thống cần chỉ ra các bằng chứng liên quan, vị trí của bằng chứng trên ảnh và mối quan hệ giữa các bằng chứng đó với nguồn tạo sinh được dự đoán.
+Trong năm thứ ba, nghiên cứu mở rộng từ nhận diện ảnh tạo sinh sang truy tìm nguồn gốc (source attribution), tập trung xác định và lựa chọn những dấu vết có giá trị phân biệt giữa các mô hình tạo sinh. Nghiên cứu ưu tiên khai thác các mô hình tạo sinh mở có thể tiếp cận kiến trúc, trọng số và quy trình sinh ảnh như một môi trường có kiểm soát, nhằm phân tích mối quan hệ giữa đặc điểm mô hình, dữ liệu huấn luyện, cơ chế sinh ảnh và các dấu vết quan sát được.
+
+Trên cơ sở các bằng chứng đã được phân tích ở giai đoạn trước, nghiên cứu phát triển phương pháp đánh giá, lựa chọn và kết hợp các dấu vết phục vụ truy tìm nguồn. Các thí nghiệm đối chứng và loại bỏ từng nhóm bằng chứng (ablation study) được thực hiện nhằm đánh giá mức độ đóng góp của chúng vào quyết định phân loại. Đồng thời, nghiên cứu khảo sát khả năng duy trì tính phân biệt nguồn khi hình ảnh trải qua các phép xử lý hậu kỳ như nén, thay đổi kích thước hoặc làm mờ.
+
+Bên cạnh việc đánh giá khả năng phân biệt các nguồn đã biết (closed-set attribution), nghiên cứu còn xem xét khả năng nhận biết các nguồn chưa xuất hiện trong dữ liệu huấn luyện (open-set attribution). Trong trường hợp không đủ bằng chứng, hệ thống cần có khả năng từ chối gán ảnh cho một nguồn đã biết. Các hướng mở rộng như thích nghi với nguồn mới từ số lượng mẫu nhỏ (few-shot adaptation) hoặc phân nhóm các nguồn chưa biết (source discovery) có thể được khảo sát tùy theo kết quả và điều kiện thực nghiệm.
 
 \textbf{Kết quả dự kiến:}
 \begin{itemize}
-    \item Hệ thống hoàn chỉnh từ phát hiện, định vị, truy tìm nguồn đến suy luận và lý giải;
-    \item Đánh giá thực nghiệm trên nhiều thế hệ và nhiều nhóm mô hình tạo sinh;
+    \item Phương pháp truy tìm nguồn dựa trên cơ chế lựa chọn và kết hợp các bằng chứng có giá trị phân biệt nguồn;
+    \item Kết quả phân tích mối quan hệ giữa các yếu tố của mô hình tạo sinh và những dấu vết đặc trưng quan sát được;
+    \item Bộ thử nghiệm và kết quả đánh giá truy tìm nguồn trong điều kiện closed-set và open-set, bao gồm khả năng từ chối gán nguồn chưa biết.
 \end{itemize}
+
+\subsection{Năm 4: Xây dựng cơ chế suy luận, lý giải và hoàn thiện hệ thống}
+
+Trong năm cuối, nghiên cứu tập trung xây dựng cơ chế suy luận và lý giải dựa trên các bằng chứng đã được phát hiện, phân tích và lựa chọn ở những giai đoạn trước. Hệ thống dự kiến tích hợp các thành phần nhận diện, biểu diễn bằng chứng và truy tìm nguồn nhằm cung cấp lời giải thích bằng ngôn ngữ tự nhiên cho các kết luận. Mô hình ngôn ngữ lớn đa phương thức (MLLM) có thể được khai thác để kết hợp thông tin hình ảnh và các bằng chứng có cấu trúc, trong đó mỗi lời giải thích cần thể hiện rõ mối liên hệ giữa bằng chứng được quan sát và quyết định tương ứng.
+
+Trọng tâm của giai đoạn này là đánh giá tính nhất quán và độ trung thực (faithfulness) của lời giải thích. Nghiên cứu dự kiến xây dựng các phương pháp kiểm chứng mức độ liên kết giữa lời giải thích và bằng chứng (evidence grounding), đồng thời đánh giá sự thay đổi của kết quả dự đoán khi loại bỏ hoặc làm suy yếu các bằng chứng trong điều kiện kiểm soát. Bên cạnh đó, nghiên cứu xem xét khả năng phản ánh mức độ bất định và giải thích quyết định từ chối gán nguồn khi bằng chứng chưa đầy đủ.
+
+Cuối cùng, nghiên cứu tiến hành đánh giá toàn diện hệ thống trên nhiều nhóm mô hình tạo sinh và điều kiện dữ liệu khác nhau, phân tích các hạn chế còn tồn tại, tổng hợp kết quả và hoàn thiện luận án.
+
+\textbf{Kết quả dự kiến:}
+\begin{itemize}
+    \item Cơ chế suy luận và lý giải kết quả nhận diện, truy tìm nguồn dựa trên bằng chứng có thể kiểm chứng;
+    \item Phương pháp và kết quả đánh giá tính nhất quán, độ trung thực của lời giải thích và khả năng phản ánh mức độ bất định;
+    \item Hệ thống tích hợp, kết quả thực nghiệm tổng hợp và luận án tiến sĩ hoàn chỉnh.
+\end{itemize}
+
 
 \section{Tài liệu tham khảo} 
 

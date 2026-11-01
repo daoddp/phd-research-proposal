@@ -219,22 +219,19 @@ Bộ dữ liệu đóng vai trò quan trọng trong việc nghiên cứu khả n
 |p{3.0cm}
 |p{3.1cm}
 |p{4.3cm}
-|p{4.0cm}
 |p{4.0cm}|
 }
 \hline
 \textbf{Dataset / Year} &
 \textbf{Samples} &
 \textbf{Generative Sources} &
-\textbf{Primary Tasks} &
-\textbf{Evidence Annotations} \\
+\textbf{Primary Tasks}\\
 \hline
 
 CIFAKE \cite{bird2024cifake} (2024) &
 120K (60K real + 60K fake) &
 1 (Stable Diffusion 1.4) &
-Detection &
--- \\
+Detection \\
 \hline
 
 WildFake \cite{hong2025wildfake} (2025) &
@@ -247,50 +244,43 @@ Detection&
 AIGIBench \cite{li2025artificial} (2025) &
 144K per training setting &
 Multiple (GAN, SD, FLUX, Midjourney, DALL-E, etc.) &
-Detection &
--- \\
+Detection \\
 \hline
 
 SID-Set \cite{huang2025sida} (2025) &
 300K &
 Multiple (FLUX, SDXL, Kandinsky, etc.) &
-Detection, localization, explanation &
-Tampering masks, textual explanations \\
+Detection, localization, explanation \\
 \hline
 
 Synthbuster \cite{bammey2024synthbuster} (2023) &
 9K fake &
 9 generators (DALL-E, Midjourney, SD, etc.) &
-Detection &
--- \\
+Detection \\
 \hline
 
 GenImage \cite{zhu2023genimage} (2023) &
 2.68M &
 8 generators (GAN, Diffusion, etc.) &
-Detection &
--- \\
+Detection \\
 \hline
 
 DRAGON \cite{bertazzini2025dragon} (2025) &
 2.6M &
 25 diffusion models &
-Detection, attribution &
--- \\
+Detection, attribution \\
 \hline
 
 AnomReason \cite{tan2026semantic} (2026) &
 21,539 fake &
 3 (Midjourney, SD3.5, FLUX) &
-Semantic anomaly reasoning &
-Structured anomaly descriptions \\
+Semantic anomaly reasoning \\
 \hline
 
 FakeXplained \cite{ji2026fakexplain} (2026) &
 8K+ fake &
 28 generators &
-Detection, localization, explanation &
-Bounding boxes, artifact descriptions \\
+Detection, localization, explanation  \\
 \hline
 
 \end{tabular}%
@@ -324,63 +314,51 @@ Một vấn đề trọng tâm là kiểm chứng tính nhất quán và độ t
 
 Bên cạnh đó, nghiên cứu hướng đến hạn chế những lời giải thích không có cơ sở, không nhất quán với bằng chứng hoặc khẳng định quá mức so với thông tin quan sát được. Đối với những trường hợp bằng chứng chưa đủ để xác định nguồn sinh, hệ thống cần thể hiện mức độ bất định và giải thích cơ sở của quyết định từ chối gán nguồn. Kết quả nghiên cứu được đánh giá thông qua khả năng liên kết lời giải thích với bằng chứng, mức độ trung thực đối với quyết định và khả năng phản ánh sự không chắc chắn của hệ thống. Qua đó, nghiên cứu hướng đến xây dựng quá trình suy luận và lý giải có thể kiểm chứng, thay vì chỉ tạo ra những mô tả hợp lý về mặt ngôn ngữ.
 
+
 \section{Kế hoạch nghiên cứu}
 \label{sec:plan}
 
 \subsection{Năm 1: Khảo sát và hệ thống hóa các dấu vết tạo sinh}
 
-Trong năm đầu tiên, nghiên cứu tập trung khảo sát và hệ thống hóa các dấu vết liên quan đến quá trình tạo sinh ảnh từ nhiều hướng tiếp cận, bao gồm pháp chứng ảnh (image forensics), phân tích tín hiệu thống kê và miền tần số, phát hiện bất thường hình học và ngữ nghĩa, cũng như nhận dạng dấu vân tay mô hình (model fingerprinting).
-
-Trên cơ sở khảo sát, nghiên cứu xây dựng hệ thống phân loại (taxonomy) các dấu vết tạo sinh theo đặc điểm, mức độ biểu diễn và vai trò đối với hai nhiệm vụ: nhận diện ảnh tạo sinh và truy tìm nguồn tạo sinh. Đồng thời, nghiên cứu xác định các tiêu chí để một dấu vết có thể được xem là bằng chứng, phân biệt bằng chứng phục vụ nhận diện ảnh tạo sinh và bằng chứng có giá trị phân biệt nguồn. Bên cạnh đó, nghiên cứu tổng hợp các bộ dữ liệu, benchmark và đề xuất giao thức đánh giá phù hợp, bước đầu xây dựng tập dữ liệu thử nghiệm có kiểm soát từ các mô hình tạo sinh mở để phục vụ các giai đoạn tiếp theo.
+Nghiên cứu tập trung khảo sát và hệ thống hóa các dấu vết tạo sinh từ nhiều hướng tiếp cận, bao gồm đặc trưng thống kê, miền tần số, bất thường hình học, ngữ nghĩa và dấu vân tay mô hình (model fingerprinting). Trên cơ sở đó, xây dựng hệ thống phân loại (taxonomy) các dấu vết theo đặc điểm, cách biểu diễn và vai trò đối với hai nhiệm vụ nhận diện ảnh tạo sinh và truy tìm nguồn. Đồng thời, nghiên cứu tổng hợp các bộ dữ liệu, xác định tiêu chí đánh giá bằng chứng và xây dựng tập dữ liệu thử nghiệm ban đầu từ các mô hình tạo sinh mở.
 
 \textbf{Kết quả dự kiến:}
 \begin{itemize}
-    \item Hệ thống phân loại (taxonomy) các dấu vết tạo sinh và tiêu chí đánh giá vai trò của từng loại bằng chứng;
-    \item Định nghĩa bài toán, giao thức đánh giá và tập dữ liệu thử nghiệm ban đầu có kiểm soát phục vụ nghiên cứu.
+    \item Hệ thống phân loại dấu vết tạo sinh và các tiêu chí đánh giá bằng chứng;
+    \item Giao thức đánh giá và tập dữ liệu thử nghiệm ban đầu phục vụ nghiên cứu.
 \end{itemize}
 
-\subsection{Năm 2: Phát triển phương pháp phát hiện, biểu diễn và định vị bằng chứng}
+\subsection{Năm 2: Phát triển phương pháp phát hiện và định vị bằng chứng}
 
-Trong năm thứ hai, nghiên cứu tập trung phát triển các phương pháp tự động phát hiện và biểu diễn những dấu vết tạo sinh đã được hệ thống hóa ở giai đoạn trước. Hướng tiếp cận dự kiến kết hợp nhiều nhóm đặc trưng, từ tín hiệu cấp thấp như nhiễu, quan hệ điểm ảnh và miền tần số đến các bất thường cấp cao về kết cấu, hình học, quy luật vật lý và ngữ nghĩa. Tùy theo bản chất của từng loại dấu vết, bằng chứng có thể được biểu diễn thông qua vùng ảnh, mặt nạ phân đoạn, bản đồ đặc trưng hoặc thông tin thống kê toàn cục.
-
-Bên cạnh xây dựng phương pháp nhận diện ảnh tạo sinh dựa trên bằng chứng, nghiên cứu thực hiện các thí nghiệm so sánh việc sử dụng riêng từng nhóm đặc trưng, kết hợp nhiều nhóm đặc trưng và lựa chọn bằng chứng theo nhiệm vụ. Qua đó, nghiên cứu đánh giá giá trị và tính bổ sung của từng loại dấu vết đối với nhận diện ảnh tạo sinh và khả năng cung cấp thông tin phân biệt nguồn. Hiệu quả được kiểm chứng thông qua độ chính xác nhận diện, độ chính xác định vị đối với các bằng chứng có chú thích phù hợp và tính ổn định trong những điều kiện dữ liệu khác nhau.
+Nghiên cứu phát triển phương pháp phát hiện và biểu diễn các dấu vết tạo sinh ở nhiều mức độ, từ tín hiệu cấp thấp đến các bất thường hình học và ngữ nghĩa. Các bằng chứng được biểu diễn bằng vùng ảnh, mặt nạ, bản đồ đặc trưng hoặc thông tin thống kê tùy theo bản chất của chúng. Đồng thời, thực hiện các thí nghiệm so sánh và kết hợp các nhóm đặc trưng nhằm đánh giá khả năng nhận diện ảnh tạo sinh, độ chính xác định vị và vai trò của từng loại bằng chứng đối với các nhiệm vụ phân loại.
 
 \textbf{Kết quả dự kiến:}
 \begin{itemize}
-    \item Phương pháp phát hiện, biểu diễn và định vị các dấu vết tạo sinh ở nhiều mức độ;
-    \item Kết quả thực nghiệm đánh giá khả năng nhận diện ảnh tạo sinh và vai trò của từng nhóm bằng chứng, làm cơ sở cho bài toán truy tìm nguồn.
+    \item Phương pháp phát hiện, biểu diễn và định vị bằng chứng tạo sinh;
+    \item Kết quả thực nghiệm đánh giá hiệu quả nhận diện và mức độ đóng góp của từng nhóm bằng chứng.
 \end{itemize}
 
 \subsection{Năm 3: Phát triển phương pháp truy tìm nguồn tạo sinh dựa trên bằng chứng}
 
-Trong năm thứ ba, nghiên cứu mở rộng từ nhận diện ảnh tạo sinh sang truy tìm nguồn gốc (source attribution), tập trung xác định và lựa chọn những dấu vết có giá trị phân biệt giữa các mô hình tạo sinh. Nghiên cứu ưu tiên khai thác các mô hình tạo sinh mở có thể tiếp cận kiến trúc, trọng số và quy trình sinh ảnh như một môi trường có kiểm soát, nhằm phân tích mối quan hệ giữa đặc điểm mô hình, dữ liệu huấn luyện, cơ chế sinh ảnh và các dấu vết quan sát được.
-
-Trên cơ sở các bằng chứng đã được phân tích ở giai đoạn trước, nghiên cứu phát triển phương pháp đánh giá, lựa chọn và kết hợp các dấu vết phục vụ truy tìm nguồn. Các thí nghiệm đối chứng và loại bỏ từng nhóm bằng chứng (ablation study) được thực hiện nhằm đánh giá mức độ đóng góp của chúng vào quyết định phân loại. Đồng thời, nghiên cứu khảo sát khả năng duy trì tính phân biệt nguồn khi hình ảnh trải qua các phép xử lý hậu kỳ như nén, thay đổi kích thước hoặc làm mờ.
-
-Bên cạnh việc đánh giá khả năng phân biệt các nguồn đã biết (closed-set attribution), nghiên cứu còn xem xét khả năng nhận biết các nguồn chưa xuất hiện trong dữ liệu huấn luyện (open-set attribution). Trong trường hợp không đủ bằng chứng, hệ thống cần có khả năng từ chối gán ảnh cho một nguồn đã biết. Các hướng mở rộng như thích nghi với nguồn mới từ số lượng mẫu nhỏ (few-shot adaptation) hoặc phân nhóm các nguồn chưa biết (source discovery) có thể được khảo sát tùy theo kết quả và điều kiện thực nghiệm.
+Nghiên cứu tập trung xác định và lựa chọn các dấu vết có giá trị phân biệt nguồn tạo sinh. Các mô hình tạo sinh mở được sử dụng trong môi trường có kiểm soát nhằm phân tích mối quan hệ giữa kiến trúc, dữ liệu huấn luyện, quy trình sinh ảnh và dấu vết quan sát được. Trên cơ sở đó, phát triển phương pháp kết hợp bằng chứng để truy tìm nguồn, đồng thời đánh giá mức độ đóng góp và tính ổn định của các dấu vết thông qua các thí nghiệm đối chứng, ablation và xử lý hậu kỳ. Nghiên cứu cũng xem xét khả năng nhận biết và từ chối gán nguồn chưa biết trong môi trường open-set.
 
 \textbf{Kết quả dự kiến:}
 \begin{itemize}
-    \item Phương pháp truy tìm nguồn dựa trên cơ chế lựa chọn và kết hợp các bằng chứng có giá trị phân biệt nguồn;
-    \item Kết quả phân tích mối quan hệ giữa các yếu tố của mô hình tạo sinh và những dấu vết đặc trưng quan sát được;
-    \item Bộ thử nghiệm và kết quả đánh giá truy tìm nguồn trong điều kiện closed-set và open-set, bao gồm khả năng từ chối gán nguồn chưa biết.
+    \item Phương pháp truy tìm nguồn dựa trên các bằng chứng có giá trị phân biệt;
+    \item Kết quả phân tích mối quan hệ giữa cơ chế tạo sinh và các dấu vết đặc trưng;
+    \item Đánh giá khả năng truy tìm nguồn trong điều kiện closed-set và open-set.
 \end{itemize}
 
 \subsection{Năm 4: Xây dựng cơ chế suy luận, lý giải và hoàn thiện hệ thống}
 
-Trong năm cuối, nghiên cứu tập trung xây dựng cơ chế suy luận và lý giải dựa trên các bằng chứng đã được phát hiện, phân tích và lựa chọn ở những giai đoạn trước. Hệ thống dự kiến tích hợp các thành phần nhận diện, biểu diễn bằng chứng và truy tìm nguồn nhằm cung cấp lời giải thích bằng ngôn ngữ tự nhiên cho các kết luận. Mô hình ngôn ngữ lớn đa phương thức (MLLM) có thể được khai thác để kết hợp thông tin hình ảnh và các bằng chứng có cấu trúc, trong đó mỗi lời giải thích cần thể hiện rõ mối liên hệ giữa bằng chứng được quan sát và quyết định tương ứng.
-
-Trọng tâm của giai đoạn này là đánh giá tính nhất quán và độ trung thực (faithfulness) của lời giải thích. Nghiên cứu dự kiến xây dựng các phương pháp kiểm chứng mức độ liên kết giữa lời giải thích và bằng chứng (evidence grounding), đồng thời đánh giá sự thay đổi của kết quả dự đoán khi loại bỏ hoặc làm suy yếu các bằng chứng trong điều kiện kiểm soát. Bên cạnh đó, nghiên cứu xem xét khả năng phản ánh mức độ bất định và giải thích quyết định từ chối gán nguồn khi bằng chứng chưa đầy đủ.
-
-Cuối cùng, nghiên cứu tiến hành đánh giá toàn diện hệ thống trên nhiều nhóm mô hình tạo sinh và điều kiện dữ liệu khác nhau, phân tích các hạn chế còn tồn tại, tổng hợp kết quả và hoàn thiện luận án.
+Nghiên cứu xây dựng cơ chế suy luận và lý giải kết quả nhận diện, truy tìm nguồn dựa trên các bằng chứng đã được phát hiện và lựa chọn. Mô hình ngôn ngữ lớn đa phương thức (MLLM) có thể được khai thác để kết hợp thông tin hình ảnh và bằng chứng có cấu trúc nhằm tạo ra lời giải thích dễ hiểu. Trọng tâm là kiểm chứng mức độ liên kết giữa lời giải thích và bằng chứng (grounding), độ trung thực của lời giải thích đối với quyết định (faithfulness) và khả năng phản ánh mức độ bất định. Cuối cùng, nghiên cứu tích hợp các thành phần, đánh giá toàn diện trên nhiều nguồn tạo sinh và hoàn thiện luận án.
 
 \textbf{Kết quả dự kiến:}
 \begin{itemize}
-    \item Cơ chế suy luận và lý giải kết quả nhận diện, truy tìm nguồn dựa trên bằng chứng có thể kiểm chứng;
-    \item Phương pháp và kết quả đánh giá tính nhất quán, độ trung thực của lời giải thích và khả năng phản ánh mức độ bất định;
-    \item Hệ thống tích hợp, kết quả thực nghiệm tổng hợp và luận án tiến sĩ hoàn chỉnh.
+    \item Cơ chế suy luận và lý giải dựa trên bằng chứng có thể kiểm chứng;
+    \item Kết quả đánh giá grounding, faithfulness và mức độ bất định;
+    \item Hệ thống tích hợp và luận án tiến sĩ hoàn chỉnh.
 \end{itemize}
-
 
 \section{Tài liệu tham khảo} 
 
